@@ -8,114 +8,84 @@ const io = new Server(server);
 
 app.use(express.static(__dirname));
 
-let players = {};
+let rooms = {}; // تخزين الغرف والألعاب
 
 io.on('connection', (socket) => {
   console.log('لاعب متصل:', socket.id);
 
-  socket.on('playerJoin', (data, callback) => {
-    let initialKills = (data.name.toUpperCase() === 'EPIKDEV' || data.name.toUpperCase() === 'MOHAMMED') ? 999999 : 0;
-
-    players[socket.id] = { 
-      ...data, 
-      hp: 100,
-      maxHp: 100,
-      coins: players[socket.id]?.coins || 50, 
-      kills: players[socket.id]?.kills || initialKills 
+  // إنشاء غرفة برمز خاص
+  socket.on('createRoom', (data) => {
+    const roomCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+    rooms[roomCode] = {
+      gameType: data.gameType,
+      players: [{ id: socket.id, name: data.name, isDev: data.isDev }]
     };
-
-    if (typeof callback === 'function') {
-      callback({ success: true, coins: players[socket.id].coins, kills: players[socket.id].kills });
-    }
-    
-    io.emit('currentPlayers', players);
-    updateLeaderboard();
+    socket.join(roomCode);
+    socket.emit('roomCreated', { roomCode, gameType: data.gameType });
   });
 
-  socket.on('playerMove', (data) => {
-    if (players[data.id]) {
-      players[data.id].x = data.x;
-      players[data.id].y = data.y;
-      players[data.id].isDev = data.isDev;
-      players[data.id].form = data.form;
-      socket.broadcast.emit('playerMove', data);
+  // الانضمام لغرفة عبر الرمز
+  socket.on('joinRoom', (data) => {
+    const room = rooms[data.roomCode];
+    if (room && room.players.length < 2) {
+      room.players.push({ id: socket.id, name: data.name, isDev: data.isDev });
+      socket.join(data.roomCode);
+      
+      // إخبار اللاعبين أن الغرفة اكتملت وبدأت اللعبة
+      io.to(data.roomCode).emit('startGame', { 
+        gameType: room.gameType, 
+        players: room.players 
+      });
+    } else {
+      socket.emit('errorMsg', 'الغرفة غير موجودة أو ممتلئة!');
     }
+  });
+
+  // أحداث لعبة غوكو
+  function getRoomCode(id) {
+    for (let code in rooms) {
+      if (rooms[code].players.some(p => p.id === id)) return code;
+    }
+    return null;
+  }
+
+  socket.on('playerMove', (data) => {
+    let rCode = getRoomCode(socket.id);
+    if (rCode) socket.to(rCode).emit('playerMove', data);
   });
 
   socket.on('playerAction', (data) => {
-    if (players[data.id]) {
-      players[data.id].form = data.form;
-      socket.broadcast.emit('playerAction', data);
-    }
+    let rCode = getRoomCode(socket.id);
+    if (rCode) socket.to(rCode).emit('playerAction', data);
   });
 
-  // نظام إطلاق الكاميهااميها والضرر على اللاعبين القريبين
   socket.on('kamehamehaAttack', (data) => {
-    let attacker = players[socket.id];
-    if (!attacker) return;
-
-    // بث تأثير الكاميهااميها لجميع اللاعبين
-    io.emit('spawnBeam', { x: data.x, y: data.y, id: socket.id });
-
-    // فحص المسافة بين المهاجم وبقية اللاعبين لإلحاق الضرر
-    for (let id in players) {
-      if (id !== socket.id) {
-        let target = players[id];
-        let dist = Math.hypot(target.x - attacker.x, target.y - attacker.y);
-        
-        if (dist < 60) { // مسافة الضربة
-          target.hp -= 25;
-          if (target.hp <= 0) {
-            target.hp = 100; // إعادة إحياء
-            target.x = 140;
-            target.y = 70;
-            // زيادة قتلات المهاجم (إلا لو كان المطور قتلاته فلكية)
-            if (attacker.kills < 999999) attacker.kills += 1;
-            attacker.coins += 10;
-          }
-        }
-      }
-    }
-    io.emit('currentPlayers', players);
-    updateLeaderboard();
+    let rCode = getRoomCode(socket.id);
+    if (rCode) io.to(rCode).emit('spawnBeam', data);
   });
 
-  socket.on('buyTransformation', (data, callback) => {
-    if (players[socket.id]) {
-      if (players[socket.id].coins >= data.cost) {
-        players[socket.id].coins -= data.cost;
-        callback({ success: true, coins: players[socket.id].coins });
-        updateLeaderboard();
-      } else {
-        callback({ success: false, message: 'ليس لديك كوينز كافية!' });
-      }
-    }
+  // أحداث لعبة إكس أو (Tic Tac Toe)
+  socket.on('makeMove', (data) => {
+    let rCode = getRoomCode(socket.id);
+    if (rCode) io.to(rCode).emit('opponentMove', data);
   });
 
-  socket.on('chatMessage', (data) => {
-    io.emit('chatMessage', data);
+  // أحداث حجر ورق مقص
+  socket.on('rpsPlay', (data) => {
+    let rCode = getRoomCode(socket.id);
+    if (rCode) io.to(rCode).emit('rpsResult', data);
   });
 
   socket.on('disconnect', () => {
     console.log('لاعب خرج:', socket.id);
-    delete players[socket.id];
-    io.emit('disconnect', socket.id);
-    updateLeaderboard();
+    for (let code in rooms) {
+      rooms[code].players = rooms[code].players.filter(p => p.id !== socket.id);
+      if (rooms[code].players.length === 0) delete rooms[code];
+    }
   });
 });
 
-function updateLeaderboard() {
-  let leaderboardList = Object.values(players).map(p => ({
-    name: p.name,
-    isDev: p.isDev,
-    kills: p.kills || 0,
-    coins: p.coins || 0
-  })).sort((a, b) => b.kills - a.kills || b.coins - a.coins);
-
-  io.emit('updateLeaderboard', leaderboardList);
-}
-
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`السيرفر شغال على البورت ${PORT}`);
+  console.log(`منصة الألعاب شغالّة على البورت ${PORT}`);
 });

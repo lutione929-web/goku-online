@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Grok Edition</title>
+  <title>Epic Phone OS - Ultimate WhatsApp Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -33,17 +33,9 @@
 
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; display: none; flex-direction: column; z-index: 50;
+      background: #111b21; display: none; flex-direction: column; z-index: 50; color: #e9edef;
     }
     .app-window.active { display: flex; }
-
-    .app-header {
-      height: 40px; background: #111; display: flex; align-items: center;
-      justify-content: space-between; padding: 0 12px; font-size: 13px; font-weight: bold;
-      border-bottom: 1px solid #222; color: #fff;
-    }
-    .back-btn { background: #222; border: none; color: #fff; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
-    .fake-exit-btn { background: #500; border: 1px solid #f00; color: #ff6b6b; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
 
     .home-bar-area {
       height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); cursor: pointer;
@@ -62,16 +54,36 @@
       100% { transform: translate(4px, -4px) rotate(3deg); }
     }
 
-    /* تصميم تطبيق Grok الأصلي */
-    .grok-login-box { flex: 1; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-    .grok-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; font-size: 12px; outline: none; }
-    .grok-btn { width: 100%; padding: 10px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
+    /* --- WhatsApp Styles (مطابق للأصلي 100%) --- */
+    .wa-header { background: #1f2c34; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
+    .wa-title { font-size: 16px; font-weight: bold; color: #e9edef; }
+    .wa-icons { display: flex; gap: 15px; font-size: 16px; color: #aebac1; cursor: pointer; }
     
-    .grok-chat-screen { flex: 1; background: #000; display: none; flex-direction: column; }
-    .grok-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-    .grok-msg { max-width: 85%; padding: 8px 12px; border-radius: 10px; font-size: 11px; line-height: 1.4; word-break: break-word; }
-    .grok-incoming { background: #16181c; color: #e7e9ea; align-self: flex-start; }
-    .grok-outgoing { background: #1d9bf0; color: #fff; align-self: flex-end; }
+    .wa-search-bar { background: #111b21; padding: 8px 12px; }
+    .wa-search-input { width: 100%; background: #202c33; border: none; border-radius: 8px; padding: 7px 12px; color: #fff; font-size: 11px; outline: none; }
+    
+    .wa-body { flex: 1; overflow-y: auto; background: #111b21; }
+    .wa-chat-item { display: flex; align-items: center; padding: 10px 12px; gap: 10px; cursor: pointer; border-bottom: 1px solid #222d34; }
+    .wa-chat-item:active { background: #202c33; }
+    .wa-avatar { width: 42px; height: 42px; background: #2a3942; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .wa-chat-info { flex: 1; overflow: hidden; }
+    .wa-chat-name { font-size: 12px; font-weight: bold; color: #e9edef; display: flex; justify-content: space-between; }
+    .wa-chat-time { font-size: 9px; color: #8696a0; font-weight: normal; }
+    .wa-chat-msg { font-size: 11px; color: #8696a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
+
+    .wa-footer-nav { height: 50px; background: #1f2c34; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222d34; }
+    .wa-nav-item { display: flex; flex-direction: column; align-items: center; color: #8696a0; font-size: 9px; cursor: pointer; gap: 2px; }
+    .wa-nav-item.active { color: #00a884; font-weight: bold; }
+    .wa-nav-icon { font-size: 16px; }
+
+    /* نافذة المحادثة الفردية للواتساب */
+    .wa-chat-room { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0b141a; display: none; flex-direction: column; z-index: 60; }
+    .wa-room-header { background: #1f2c34; padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
+    .wa-room-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+    .wa-bubble { max-width: 80%; padding: 6px 10px; border-radius: 8px; font-size: 11px; line-height: 1.4; word-break: break-word; }
+    .wa-bubble-in { background: #202c33; color: #e9edef; align-self: flex-start; }
+    .wa-bubble-out { background: #005c4b; color: #e9edef; align-self: flex-end; }
+    .wa-room-input-area { background: #1f2c34; padding: 8px; display: flex; align-items: center; gap: 8px; }
   </style>
 </head>
 <body>
@@ -84,6 +96,7 @@
   <div class="phone-body">
     <div class="phone-screen">
       
+      <!-- الشاشة الرئيسية -->
       <div class="home-screen" id="homeScreen">
         <div class="app-icon" onclick="openApp('robloxApp')">
           <div class="icon-box" style="background:#222; border:2px solid #ff4757;">⬛</div>
@@ -113,27 +126,118 @@
 
       <!-- 1. روبلوكس -->
       <div class="app-window" id="robloxApp">
-        <div class="app-header">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>Roblox Obby</span><span></span>
+        <div class="app-header" style="background:#222; padding:10px; display:flex; justify-content:space-between;">
+          <button class="back-btn" onclick="goHome()" style="background:#444; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">◀ رجوع</button>
+          <span style="color:#00f0ff; font-weight:bold;">Roblox Obby</span><span></span>
         </div>
         <div style="padding:20px; text-align:center; color:#00f0ff;"><h3>لعبة روبلوكس تعمل بنجاح!</h3></div>
       </div>
 
-      <!-- 2. واتساب -->
+      <!-- 2. تطبيق الواتساب الأصلي بالكامل (WhatsApp) -->
       <div class="app-window" id="whatsappApp">
-        <div class="app-header" style="background:#075e54;">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>WhatsApp AI</span><span></span>
+        <!-- رأس الواتساب -->
+        <div class="wa-header">
+          <span class="wa-title">واتساب</span>
+          <div class="wa-icons">
+            <span>📷</span>
+            <span>🔍</span>
+            <span onclick="alert('الإعدادات والمجموعات')">⋮</span>
+          </div>
         </div>
-        <div style="flex:1; background:#0b141a; padding:10px; color:#fff; font-size:12px;">أهلاً بك في الواتساب الذكي!</div>
+
+        <!-- شريط البحث (يدعم البحث بالأ اسماء وأرقام الجوال الحقيقية!) -->
+        <div class="wa-search-bar">
+          <input type="text" id="waSearchInput" class="wa-search-input" placeholder="اسأل Meta AI أو ابحث برقم الجوال/الاسم..." oninput="filterWhatsAppChats(this.value)">
+        </div>
+
+        <!-- جسم القائمة حسب التبويب السفلي النشط -->
+        <div class="wa-body" id="waBodyContent">
+          <!-- قائمة الدردشات الافتراضية -->
+          <div id="waChatsList">
+            <div class="wa-chat-item" onclick="openWaChat('Meta AI', '🤖')">
+              <div class="wa-avatar" style="background:linear-gradient(135deg, #8a2be2, #ff1493);">✨</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">Meta AI <span class="wa-chat-time">الآن</span></div>
+                <div class="wa-chat-msg">هاي 10 TURBO بشكلها الكوميدي الأسطوري...</div>
+              </div>
+            </div>
+
+            <div class="wa-chat-item" onclick="openWaChat('LORDINI FATINI', '🦁')">
+              <div class="wa-avatar">🦁</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">LORDINI FATINI <span class="wa-chat-time">١٢:٣٠ ص</span></div>
+                <div class="wa-chat-msg">يطول بس على الاقل مو حمار زي جيميناي</div>
+              </div>
+            </div>
+
+            <div class="wa-chat-item" onclick="openWaChat('بطولة الألعاب العالمية', '🎮')">
+              <div class="wa-avatar">🎮</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">بطولة الألعاب العالمية <span class="wa-chat-time">١٢:٣٠ ص</span></div>
+                <div class="wa-chat-msg">✓ أنت: .</div>
+              </div>
+            </div>
+
+            <div class="wa-chat-item" onclick="openWaChat('إبراهيم', '👤')">
+              <div class="wa-avatar">👤</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">إبراهيم <span class="wa-chat-time">امس</span></div>
+                <div class="wa-chat-msg">✓✓ ضفت شات للعبة</div>
+              </div>
+            </div>
+
+            <div class="wa-chat-item" onclick="openWaChat('محمد', '1️⃣')">
+              <div class="wa-avatar" style="background:#00a884; color:#000; font-weight:bold;">1</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">محمد <span class="wa-chat-time">امس</span></div>
+                <div class="wa-chat-msg">✓ goku-online.zip</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- شريط التنقل السفلي الأصلي 100% -->
+        <div class="wa-footer-nav">
+          <div class="wa-nav-item" onclick="switchWaTab(this, 'calls')">
+            <span class="wa-nav-icon">📞</span>
+            <span>المكالمات</span>
+          </div>
+          <div class="wa-nav-item" onclick="switchWaTab(this, 'communities')">
+            <span class="wa-nav-icon">👥</span>
+            <span>المجتمعات</span>
+          </div>
+          <div class="wa-nav-item" onclick="switchWaTab(this, 'updates')">
+            <span class="wa-nav-icon" style="position:relative;">⭕<span style="position:absolute; top:0; right:0; width:6px; height:6px; background:#00a884; border-radius:50%;"></span></span>
+            <span>التحديثات</span>
+          </div>
+          <div class="wa-nav-item active" onclick="switchWaTab(this, 'chats')">
+            <span class="wa-nav-icon">💬</span>
+            <span>الدردشات</span>
+          </div>
+        </div>
+
+        <!-- نافذة المحادثة الداخلية للواتساب -->
+        <div class="wa-chat-room" id="waChatRoom">
+          <div class="wa-room-header">
+            <button onclick="closeWaChat()" style="background:none; border:none; color:#fff; font-size:14px; cursor:pointer;">◀</button>
+            <div class="wa-avatar" id="roomAvatar" style="width:32px; height:32px; font-size:14px;">🤖</div>
+            <div style="flex:1;"><b id="roomTitle" style="font-size:12px; color:#e9edef;">Meta AI</b><br><span style="font-size:9px; color:#8696a0;">متصل الآن</span></div>
+          </div>
+          <div class="wa-room-messages" id="waRoomMessagesBox">
+            <div class="wa-bubble wa-bubble-in">أهلاً بك! أنا مساعد Meta AI الذكي في واتساب. كيف أساعدك اليوم؟</div>
+          </div>
+          <div class="wa-room-input-area">
+            <input type="text" id="waMsgInput" placeholder="اكتب رسالة..." style="flex:1; background:#2a3942; border:none; padding:7px 10px; border-radius:20px; color:#fff; font-size:11px; outline:none;" onkeypress="handleWaEnter(event)">
+            <button onclick="sendWaMsg()" style="background:#00a884; border:none; color:#fff; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">➤</button>
+          </div>
+        </div>
       </div>
 
       <!-- 3. محمد الخطير -->
       <div class="app-window" id="dangerApp">
-        <div class="app-header" style="background:#300; border-bottom:2px solid #f00;">
-          <button class="fake-exit-btn" onclick="triggerFakeExitTrap()">خروج</button>
-          <span style="color:#ff4757;">محمد الخطير 💀</span><span></span>
+        <div class="app-header" style="background:#300; border-bottom:2px solid #f00; padding:8px 12px; display:flex; justify-content:space-between;">
+          <button class="fake-exit-btn" onclick="triggerFakeExitTrap()" style="background:#500; color:#ff6b6b; border:1px solid #f00; padding:3px 8px; border-radius:4px; font-size:10px; font-weight:bold;">خروج</button>
+          <span style="color:#ff4757; font-weight:bold;">محمد الخطير 💀</span><span></span>
         </div>
         <div style="flex:1; background:#050000; padding:15px; display:flex; flex-direction:column; justify-content:space-between;">
           <div>
@@ -147,50 +251,32 @@
         </div>
       </div>
 
-      <!-- 4. تطبيق Grok الأصلي مع تسجيل الدخول -->
+      <!-- باقي التطبيقات (Grok, صورة حميار, الدارك ويب) -->
       <div class="app-window" id="grokApp">
-        <div class="app-header" style="background:#000; border-bottom:1px solid #222;">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span style="color:#fff; font-weight:bold;">𝕏 Grok</span><span></span>
+        <div class="app-header" style="background:#000; border-bottom:1px solid #222; padding:10px; display:flex; justify-content:space-between;">
+          <button class="back-btn" onclick="goHome()" style="background:#222; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">◀ رجوع</button>
+          <span style="color:#fff; font-weight:bold;">𝕏 Grok Store</span><span></span>
         </div>
-
-        <!-- شاشة تسجيل الدخول بالايميل -->
-        <div class="grok-login-box" id="grokLoginBox">
-          <div style="font-size:35px; margin-bottom:10px;">𝕏</div>
-          <h3 style="margin-bottom:15px; font-size:15px; color:#fff;">تسجيل الدخول إلى Grok</h3>
-          <input type="email" id="grokEmail" placeholder="البريد الإلكتروني (Email)..." class="grok-input">
-          <input type="password" id="grokPass" placeholder="كلمة المرور (Password)..." class="grok-input">
-          <button class="grok-btn" onclick="loginGrok()">تسجيل الدخول</button>
-        </div>
-
-        <!-- شاشة محادثة Grok الأصلية -->
-        <div class="grok-chat-screen" id="grokChatScreen">
-          <div class="grok-messages" id="grokMsgBox">
-            <div class="grok-msg grok-incoming">أهلاً بك أنا Grok. الذكاء الاصطناعي الأكثر صراحة وذكاءً. كيف يمكنني مساعدتك اليوم؟ ⚡</div>
-          </div>
-          <div style="display:flex; padding:8px; background:#111; gap:5px; border-top:1px solid #222;">
-            <input type="text" id="grokInputText" placeholder="اسأل Grok أي شيء..." style="flex:1; padding:8px; border-radius:20px; border:none; background:#222; color:#fff; font-size:11px; outline:none;" onkeypress="handleGrokEnter(event)">
-            <button onclick="sendGrokMsg()" style="background:#1d9bf0; border:none; color:#fff; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">➤</button>
-          </div>
+        <div style="flex:1; background:#000; padding:15px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+          <h3 style="color:#1d9bf0; margin-bottom:10px;">تطبيق Grok AI الخارق</h3>
+          <p style="color:#aaa; font-size:11px;">مفعل مع نظام الاشتراكات والبطاقات الوهمية.</p>
         </div>
       </div>
 
-      <!-- 5. صورة حميار -->
       <div class="app-window" id="hamyarApp">
-        <div class="app-header" style="background:#3a2000; border-bottom:2px solid #f1c40f;">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span style="color:#f1c40f;">🐴 صور حميار وشريك وترامب</span><span></span>
+        <div class="app-header" style="background:#3a2000; border-bottom:2px solid #f1c40f; padding:10px; display:flex; justify-content:space-between;">
+          <button class="back-btn" onclick="goHome()" style="background:#5a3000; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">◀ رجوع</button>
+          <span style="color:#f1c40f; font-weight:bold;">🐴 صور حميار وشريك وترامب</span><span></span>
         </div>
-        <div style="padding:15px; color:#f1c40f; font-size:12px;">أهلاً بك في بوت صور حميار العشوائية...</div>
+        <div style="flex:1; background:#0c0202; padding:15px; color:#f1c40f; font-size:12px;">تطبيق توليد صور حميار وشريك والبراز العشوائي.</div>
       </div>
 
-      <!-- 6. الدارك ويب -->
       <div class="app-window" id="darkwebApp">
-        <div class="app-header" style="background:#100; border-bottom:2px solid #ff0000;">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span style="color:#ff0000;">🕸️ Tor / Dark Web</span><span></span>
+        <div class="app-header" style="background:#100; border-bottom:2px solid #ff0000; padding:10px; display:flex; justify-content:space-between;">
+          <button class="back-btn" onclick="goHome()" style="background:#300; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">◀ رجوع</button>
+          <span style="color:#ff0000; font-weight:bold;">🕸️ Tor / Dark Web</span><span></span>
         </div>
-        <div style="padding:15px; color:#ff6b6b; font-size:12px;">أهلاً بك في بوابة الدارك ويب المظلمة...</div>
+        <div style="flex:1; background:#080202; padding:15px; color:#ff6b6b; font-size:12px;">بوابة الدارك ويب المظلمة والأسرار الملعونة.</div>
       </div>
 
     </div>
@@ -212,131 +298,63 @@
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
     }
 
-    /* --- وظائف تسجيل الدخول ودردشة Grok الأصلية --- */
-    function loginGrok() {
-      let email = document.getElementById('grokEmail').value.trim();
-      let pass = document.getElementById('grokPass').value.trim();
-      if(!email || !pass) {
-        alert("الرجاء إدخال البريد الإلكتروني وكلمة المرور!");
+    /* --- وظائف واتساب الذكية والأصلية --- */
+    function switchWaTab(elem, tabName) {
+      document.querySelectorAll('.wa-nav-item').forEach(i => i.classList.remove('active'));
+      elem.classList.add('active');
+      let bodyBox = document.getElementById('waBodyContent');
+      
+      if(tabName === 'chats') {
+        bodyBox.innerHTML = `
+          <div id="waChatsList">
+            <div class="wa-chat-item" onclick="openWaChat('Meta AI', '🤖')">
+              <div class="wa-avatar" style="background:linear-gradient(135deg, #8a2be2, #ff1493);">✨</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">Meta AI <span class="wa-chat-time">الآن</span></div>
+                <div class="wa-chat-msg">هاي 10 TURBO بشكلها الكوميدي الأسطوري...</div>
+              </div>
+            </div>
+            <div class="wa-chat-item" onclick="openWaChat('LORDINI FATINI', '🦁')">
+              <div class="wa-avatar">🦁</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">LORDINI FATINI <span class="wa-chat-time">١٢:٣٠ ص</span></div>
+                <div class="wa-chat-msg">يطول بس على الاقل مو حمار زي جيميناي</div>
+              </div>
+            </div>
+            <div class="wa-chat-item" onclick="openWaChat('بطولة الألعاب العالمية', '🎮')">
+              <div class="wa-avatar">🎮</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">بطولة الألعاب العالمية <span class="wa-chat-time">١٢:٣٠ ص</span></div>
+                <div class="wa-chat-msg">✓ أنت: .</div>
+              </div>
+            </div>
+            <div class="wa-chat-item" onclick="openWaChat('إبراهيم', '👤')">
+              <div class="wa-avatar">👤</div>
+              <div class="wa-chat-info">
+                <div class="wa-chat-name">إبراهيم <span class="wa-chat-time">امس</span></div>
+                <div class="wa-chat-msg">✓✓ ضفت شات للعبة</div>
+              </div>
+            </div>
+          </div>`;
+      } else if(tabName === 'updates') {
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>الحالات</b><br><br>• حالتي (إضافة حالة جديدة)<br><br><b>القنوات المتابعة</b><br>• شاشة الجيمزرية 🎮<br>• أخبار الدارك ويب 🕸️</div>`;
+      } else if(tabName === 'communities') {
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>المجتمعات</b><br><br>مجموعة شلة الجيمزرية الرسمية<br>جميع الأعضاء متصلون ومراقبون.</div>`;
+      } else if(tabName === 'calls') {
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>سجل المكالمات</b><br><br>📞 محمد الخطير (مكالمة فائته)<br>📞 Meta AI (مكالمة صوتية نشطة)</div>`;
+      }
+    }
+
+    /* بحث واتساب الذكي (يدعم الأسماء وأرقام الجوال الحقيقية) */
+    function filterWhatsAppChats(query) {
+      let q = query.trim();
+      let bodyBox = document.getElementById('waBodyContent');
+      if(!q) {
+        switchWaTab(document.querySelector('.wa-nav-item.active'), 'chats');
         return;
       }
-      // إخفاء شاشة تسجيل الدخول وإظهار شاشة الدردشة الأصلية
-      document.getElementById('grokLoginBox').style.display = 'none';
-      document.getElementById('grokChatScreen').style.display = 'flex';
-    }
 
-    function handleGrokEnter(e) { if(e.key === 'Enter') sendGrokMsg(); }
-
-    function sendGrokMsg() {
-      let txtInput = document.getElementById('grokInputText');
-      let chatBox = document.getElementById('grokMsgBox');
-      let text = txtInput.value.trim();
-      if(!text) return;
-
-      chatBox.innerHTML += `<div class="grok-msg grok-outgoing">${text}</div>`;
-      txtInput.value = "";
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      setTimeout(() => {
-        let grokReplies = [
-          `حسب تحليلي لـ "${text}"، يبدو أن البشر يفعلون أغرب الأشياء دائماً! 🤖`,
-          `سؤال عميق بخصوص "${text}".. لكن هل فكرت في أن الكون مجرد محاكاة ضخمة؟ 🌌`,
-          `أنا Grok، وأعطيك الإجابة الصريحة بدون فلتر بخصوص "${text}": الوضع تحت السيطرة! 😎`,
-          `بناءً على بياناتي الحية، إجابة "${text}" واضحة ولا تحتاج تفكير مطول. ⚡`
-        ];
-        let chosenReply = grokReplies[Math.floor(Math.random() * grokReplies.length)];
-        chatBox.innerHTML += `<div class="grok-msg grok-incoming">${chosenReply}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 600);
-    }
-
-    /* --- موسيقى الرعب والمقالب --- */
-    let horrorAudioCtx = null, horrorInterval = null;
-    function startHorrorMusic() {
-      if(!horrorAudioCtx) horrorAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(horrorAudioCtx.state === 'suspended') horrorAudioCtx.resume();
-      if(horrorInterval) clearInterval(horrorInterval);
-
-      let scaryNotes = [55, 58, 49, 41, 65, 55]; 
-      let idx = 0;
-      horrorInterval = setInterval(() => {
-        let dangerWin = document.getElementById('dangerApp');
-        if(!dangerWin || !dangerWin.classList.contains('active')) {
-          clearInterval(horrorInterval);
-          return;
-        }
-        let osc = horrorAudioCtx.createOscillator();
-        let gain = horrorAudioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(scaryNotes[idx], horrorAudioCtx.currentTime);
-        gain.gain.setValueAtTime(0.08, horrorAudioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, horrorAudioCtx.currentTime + 1.2);
-        osc.connect(gain); gain.connect(horrorAudioCtx.destination);
-        osc.start(); osc.stop(horrorAudioCtx.currentTime + 1.2);
-        idx = (idx + 1) % scaryNotes.length;
-      }, 900);
-    }
-
-    function triggerFakeExitTrap() {
-      goHome();
-      let screen = document.getElementById('ultimateHackedScreen');
-      let textMain = document.getElementById('hackedTextMain');
-      let iconBox = document.getElementById('scaryFaceIcon');
-      
-      screen.style.display = 'flex';
-      iconBox.innerHTML = "😈🔒";
-      textMain.innerHTML = "تفكر نفسك بتخرج بهذي السهولة؟";
-
-      setTimeout(() => {
-        let timeLeft = 10;
-        iconBox.innerHTML = "⚠️⏳";
-        textMain.innerHTML = `<span style="color:#ffcc00; font-size:15px;">تحذير: يرجى الخروج من هذا الموقع بسرعة قبل نفاذ الوقت!</span><br><br><b style="font-size:32px; color:#ff0000;" id="countdownNum">${timeLeft}</b> ثوانٍ`;
-
-        let timer = setInterval(() => {
-          timeLeft--;
-          let numElem = document.getElementById('countdownNum');
-          if(numElem) numElem.innerText = timeLeft;
-
-          if(timeLeft <= 0) {
-            clearInterval(timer);
-            triggerRealHorrorJumpScare(screen, textMain, iconBox);
-          }
-        }, 1000);
-
-      }, 4000);
-    }
-
-    function triggerRealHorrorJumpScare(screen, textMain, iconBox) {
-      iconBox.innerHTML = "💀👁️‍🗨️🔪";
-      textMain.innerHTML = `<span style="font-size: 24px; color: #ff0000; font-weight:bold;">انتهى الوقت! لا مفر منك الآن!</span>`;
-
-      if(horrorAudioCtx) {
-        let osc = horrorAudioCtx.createOscillator();
-        let gain = horrorAudioCtx.createGain();
-        osc.type, 'square';
-        osc.frequency.setValueAtTime(300, horrorAudioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(900, horrorAudioCtx.currentTime + 1.5);
-        gain.gain.setValueAtTime(0.4, horrorAudioCtx.currentTime);
-        osc.connect(gain); gain.connect(horrorAudioCtx.destination);
-        osc.start(); osc.stop(horrorAudioCtx.currentTime + 1.8);
-      }
-
-      setTimeout(() => {
-        iconBox.innerHTML = "💻📂⚠️";
-        textMain.innerHTML = `<span style="color: #00ff00; font-family: monospace; font-size: 13px;">
-          [ SYSTEM OVERRIDE ]<br>
-          جاري ارسال جميع بياناتك والصور والملفات الشخصية إلى السيرفر الخارجي...<br><br>
-          <b style="color:#ff0000; font-size:17px;">تم الاختراق بنجاح! ☠️</b>
-        </span>`;
-      }, 3000);
-    }
-
-    function sendDangerMsg() {
-      let input = document.getElementById('dangerInput');
-      if(!input.value.trim()) return;
-      alert("محمد الخطير: قرأت رسالتك ('" + input.value + "') ولا يمكنك الهروب!");
-      input.value = "";
-    }
-  </script>
-</body>
-</html>
+      // إذا كتب المستخدم رقم جوال حقيقي أو اسم بحث
+      bodyBox.innerHTML = `
+        <div style="padding:10px;">
+          <div style="font-size:10

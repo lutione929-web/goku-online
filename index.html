@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Hamyar AI Edition</title>
+  <title>Epic Phone OS - Hamyar Real Images</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -50,7 +50,6 @@
     }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
 
-    /* شاشة الاختراق والمقلب */
     #ultimateHackedScreen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #000; z-index: 200; display: none; flex-direction: column;
@@ -63,17 +62,15 @@
       100% { transform: translate(4px, -4px) rotate(3deg); }
     }
 
-    /* شات تطبيق حميار AI */
     .hamyar-chat { flex: 1; background: #0c0202; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; gap: 8px; }
-    .hamyar-msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 11px; line-height: 1.4; word-break: break-word; }
+    .hamyar-msg { max-width: 90%; padding: 8px 12px; border-radius: 8px; font-size: 11px; line-height: 1.4; word-break: break-word; }
     .hamyar-incoming { background: #200; color: #ff6b6b; align-self: flex-start; border: 1px solid #ff0000; }
     .hamyar-outgoing { background: #331a00; color: #feca57; align-self: flex-end; border: 1px solid #ff9f43; }
-    .hamyar-img-card { width: 100%; max-width: 180px; border-radius: 6px; margin-top: 5px; border: 1px solid #ff4757; background: #111; padding: 5px; text-align: center; }
+    .hamyar-real-img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 6px; margin-top: 6px; border: 2px solid #f1c40f; }
   </style>
 </head>
 <body>
 
-  <!-- شاشة الاختراق -->
   <div id="ultimateHackedScreen">
     <div class="scary-img-box" id="scaryFaceIcon">😈🔒</div>
     <h2 id="hackedTextMain" style="color: #ff0000; margin-top: 15px; font-size: 18px; line-height: 1.5; padding: 0 10px;">جاري إعداد النظام...</h2>
@@ -82,7 +79,6 @@
   <div class="phone-body">
     <div class="phone-screen">
       
-      <!-- الشاشة الرئيسية -->
       <div class="home-screen" id="homeScreen">
         <div class="app-icon" onclick="openApp('robloxApp')">
           <div class="icon-box" style="background:#222; border:2px solid #ff4757;">⬛</div>
@@ -96,7 +92,6 @@
           <div class="icon-box" style="background:#8b0000; border:2px solid #ff0000;">⚠️</div>
           <span class="app-name">محمد الخطير</span>
         </div>
-        <!-- أيقونة تطبيق إنشاء صورة حميار الجديدة -->
         <div class="app-icon" onclick="openApp('hamyarApp')">
           <div class="icon-box" style="background:#4a2c00; border:2px solid #f1c40f;">🐴</div>
           <span class="app-name">صورة حميار</span>
@@ -138,7 +133,7 @@
         <div style="flex:1; background:#050000; padding:15px; display:flex; flex-direction:column; justify-content:space-between;">
           <div>
             <h2 style="color:#ff0000; margin-bottom:10px; font-size:16px;">⚠️ تحذير مرعب!</h2>
-            <p style="color:#ff6b6b; font-size:12px; line-height:1.5;">أنت داخل التطبيق المراقب. جرب زر الخروج المزيف...</p>
+            <p style="color:#ff6b6b; font-size:12px; line-height:1.5;">أنت داخل التطبيق المراقب...</p>
           </div>
           <div style="display:flex; gap:5px;">
             <input type="text" id="dangerInput" placeholder="تحدث مع الكيان..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f00; background:#100; color:#fff; font-size:11px; outline:none;">
@@ -147,14 +142,14 @@
         </div>
       </div>
 
-      <!-- 4. تطبيق إنشاء صورة حميار الجديد (Hamyar AI Bot) -->
+      <!-- 4. تطبيق صورة حميار مع صور حقيقية حية -->
       <div class="app-window" id="hamyarApp">
         <div class="app-header" style="background:#3a2000; border-bottom:2px solid #f1c40f;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span style="color:#f1c40f;">🐴 بوت إنشاء صورة حميار AI</span><span></span>
+          <span style="color:#f1c40f;">🐴 مولد صور حميار الحقيقية</span><span></span>
         </div>
         <div class="hamyar-chat" id="hamyarChatBox">
-          <div class="hamyar-msg hamyar-incoming">أهلاً بك يا أسطورة في بوت "صورة حميار"! اكتب لي (صورة حميار) وسأولد لك أكثر من 1000 صورة حمار مضحكة، شريك (SHREK)، وترامب مع مفاجآت عشوائية فتاكة! 🐴🔥</div>
+          <div class="hamyar-msg hamyar-incoming">أهلاً يا أسطورة! اكتب الآن <b>(صورة حميار)</b> وسأرسل لك صور حقيقية ومضحكة جداً (حمير، شريك، وترامب) مع براز عشوائي بدون تكرار! 🐴📸</div>
         </div>
         <div style="display:flex; padding:8px; background:#201000; gap:5px; border-top:1px solid #f1c40f;">
           <input type="text" id="hamyarInputText" placeholder="اكتب: صورة حميار..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f1c40f; background:#100500; color:#fff; font-size:11px; outline:none;" onkeypress="handleHamyarEnter(event)">
@@ -194,16 +189,14 @@
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
       let target = document.getElementById(id);
       if(target) target.classList.add('active');
-      if(id === 'dangerApp') {
-        startHorrorMusic();
-      }
+      if(id === 'dangerApp') { startHorrorMusic(); }
     }
 
     function goHome() {
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
     }
 
-    /* --- محرك مولد صور حميار الـ 1000+ مع ترامب وشريك والبراز العشوائي --- */
+    /* --- محرك صور حميار الحقيقية (حمير، شريك، ترامب + براز عشوائي) --- */
     function handleHamyarEnter(e) { if(e.key === 'Enter') sendHamyarMsg(); }
 
     function sendHamyarMsg() {
@@ -217,46 +210,65 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       setTimeout(() => {
-        let generatedContent = generateRandomHamyarMasterpiece();
-        chatBox.innerHTML += `<div class="hamyar-msg hamyar-incoming">${generatedContent}</div>`;
+        let responseHTML = generateRealImageMasterpiece();
+        chatBox.innerHTML += `<div class="hamyar-msg hamyar-incoming">${responseHTML}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
       }, 500);
     }
 
-    function generateRandomHamyarMasterpiece() {
-      // قاعدة بيانات ضخمة تحاكي توليد أكثر من 1000 صورة مختلفة بدون تكرار
-      const themes = [
-        { title: "🐴 حمار أكسجين مسطح (رقم #742)", desc: "حمار ينظر للكاميرا بابتسامة غبية وعيونه تطلع لجهات مختلفة!", emoji: "🐴🤪" },
-        { title: "🐴 حمار يرتدي نظارة شمسية (رقم #109)", desc: "كشخة ولكن الحمار واقع بحفرة طين عميقة!", emoji: "🐴🕶️" },
-        { title: "🟢 شريك (SHREK) بصيغة حمار خارق (رقم #881)", desc: "شريك غاضب جداً وبجانبه حمار يضحك بطريقة هستيرية!", emoji: "👹🐴" },
-        { title: "🇺🇸 ترامب مع حمار في البيت الأبيض (رقم #305)", desc: "دونالد ترامب يلقي خطاباً رسمياً والحمار يقلده بالحركات!", emoji: "🟠🐴" },
-        { title: "🟢 شريك الوسيم الخارق (رقم #992)", desc: "شريك يبتسم بابتسامة عريضة ومعه ميمز خرافية!", emoji: "💚😂" },
-        { title: "🐴 حمار يطير بالفضاء (رقم #554)", desc: "حمار يلبس بدلة رائد فضاء وتايه بين الكواكب!", emoji: "🐴🚀" },
-        { title: "🟠 دونالد ترامب بشعر حمار (رقم #120)", desc: "صورة مضحكة جداً لترامب مدمجة مع وجه حمار كوميدي!", emoji: "🇺🇸🐴" }
+    function generateRealImageMasterpiece() {
+      // مكتبة ضخمة جداً تحتوي على صور حقيقية كوميدية من روابط آمنة (حمير مضحكة، شريك، ترامب)
+      const realImages = [
+        {
+          title: "🐴 حمار أكسجين ضاحك بقوة (رقم #104)",
+          url: "https://images.unsplash.com/photo-1553332164-2454efb39690?w=400&auto=format&fit=crop&q=60",
+          desc: "صورة حقيقية لحمار ينظر للكاميرا بملامح مضحكة تفطس ضحك!"
+        },
+        {
+          title: "🐴 حمار كشخة بنظارات شمسية (رقم #512)",
+          url: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=400&auto=format&fit=crop&q=60",
+          desc: "حمار فخم جداً يعيش حياته بكل راحة وسعادة!"
+        },
+        {
+          title: "🟢 شريك (SHREK) الأسطوري (رقم #889)",
+          url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&auto=format&fit=crop&q=60",
+          desc: "شريك في لقطة كوميدية وغاضبة تقتل ضحك!"
+        },
+        {
+          title: "🇺🇸 دونالد ترامب في مؤتمر كوميدي (رقم #321)",
+          url: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=400&auto=format&fit=crop&q=60",
+          desc: "ترامب بتعبيرات وجه غريبة وعشوائية تماماً!"
+        },
+        {
+          title: "🐴 حمار صغير يعاني من النوم العشوائي (رقم #776)",
+          url: "https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=400&auto=format&fit=crop&q=60",
+          desc: "حمار نائم بطريقة غريبة ومضحكة جداً!"
+        },
+        {
+          title: "🟢 شريك يبتسم بخبث (رقم #994)",
+          url: "https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=60",
+          desc: "ابتسامة شريك المرعبة والمضحكة في نفس الوقت!"
+        }
       ];
 
-      // إدراج البراز بمكان عشوائي بنسبة حدوث ذكية
-      const poopOptions = [
+      // إدراج البراز بمكان عشوائي لزيادة الكوميديا المرعبة
+      const randomPoops = [
         "",
-        "<br><span style='color:#a0522d; font-size:10px;'>💩 [مفاجأة: تم رصد براز طائر في الزاوية العلوية!]</span>",
-        "<br><span style='color:#a0522d; font-size:10px;'>💩 [ملاحظة: توجد بركة براز تحت أقدام الشخصية مباشرة!]</span>",
-        "<br><span style='color:#a0522d; font-size:10px;'>💩 [تحذير بيئي: براز عشوائي يغطي جزءاً من الصورة!]</span>"
+        "<br><span style='color:#a0522d; font-size:10px;'>💩 [مفاجأة عشوائية: تم رصد براز طازج في زاوية الصورة!]</span>",
+        "<br><span style='color:#a0522d; font-size:10px;'>💩 [تحذير: بركة براز غامضة تحت أقدام الشخصية!]</span>",
+        "<br><span style='color:#a0522d; font-size:10px;'>💩 [ملاحظة كوميدية: براز طائر يزين منتصف الصورة!]</span>"
       ];
 
-      // اختيار عشوائي من بين آلاف الاحتمالات الوهمية
-      let randomTheme = themes[Math.floor(Math.random() * themes.length)];
-      let randomPoop = poopOptions[Math.floor(Math.random() * poopOptions.length)];
-      let uniqueId = Math.floor(Math.random() * 9000) + 1000; // لضمان عدم تكرار الرقم أبداً
+      let chosenImg = realImages[Math.floor(Math.random() * realImages.length)];
+      let chosenPoop = randomPoops[Math.floor(Math.random() * randomPoops.length)];
+      let uniqueId = Math.floor(Math.random() * 90000) + 10000;
 
       return `
-        <b>تم توليد الصورة بنجاح (ID: ${uniqueId})!</b><br>
-        <div class="hamyar-img-card">
-          <div style="font-size:35px; margin-bottom:4px;">${randomTheme.emoji}</div>
-          <b style="color:#f1c40f; font-size:11px;">${randomTheme.title}</b><br>
-          <span style="color:#ddd; font-size:10px;">${randomTheme.desc}</span>
-          ${randomPoop}
-        </div>
-        <span style="font-size:9px; color:#888;">🤖 تم بواسطة ذكاء حميار الاصطناعي (نسخة غير قابلة للتكرار).</span>
+        <b>تم توليد الصورة الحقيقية (ID: ${uniqueId})!</b><br>
+        <b style="color:#f1c40f; font-size:11px;">${chosenImg.title}</b><br>
+        <img src="${chosenImg.url}" class="hamyar-real-img" alt="حمار مضحك">
+        <span style="color:#ddd; font-size:10px; display:block; margin-top:4px;">${chosenImg.desc}</span>
+        ${chosenPoop}
       `;
     }
 

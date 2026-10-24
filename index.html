@@ -16,7 +16,6 @@
     .login-box button{width:100%;background:#0984e3;color:#fff;border:none;padding:10px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:bold}
     .error-msg{color:#d63031;font-size:0.75rem;margin-top:5px;display:block}
 
-    /* نافذة المتجر (Shop Modal) */
     #shopModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200;padding:15px}
     .shop-container{background:#1e272e;border:2px solid #f1c40f;width:100%;max-width:320px;border-radius:12px;padding:15px;text-align:center}
     .shop-item{background:#2d3436;padding:10px;margin:8px 0;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:0.85rem}
@@ -50,7 +49,6 @@
 </head>
 <body>
 
-  <!-- شاشة تسجيل الدخول -->
   <div id="loginScreen">
     <div class="login-box">
       <h2>⚡ Goku Fighter Login</h2>
@@ -60,7 +58,6 @@
     </div>
   </div>
 
-  <!-- واجهة المتجر (SHOP) -->
   <div id="shopModal">
     <div class="shop-container">
       <h3 style="color:#f1c40f; margin-bottom:10px;">🛒 متجر التحولات الأسطورية</h3>
@@ -83,7 +80,6 @@
     </div>
   </div>
 
-  <!-- واجهة اللعبة -->
   <div id="gameUI">
     <h1>⚡ Goku Fighter Online</h1>
     
@@ -132,12 +128,11 @@
     let isDev = false;
     let myCoins = 50;
     let ki = 0;
-    let currentForm = 'normal'; // normal, ssj, ssj2, blue, ui
-    let unlockedForms = ['normal', 'ssj']; // الشخص يبدأ بالعادة و SSJ العادي
+    let currentForm = 'normal';
+    let unlockedForms = ['normal', 'ssj'];
     let moveVector = { x: 0, y: 0 };
     let isDragging = false;
 
-    // فحص الـ localStorage تلقائياً عند فتح الموقع لحفظ الدخول
     window.onload = function() {
       const savedName = localStorage.getItem('goku_player_name');
       if (savedName) {
@@ -169,8 +164,6 @@
           myName = nameVal;
           myId = socket.id;
           myCoins = response.coins;
-          
-          // حفظ الاسم في الذاكرة المحلية لكي لا يطلب تسجيل دخول مرة أخرى
           localStorage.setItem('goku_player_name', myName);
 
           document.getElementById('loginScreen').style.display = 'none';
@@ -294,7 +287,6 @@
 
     function transformGoku() {
       if(ki >= 100) {
-        // التبديل بين التحولات المفتوحة
         if(currentForm === 'normal' && unlockedForms.includes('ssj')) currentForm = 'ssj';
         else if(currentForm === 'ssj' && unlockedForms.includes('ssj2')) currentForm = 'ssj2';
         else if(currentForm === 'ssj2' && unlockedForms.includes('blue')) currentForm = 'blue';
@@ -365,7 +357,7 @@
 
     function addFriend() { prompt("أدخل اسم صديقك لإضافته:"); }
 
-    // رسم شخصية جوكو الحقيقية (الجسم، اليدين، الملابس، والشعر حسب التحول)
+    // رسم شخصية جوكو بستايل بكسل آرت (Pixel Art) مطابق تماماً للصورة
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let id in players) {
@@ -374,17 +366,16 @@
         let y = p.y;
         let form = p.form || 'normal';
 
-        // تحديد ألوان الشخصية والشعر بناءً على التحول
-        let hairColor = '#2d3436'; // أسود لغوكو العادي
-        let hairStyle = 'spiky';
+        // ألوان الشعر حسب التحول (مطابق لستايل بكسل آرت)
+        let hairColor = '#1e272e'; // أسود غامق للبكسل
+        let highlightHair = '#485460';
         let auraColor = 'transparent';
 
-        if(form === 'ssj') { hairColor = '#fdcb6e'; auraColor = 'rgba(253, 203, 110, 0.4)'; }
-        else if(form === 'ssj2') { hairColor = '#ffeaa7'; auraColor = 'rgba(255, 234, 167, 0.6)'; }
-        else if(form === 'blue') { hairColor = '#0984e3'; auraColor = 'rgba(9, 132, 227, 0.6)'; }
-        else if(form === 'ui') { hairColor = '#dfe6e9'; auraColor = 'rgba(223, 230, 233, 0.8)'; }
+        if(form === 'ssj') { hairColor = '#f1c40f'; highlightHair = '#f39c12'; auraColor = 'rgba(241, 196, 15, 0.4)'; }
+        else if(form === 'ssj2') { hairColor = '#f1c40f'; highlightHair = '#ffeaa7'; auraColor = 'rgba(255, 234, 167, 0.6)'; }
+        else if(form === 'blue') { hairColor = '#0984e3'; highlightHair = '#74b9ff'; auraColor = 'rgba(9, 132, 227, 0.6)'; }
+        else if(form === 'ui') { hairColor = '#b2bec3'; highlightHair = '#dfe6e9'; auraColor = 'rgba(223, 230, 233, 0.8)'; }
 
-        // رسم الهالة (Aura) حول الشخصية عند التحول
         if(auraColor !== 'transparent') {
           ctx.fillStyle = auraColor;
           ctx.beginPath();
@@ -392,35 +383,46 @@
           ctx.fill();
         }
 
-        // جسم وجذع الشخصية (ملابس غوكو البرتقالية)
-        ctx.fillStyle = '#e17055';
-        ctx.fillRect(x + 6, y + 10, 12, 12);
+        // --- رسم شخصية Pixel Art دقيقة لجوكو ---
+        
+        // الأرجل (بنطال برتقالي + جزمة زرقاء)
+        ctx.fillStyle = '#d35400'; // بنطال برتقالي
+        ctx.fillRect(x + 8, y + 16, 4, 6);
+        ctx.fillRect(x + 12, y + 16, 4, 6);
+        
+        ctx.fillStyle = '#2980b9'; // جزمة زرقاء
+        ctx.fillRect(x + 7, y + 21, 5, 3);
+        ctx.fillRect(x + 12, y + 21, 5, 3);
 
-        // الرأس (وجه الشخصية)
-        ctx.fillStyle = '#fab1a0';
-        ctx.beginPath();
-        ctx.arc(x + 12, y + 8, 8, 0, Math.PI * 2);
-        ctx.fill();
+        // الجذع (قميص أزرق مع حزام)
+        ctx.fillStyle = '#2980b9';
+        ctx.fillRect(x + 7, y + 9, 10, 8);
+        
+        ctx.fillStyle = '#e67e22'; // حزام الخصر
+        ctx.fillRect(x + 8, y + 15, 8, 2);
 
-        // شعر غوكو الأسطوري
+        // اليدين بوضعية القتال (مرفوعة للجانبين)
+        ctx.fillStyle = '#e1b12c'; // لون الجلد بستايل بكسل
+        ctx.fillRect(x + 3, y + 11, 4, 4);
+        ctx.fillRect(x + 17, y + 11, 4, 4);
+
+        // الرأس والوجه
+        ctx.fillStyle = '#e1b12c';
+        ctx.fillRect(x + 8, y + 4, 8, 6);
+
+        // شعر جوكو الحاد (Pixel Spiky Hair)
         ctx.fillStyle = hairColor;
-        ctx.beginPath();
-        ctx.moveTo(x + 4, y + 6);
-        ctx.lineTo(x + 12, y - 2);
-        ctx.lineTo(x + 20, y + 6);
-        ctx.fill();
+        ctx.fillRect(x + 6, y + 1, 12, 4);
+        ctx.fillRect(x + 4, y + 2, 3, 4); // خصلة يسار
+        ctx.fillRect(x + 17, y + 2, 3, 4); // خصلة يمين
+        ctx.fillRect(x + 10, y, 4, 2);   // خصلة أعلى
 
-        // اليدين
-        ctx.fillStyle = '#fab1a0';
-        ctx.fillRect(x + 2, y + 12, 4, 6);
-        ctx.fillRect(x + 18, y + 12, 4, 6);
-
-        // كتابة الاسم مع تاج المطور الذهبي
+        // اسم اللاعب والتاج الذهبي
         ctx.fillStyle = p.isDev ? '#f1c40f' : '#fff';
         ctx.font = p.isDev ? 'bold 10px sans-serif' : '9px sans-serif';
         ctx.textAlign = 'center';
         let displayName = p.isDev ? `[👑 DEV] ${p.name}` : (p.name || 'Goku');
-        ctx.fillText(displayName, x + 12, y + 30);
+        ctx.fillText(displayName, x + 12, y + 31);
       }
     }
   </script>

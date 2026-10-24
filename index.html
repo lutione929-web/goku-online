@@ -16,6 +16,7 @@
     button{width:100%;background:linear-gradient(90deg, #6c5ce7, #4834d4);color:#fff;border:none;padding:12px;border-radius:10px;font-size:1rem;cursor:pointer;font-weight:bold;margin-top:6px;box-shadow:0 4px 15px rgba(108,92,231,0.4);transition:0.2s}
     button:active{transform:scale(0.97)}
     
+    .btn-guest{background:linear-gradient(90deg, #636e72, #2d3436); margin-top:8px}
     .error-msg{color:#ff7675;font-size:0.75rem;margin-top:5px;text-align:center}
 
     .music-bar{position:fixed;top:10px;left:10px;background:rgba(255,255,255,0.1);padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:1px solid #f1c40f;z-index:999}
@@ -38,7 +39,8 @@
   <div id="loginScreen" class="screen" style="display:flex;">
     <h2>⚡ تسجيل الدخول الأسطوري</h2>
     <input type="text" id="playerNameInput" placeholder="أدخل اسمك (إنجليزي)">
-    <button onclick="saveAndLogin()">دخول المنصة</button>
+    <button onclick="saveAndLogin()">دخول المنصة 🚀</button>
+    <button onclick="loginAsGuest()" class="btn-guest">👤 المتابعة كـ ضيف (بدون تسجيل)</button>
     <span class="error-msg" id="loginError"></span>
   </div>
 
@@ -127,26 +129,32 @@
 
     window.onload = function() {
       const savedName = localStorage.getItem('arcade_player_name');
-      if (savedName && savedName.length >= 3) {
-        myName = savedName;
-        isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('lobbyScreen').style.display = 'flex';
+      if (savedName && savedName.length > 0) {
+        enterLobbyDirectly(savedName);
       }
     };
+
+    function enterLobbyDirectly(name) {
+      myName = name;
+      isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('lobbyScreen').style.display = 'flex';
+    }
 
     function saveAndLogin() {
       const input = document.getElementById('playerNameInput');
       const nameVal = input.value.trim();
-      if(nameVal.length < 3) {
-        document.getElementById('loginError').innerText = "⚠️ أدخل 3 أحرف على الأقل!";
+      if(nameVal.length === 0) {
+        document.getElementById('loginError').innerText = "⚠️ يرجى كتابة اسمك أو الدخول كـ ضيف!";
         return;
       }
-      myName = nameVal;
-      isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
-      localStorage.setItem('arcade_player_name', myName);
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('lobbyScreen').style.display = 'flex';
+      localStorage.setItem('arcade_player_name', nameVal);
+      enterLobbyDirectly(nameVal);
+    }
+
+    function loginAsGuest() {
+      const randomGuest = "Guest_" + Math.floor(Math.random() * 900 + 100);
+      enterLobbyDirectly(randomGuest);
     }
 
     function toggleModeInputs() {
@@ -426,9 +434,4 @@
         return;
       }
       isMyTurn = true;
-      document.getElementById('tTurnStatus').innerText = "دورك الآن!";
-    });
-
-    function checkWin(sym) {
-      const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-      return wins.some(w => tBoard[w[0]] === sym && tBoard[w[1]] ===
+      document.getElementById('tTurnStatus').innerText = "دو

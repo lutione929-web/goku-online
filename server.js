@@ -8,12 +8,11 @@ const io = new Server(server);
 
 app.use(express.static(__dirname));
 
-let rooms = {}; // تخزين الغرف والألعاب
+let rooms = {};
 
 io.on('connection', (socket) => {
   console.log('لاعب متصل:', socket.id);
 
-  // إنشاء غرفة برمز خاص
   socket.on('createRoom', (data) => {
     const roomCode = Math.random().toString(36).substring(2, 7).toUpperCase();
     rooms[roomCode] = {
@@ -24,14 +23,13 @@ io.on('connection', (socket) => {
     socket.emit('roomCreated', { roomCode, gameType: data.gameType });
   });
 
-  // الانضمام لغرفة عبر الرمز
   socket.on('joinRoom', (data) => {
     const room = rooms[data.roomCode];
     if (room && room.players.length < 2) {
       room.players.push({ id: socket.id, name: data.name, isDev: data.isDev });
       socket.join(data.roomCode);
       
-      // إخبار اللاعبين أن الغرفة اكتملت وبدأت اللعبة
+      // إرسال معلومات اللاعبين وتحديد الأدوار
       io.to(data.roomCode).emit('startGame', { 
         gameType: room.gameType, 
         players: room.players 
@@ -41,7 +39,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // أحداث لعبة غوكو
   function getRoomCode(id) {
     for (let code in rooms) {
       if (rooms[code].players.some(p => p.id === id)) return code;
@@ -49,31 +46,47 @@ io.on('connection', (socket) => {
     return null;
   }
 
+  // أحداث غوكو
   socket.on('playerMove', (data) => {
     let rCode = getRoomCode(socket.id);
     if (rCode) socket.to(rCode).emit('playerMove', data);
   });
-
-  socket.on('playerAction', (data) => {
-    let rCode = getRoomCode(socket.id);
-    if (rCode) socket.to(rCode).emit('playerAction', data);
-  });
-
   socket.on('kamehamehaAttack', (data) => {
     let rCode = getRoomCode(socket.id);
     if (rCode) io.to(rCode).emit('spawnBeam', data);
   });
 
-  // أحداث لعبة إكس أو (Tic Tac Toe)
+  // أحداث إكس أو (Tic Tac Toe)
   socket.on('makeMove', (data) => {
     let rCode = getRoomCode(socket.id);
-    if (rCode) io.to(rCode).emit('opponentMove', data);
+    if (rCode) socket.to(rCode).emit('opponentMove', data);
   });
 
   // أحداث حجر ورق مقص
   socket.on('rpsPlay', (data) => {
     let rCode = getRoomCode(socket.id);
-    if (rCode) io.to(rCode).emit('rpsResult', data);
+    if (!rCode) return;
+    let room = rooms[rCode];
+    if (!room.rpsChoices) room.rpsChoices = {};
+    room.rpsChoices[socket.id] = data.choice;
+
+    // لما يختار اللاعبين الاثنين
+    if (Object.keys(room.rpsChoices).length === 2) {
+      let pIds = Object.keys(room.rpsChoices);
+      let p1 = pIds[0], p2 = pIds[1];
+      let c1 = room.rpsChoices[p1], c2 = room.rpsChoices[p2];
+      let winner = 'تعادل';
+
+      if (c1 !== c2) {
+        if ((c1 === 'rock' && c2 === 'scissors') || (c1 === 'paper' && c2 === 'rock') || (c1 === 'scissors' && c2 === 'paper')) {
+          winner = room.players.find(p => p.id === p1).name;
+        } else {
+          winner = room.players.find(p => p.id === p2).name;
+        }
+      }
+      io.to(rCode).emit('rpsResult', { choices: room.rpsChoices, winner, players: room.players });
+      room.rpsChoices = {}; // إعادة ضبط الجولة
+    }
   });
 
   socket.on('disconnect', () => {
@@ -87,5 +100,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`منصة الألعاب شغالّة على البورت ${PORT}`);
+  console.log(`السيرفر شغال على البورت ${PORT}`);
 });

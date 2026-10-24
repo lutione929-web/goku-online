@@ -8,26 +8,50 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:10px}
-    h1{font-size:1.5rem;margin:8px 0;background:linear-gradient(90deg,#ff7675,#e17055);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    p{font-size:0.9rem;color:#aaa;margin-bottom:10px}
+    h1{font-size:1.4rem;margin:5px 0;background:linear-gradient(90deg,#ff7675,#e17055);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    
+    /* أزرار القوائم العليا (Shop & Friends) */
+    .menu-bar{display:flex;gap:10px;margin-bottom:8px}
+    .menu-btn{background:#e17055;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:0.8rem;cursor:pointer}
+
     #gameCanvas{background:#1e272e;border:2px solid #ff7675;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
-    .controls{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-top:15px;width:100%;max-width:300px}
-    .btn{background:#2d3436;color:#fff;border:1px solid #ff7675;padding:12px;font-size:1.2rem;border-radius:8px;cursor:pointer;user-select:none;text-align:center}
+    
+    /* لوحة الشات */
+    .chat-box{width:320px;height:70px;background:#1e272e;border:1px solid #444;border-radius:8px;margin-top:8px;padding:5px;overflow-y:auto;font-size:0.8rem;text-align:right}
+    .chat-input-area{display:flex;gap:5px;width:320px;margin-top:5px}
+    .chat-input-area input{flex:1;padding:6px;border-radius:6px;border:none;background:#2d3436;color:#fff;font-size:0.8rem}
+    .chat-input-area button{background:#0984e3;color:#fff;border:none;padding:6px 10px;border-radius:6px;cursor:pointer}
+
+    /* الأزرار (حركة + ضرب) */
+    .controls{display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;margin-top:8px;width:100%;max-width:320px}
+    .btn{background:#2d3436;color:#fff;border:1px solid #ff7675;padding:10px;font-size:1rem;border-radius:8px;cursor:pointer;user-select:none;text-align:center}
     .btn:active{background:#ff7675}
+    .btn-attack{background:#d63031;border-color:#ff7675}
     .empty{}
   </style>
 </head>
 <body>
 
   <h1>⚡ Goku Fighter Online</h1>
-  <p>استخدم أزرار التحريك بالأسفل!</p>
+  
+  <div class="menu-bar">
+    <button class="menu-btn" onclick="openShop()">🛒 المتجر (Shop)</button>
+    <button class="menu-btn" onclick="addFriend()">👥 إضافة صديق</button>
+  </div>
 
-  <canvas id="gameCanvas" width="320" height="320"></canvas>
+  <canvas id="gameCanvas" width="320" height="240"></canvas>
+
+  <!-- صندوق الشات -->
+  <div class="chat-box" id="chatMessages"></div>
+  <div class="chat-input-area">
+    <input type="text" id="msgInput" placeholder="اكتب رسالتك هنا...">
+    <button onclick="sendChat()">إرسال</button>
+  </div>
 
   <div class="controls">
     <div class="empty"></div>
     <div class="btn" onclick="move('up')">⬆️</div>
-    <div class="empty"></div>
+    <div class="btn btn-attack" onclick="attack()">💥 ضرب</div>
     <div class="btn" onclick="move('left')">⬅️</div>
     <div class="btn" onclick="move('down')">⬇️</div>
     <div class="btn" onclick="move('right')">➡️</div>
@@ -43,7 +67,7 @@
 
     socket.on('connect', () => {
       myId = socket.id;
-      players[myId] = { x: 140, y: 140, color: '#ff7675' };
+      players[myId] = { x: 140, y: 100, color: '#ff7675', attacking: false };
       draw();
     });
 
@@ -52,30 +76,72 @@
       draw();
     });
 
+    socket.on('playerAttack', (data) => {
+      if(players[data.id]) {
+        players[data.id].attacking = true;
+        draw();
+        setTimeout(() => { players[data.id].attacking = false; draw(); }, 300);
+      }
+    });
+
+    socket.on('chatMessage', (data) => {
+      const box = document.getElementById('chatMessages');
+      box.innerHTML += `<div><b>${data.name}:</b> ${data.text}</div>`;
+      box.scrollTop = box.scrollHeight;
+    });
+
     function move(dir) {
       if (!myId || !players[myId]) return;
       const step = 15;
       if (dir === 'up' && players[myId].y > 0) players[myId].y -= step;
-      if (dir === 'down' && players[myId].y < canvas.height - 40) players[myId].y += step;
+      if (dir === 'down' && players[myId].y < canvas.height - 30) players[myId].y += step;
       if (dir === 'left' && players[myId].x > 0) players[myId].x -= step;
-      if (dir === 'right' && players[myId].x < canvas.width - 40) players[myId].x += step;
+      if (dir === 'right' && players[myId].x < canvas.width - 30) players[myId].x += step;
 
       draw();
       socket.emit('playerMove', { id: myId, x: players[myId].x, y: players[myId].y, color: '#ff7675' });
+    }
+
+    function attack() {
+      if (!myId || !players[myId]) return;
+      players[myId].attacking = true;
+      draw();
+      socket.emit('playerAttack', { id: myId });
+      setTimeout(() => { players[myId].attacking = false; draw(); }, 300);
+    }
+
+    function sendChat() {
+      const input = document.getElementById('msgInput');
+      const text = input.value.trim();
+      if(text !== '') {
+        socket.emit('chatMessage', { name: 'لاعب-' + myId.slice(0,4), text: text });
+        input.value = '';
+      }
+    }
+
+    function openShop() {
+      alert("🛒 قريباً سيتم افتتاح المتجر لشراء ملابس وطاقات جديدة لجوكو!");
+    }
+
+    function addFriend() {
+      const friendName = prompt("أدخل اسم أو آي دي الصديق لإضافته:");
+      if(friendName) {
+        alert("تم إرسال طلب الصديق بنجاح إلى: " + friendName);
+      }
     }
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let id in players) {
         const p = players[id];
-        ctx.fillStyle = p.color || '#ff7675';
+        ctx.fillStyle = p.attacking ? '#0984e3' : (p.color || '#ff7675');
         ctx.beginPath();
-        ctx.arc(p.x + 20, p.y + 20, 20, 0, Math.PI * 2);
+        ctx.arc(p.x + 15, p.y + 15, p.attacking ? 22 : 15, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = '#fff';
-        ctx.font = '10px sans-serif';
+        ctx.font = '9px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(id === myId ? 'أنت' : 'لاعب', p.x + 20, p.y + 48);
+        ctx.fillText(id === myId ? 'أنت' : 'خصم', p.x + 15, p.y + 35);
       }
     }
   </script>

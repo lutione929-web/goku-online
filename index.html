@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Donkey & Fart Madness</title>
+  <title>Epic Phone OS - Tic Tac Toe & Private Chat</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
       width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(255, 0, 0, 0.4); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.3); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
@@ -18,34 +18,45 @@
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
 
-    /* 1. شاشة تسجيل الدخول بالاسم */
-    #loginScreen {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #090a15; z-index: 100; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 20px; text-align: center;
-    }
-    .login-input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 10px; border: 1px solid #ff4757; background: #111; color: #fff; font-size: 13px; text-align: center; outline: none; }
-    .login-btn { width: 100%; padding: 12px; background: #ff4757; color: #fff; border: none; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,71,87,0.4); }
-
-    /* الشاشة الرئيسية بعد تسجيل الدخول */
+    /* الشاشة الرئيسية تحتوي على التطبيقين فقط */
     .home-screen {
-      flex: 1; padding: 25px 15px; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+      flex: 1; padding: 25px 15px; display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 15px; align-content: start; overflow-y: auto;
     }
 
-    /* الزر الأحمر العملاق والمرعب والمضحك */
-    .giant-red-btn {
-      width: 180px; height: 180px; background: radial-gradient(circle, #ff4757, #c0392b);
-      border: 6px solid #fff; border-radius: 50%; color: #fff; font-size: 18px; font-weight: bold;
-      cursor: pointer; box-shadow: 0 0 30px rgba(255,0,0,0.8); animation: pulseBtn 1.5s infinite;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+    .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+    .app-icon:active { transform: scale(0.9); }
+    .icon-box {
+      width: 55px; height: 55px; border-radius: 14px; display: flex; align-items: center;
+      justify-content: center; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 5px;
     }
-    .giant-red-btn:active { transform: scale(0.92); }
+    .app-name { font-size: 10px; color: #ddd; text-align: center; }
 
-    @keyframes pulseBtn {
-      0% { transform: scale(1); box-shadow: 0 0 20px rgba(255,0,0,0.6); }
-      50% { transform: scale(1.06); box-shadow: 0 0 40px rgba(255,0,0,1); }
-      100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,0,0,0.6); }
+    /* نوافذ التطبيقات */
+    .app-window {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: #0b141a; display: none; flex-direction: column; z-index: 50; color: #fff;
     }
+    .app-window.active { display: flex; }
+
+    .app-header {
+      height: 45px; background: #1f2c34; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 15px; font-size: 13px; font-weight: bold; border-bottom: 1px solid #2a3942;
+    }
+    .back-btn { background: #2a3942; border: none; color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
+
+    /* تصميم لعبة أكس أو */
+    .tictactoe-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #111b21; }
+    .board { display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px); gap: 8px; margin: 20px 0; }
+    .cell { background: #202c33; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: bold; cursor: pointer; color: #00a884; }
+    .cell:active { background: #2a3942; }
+
+    /* تصميم Super Private Chat */
+    .chat-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; background: #0b141a; }
+    .chat-bubble { max-width: 80%; padding: 8px 12px; border-radius: 10px; font-size: 11px; line-height: 1.4; word-break: break-word; }
+    .chat-in { background: #202c33; color: #e9edef; align-self: flex-start; }
+    .chat-out { background: #005c4b; color: #e9edef; align-self: flex-end; }
+    .chat-input-area { background: #1f2c34; padding: 10px; display: flex; gap: 8px; }
 
     .home-bar-area {
       height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); cursor: pointer;
@@ -55,115 +66,155 @@
 </head>
 <body>
 
-  <!-- شاشة تسجيل الدخول بالاسم -->
-  <div id="loginScreen">
-    <div style="font-size: 50px; margin-bottom: 10px;">🐴💨</div>
-    <h2 style="color: #ff4757; font-size: 18px; margin-bottom: 5px;">مرحباً بك في النظام الخارق</h2>
-    <p style="color: #aaa; font-size: 11px; margin-bottom: 15px;">الرجاء إدخال اسمك للبدء:</p>
-    <input type="text" id="userNameInput" placeholder="اكتب اسمك هنا يا أسطورة..." class="login-input">
-    <button class="login-btn" onclick="completeLogin()">دخول إلى النظام 🚀</button>
-  </div>
-
   <div class="phone-body">
     <div class="phone-screen">
       
-      <!-- الشاشة الرئيسية وتحتوي على الزر الأحمر العملاق -->
+      <!-- الشاشة الرئيسية -->
       <div class="home-screen" id="homeScreen">
-        <h3 id="welcomeUserTitle" style="color: #f1c40f; margin-bottom: 25px; font-size: 15px;">أهلاً بك!</h3>
-        
-        <!-- الزر الأحمر العملاق -->
-        <button class="giant-red-btn" onclick="triggerMadness()">
-          <span>🚨</span>
-          <span>اضغط هنا</span>
-          <span style="font-size: 10px; font-weight: normal;">(حمير + Farts)</span>
-        </button>
+        <div class="app-icon" onclick="openApp('ticTacToeApp')">
+          <div class="icon-box" style="background:#00a884;">❌⭕</div>
+          <span class="app-name">Tic Tac Toe</span>
+        </div>
+        <div class="app-icon" onclick="openApp('privateChatApp')">
+          <div class="icon-box" style="background:#8a2be2;">🔒💬</div>
+          <span class="app-name">Private Chat</span>
+        </div>
+      </div>
 
-        <p id="funStatusText" style="color: #aaa; font-size: 11px; margin-top: 25px; line-height: 1.4;">اضغط الزر الأحمر لتفجير أصوات الحمير والضحك العشوائي! 😂</p>
+      <!-- 1. لعبة أكس أو (Tic Tac Toe) -->
+      <div class="app-window" id="ticTacToeApp">
+        <div class="app-header">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span>لعبة أكس أو ❌⭕</span><span></span>
+        </div>
+        <div class="tictactoe-container">
+          <h3 id="tttStatus" style="color: #00a884; font-size: 14px; margin-bottom: 10px;">دور اللاعب: X</h3>
+          <div class="board" id="tttBoard">
+            <div class="cell" onclick="cellClicked(0)"></div>
+            <div class="cell" onclick="cellClicked(1)"></div>
+            <div class="cell" onclick="cellClicked(2)"></div>
+            <div class="cell" onclick="cellClicked(3)"></div>
+            <div class="cell" onclick="cellClicked(4)"></div>
+            <div class="cell" onclick="cellClicked(5)"></div>
+            <div class="cell" onclick="cellClicked(6)"></div>
+            <div class="cell" onclick="cellClicked(7)"></div>
+            <div class="cell" onclick="cellClicked(8)"></div>
+          </div>
+          <button onclick="resetTTT()" style="margin-top: 15px; background: #202c33; border: 1px solid #00a884; color: #00a884; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">إعادة اللعبة</button>
+        </div>
+      </div>
+
+      <!-- 2. تطبيق Super Private Chat -->
+      <div class="app-window" id="privateChatApp">
+        <div class="app-header" style="background: #202c33;">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span>🔒 Super Private Chat</span><span></span>
+        </div>
+        <div class="chat-box" id="privateChatBox">
+          <div class="chat-bubble chat-in">أهلاً بك في الشات السري الخارق! هنا كل الرسائل مشفرة وسرية تماماً بينك وبين الكيان الخفي. 🕶️</div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="privateInput" placeholder="اكتب رسالة سرية..." style="flex: 1; background: #2a3942; border: none; padding: 8px 12px; border-radius: 20px; color: #fff; font-size: 11px; outline: none;" onkeypress="handlePrivateEnter(event)">
+          <button onclick="sendPrivateMsg()" style="background: #00a884; border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-weight: bold; cursor: pointer;">➤</button>
+        </div>
       </div>
 
     </div>
 
-    <div class="home-bar-area">
+    <div class="home-bar-area" onclick="goHome()">
       <div class="home-bar"></div>
     </div>
   </div>
 
   <script>
-    let playerName = "أسطورة";
-
-    function completeLogin() {
-      let inputVal = document.getElementById('userNameInput').value.trim();
-      if(inputVal) {
-        playerName = inputVal;
-      }
-      document.getElementById('welcomeUserTitleinnerText = `أهلاً بك يا ${playerName} في عالم الفوضى! 🐴`;
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('homeScreen').style.display = 'flex';
+    function openApp(id) {
+      document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
+      let target = document.getElementById(id);
+      if(target) target.classList.add('active');
     }
 
-    // محرك توليد أصوات الحمير والـ Farts بالذكاء الصوتي (Web Audio API) بدون روابط خارجية
-    let audioCtx = null;
+    function goHome() {
+      document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
+    }
 
-    function triggerMadness() {
-      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume();
+    /* --- منطق لعبة أكس أو --- */
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let isGameActive = true;
 
-      let effects = [playDonkeySound, playFartSound, playCrazySqueak];
-      let randomEffect = effects[Math.floor(Math.random() * effects.length)];
-      randomEffect();
+    function cellClicked(index) {
+      if(board[index] !== '' || !isGameActive) return;
+      board[index] = currentPlayer;
+      document.getElementsByClassName('cell')[index].innerText = currentPlayer;
+      document.getElementsByClassName('cell')[index].style.color = currentPlayer === 'X' ? '#00a884' : '#ff4757';
 
-      let messages = [
-        `😂 يا ${playerName}، الحمار أطلق صوتاً مرعباً!`,
-        `💨 أوووف! تم إطلاق Fart خرافي وعشوائي بنجاح!`,
-        `🐴 حمار هائج يركض في الشاشة الآن!`,
-        `💀 وااااو! ريحته وصلت لعندي يا ${playerName}!`
+      checkWinner();
+    }
+
+    function checkWinner() {
+      const winConditions = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
       ];
-      document.getElementById('funStatusText').innerText = messages[Math.floor(Math.random() * messages.length)];
+
+      let roundWon = false;
+      for(let cond of winConditions) {
+        let a = board[cond[0]], b = board[cond[1]], c = board[cond[2]];
+        if(a && a === b && a === c) {
+          roundWon = true;
+          break;
+        }
+      }
+
+      if(roundWon) {
+        document.getElementById('tttStatus').innerText = `الفائز هو اللاعب: ${currentPlayer}! 🎉`;
+        isGameActive = false;
+        return;
+      }
+
+      if(!board.includes('')) {
+        document.getElementById('tttStatus').innerText = `تعادل! 🤝`;
+        isGameActive = false;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      document.getElementById('tttStatus').innerText = `دور اللاعب: ${currentPlayer}`;
     }
 
-    // صوت حمار كوميدي (ترددات متعرجة)
-    function playDonkeySound() {
-      let now = audioCtx.currentTime;
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(150, now);
-      osc.frequency.linearRampToValueAtTime(300, now + 0.2);
-      osc.frequency.linearRampToValueAtTime(120, now + 0.5);
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(now); osc.stop(now + 0.6);
+    function resetTTT() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      currentPlayer = 'X';
+      isGameActive = true;
+      document.getElementById('tttStatus').innerText = `دور اللاعب: X`;
+      let cells = document.getElementsByClassName('cell');
+      for(let c of cells) c.innerText = '';
     }
 
-    // صوت Fart كوميدي ومضحك
-    function playFartSound() {
-      let now = audioCtx.currentTime;
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(60, now);
-      osc.frequency.linearRampToValueAtTime(40, now + 0.1);
-      osc.frequency.linearRampToValueAtTime(90, now + 0.2);
-      osc.frequency.linearRampToValueAtTime(50, now + 0.35);
-      gain.gain.setValueAtTime(0.5, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(now); osc.stop(now + 0.35);
-    }
+    /* --- منطق Super Private Chat --- */
+    function handlePrivateEnter(e) { if(e.key === 'Enter') sendPrivateMsg(); }
 
-    // صوت صرير مجنون وعشوائي
-    function playCrazySqueak() {
-      let now = audioCtx.currentTime;
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(400, now);
-      osc.frequency.exponentialRampToValueAtTime(800, now + 0.2);
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(now); osc.stop(now + 0.25);
+    function sendPrivateMsg() {
+      let input = document.getElementById('privateInput');
+      let chatBox = document.getElementById('privateChatBox');
+      let txt = input.value.trim();
+      if(!txt) return;
+
+      chatBox.innerHTML += `<div class="chat-bubble chat-out">${txt}</div>`;
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      setTimeout(() => {
+        let replies = [
+          `تم استلام رسالتك السرية بنجاح: "${txt}" 🔒`,
+          `النظام المشفر يرد: رسالتك وصلت للطرف الآخر في الشات السري! 🕶️`,
+          `هششش.. لا تخلّي أحد يسمعك وأنت تقول "${txt}"! 🤫`
+        ];
+        let chosen = replies[Math.floor(Math.random() * replies.length)];
+        chatBox.innerHTML += `<div class="chat-bubble chat-in">${chosen}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 600);
     }
   </script>
 </body>

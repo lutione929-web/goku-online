@@ -3,45 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Online Punch Arena</title>
+  <title>Epic Phone OS - Online RPS Arena</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
       width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(255, 0, 0, 0.4); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.3); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
-      flex: 1; background: linear-gradient(135deg, #2b0b0b, #090a15);
+      flex: 1; background: linear-gradient(135deg, #0b1a2b, #090a15);
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
 
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #111; display: flex; flex-direction: column; z-index: 50; color: #fff; padding: 15px;
+      background: #0f172a; display: flex; flex-direction: column; z-index: 50; color: #fff; padding: 15px;
     }
 
-    .header { font-size: 14px; font-weight: bold; color: #ff4757; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .header { font-size: 14px; font-weight: bold; color: #38bdf8; margin-bottom: 10px; text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 8px; }
+
+    /* 1. شاشة بوابة الكود (مقفلة تماماً) */
+    .gate-screen { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; text-align: center; }
+    .gate-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; background: #1e293b; color: #fff; font-size: 13px; text-align: center; outline: none; }
+    .gate-btn { width: 100%; padding: 12px; background: #0284c7; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 4px 10px rgba(2,132,199,0.4); }
+
+    /* 2. شاشة اللعب والشات (تظهر بعد إدخال الكود حصرياً) */
+    .game-room-screen { flex: 1; display: none; flex-direction: column; justify-content: space-between; }
     
-    /* شاشة إدخال الكود والغرفة */
-    .lobby-box { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; text-align: center; }
-    .input-box { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ff4757; background: #1a0505; color: #fff; font-size: 12px; text-align: center; outline: none; }
-    .action-btn { width: 100%; padding: 10px; background: #ff4757; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(255,71,87,0.4); }
+    .arena-box { background: #1e293b; border-radius: 12px; padding: 12px; text-align: center; border: 1px solid #334155; }
+    .choices-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .choice-btn { background: #334155; border: none; padding: 10px; border-radius: 8px; font-size: 22px; cursor: pointer; transition: transform 0.1s; }
+    .choice-btn:active { transform: scale(0.9); background: #0284c7; }
 
-    /* حلبة القتال */
-    .arena-box { flex: 1; display: none; flex-direction: column; justify-content: space-between; padding: 10px 0; }
-    .fighter-card { background: #1a0505; border: 1px solid #ff4757; border-radius: 10px; padding: 10px; text-align: center; }
-    .hp-bar-bg { width: 100%; height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 5px; }
-    .hp-bar-fill { width: 100%; height: 100%; background: #00ba7c; transition: width 0.3s; }
-
-    .ring-arena { text-align: center; font-size: 50px; margin: 10px 0; animation: shakeRing 0.2s infinite alternate; }
-    @keyframes shakeRing { 0% { transform: translateX(-2px); } 100% { transform: translateX(2px); } }
-
-    .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .punch-btn { background: #c0392b; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
-    .punch-btn:active { transform: scale(0.95); background: #e74c3c; }
+    /* شات الغرفة الخاص */
+    .chat-container { flex: 1; background: #020617; border-radius: 10px; border: 1px solid #1e293b; margin: 10px 0; display: flex; flex-direction: column; overflow: hidden; }
+    .chat-messages { flex: 1; padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 11px; }
+    .msg-bubble { max-width: 85%; padding: 6px 10px; border-radius: 8px; word-break: break-word; }
+    .msg-in { background: #1e293b; color: #f8fafc; align-self: flex-start; }
+    .msg-out { background: #0284c7; color: #f8fafc; align-self: flex-end; }
+    .chat-input-area { display: flex; background: #1e293b; padding: 6px; gap: 6px; }
 
     .home-bar-area { height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
@@ -53,33 +56,43 @@
     <div class="phone-screen">
       
       <div class="app-window">
-        <div class="header">🥊 حلبة الضرب الأونلاين (Online Punch)</div>
+        <div class="header" id="appHeaderTitle">✂️ حجرة ورقة مقص (Online)</div>
 
-        <!-- 1. غرف اللعب وإدخال الكود -->
-        <div class="lobby-box" id="lobbyScreen">
-          <p style="font-size: 11px; color: #aaa;">أنشئ غرفة أو اكتب كود صديقك لتدخلوا نفس الجيم تماماً!</p>
-          <input type="text" id="roomCodeInput" placeholder="اكتب كود الغرفة (مثال: 777)..." class="input-box">
-          <button class="action-btn" onclick="joinRoom()">دخول الغرفة / بدء القتال 🚀</button>
+        <!-- 1. بوابة إدخال كود الصديق (مقفلة) -->
+        <div class="gate-screen" id="gateScreen">
+          <div style="font-size: 45px; margin-bottom: 5px;">🔒</div>
+          <h3 style="color: #38bdf8; font-size: 15px;">الغرفة مقفلة أونلاين</h3>
+          <p style="font-size: 11px; color: #94a3b8; line-height: 1.4;">لا يمكنك الدخول للعبة أو الشات إلا إذا طلبْت كود الغرفة من صديقك وكتبته هنا!</p>
+          <input type="text" id="roomCodeInput" placeholder="أدخل كود الغرفة من صديقك..." class="gate-input">
+          <button class="gate-btn" onclick="enterRoomWithCode()">دخول الغرفة المشتركة 🚀</button>
         </div>
 
-        <!-- 2. شاشة القتال الفعلي -->
-        <div class="arena-box" id="arenaScreen" style="display: none;">
-          <div class="fighter-card">
-            <span id="enemyName" style="font-size: 11px; color: #ff6b6b;">الخصم في الغرفة</span>
-            <div class="hp-bar-bg"><div class="hp-bar-fill" id="enemyHp" style="width: 100%;"></div></div>
+        <!-- 2. غرفة اللعبة والشات (تفتح بعد الكود) -->
+        <div class="game-room-screen" id="gameRoomScreen" style="display: none;">
+          
+          <!-- منطقة لعبة حجرة ورقة مقص -->
+          <div class="arena-box">
+            <div id="roomBadge" style="font-size: 10px; color: #38bdf8; margin-bottom: 5px;">الغرفة: #000</div>
+            <div id="rpsResult" style="font-size: 12px; font-weight: bold; margin-bottom: 8px;">اختر سلاحك للتحدي:</div>
+            <div class="choices-grid">
+              <button class="choice-btn" onclick="playRPS('🪨')">🪨</button>
+              <button class="choice-btn" onclick="playRPS('📄')">📄</button>
+              <button class="choice-btn" onclick="playRPS('✂️')">✂️</button>
+            </div>
           </div>
 
-          <div class="ring-arena" id="ringAvatar">🥊💥</div>
-
-          <div class="fighter-card" style="border-color: #00ba7c; background: #021a10;">
-            <span style="font-size: 11px; color: #00ba7c;">أنت (البطل)</span>
-            <div class="hp-bar-bg"><div class="hp-bar-fill" id="myHp" style="width: 100%;"></div></div>
+          <!-- شات الغرفة السري والأونلاين -->
+          <div class="chat-container">
+            <div style="background: #1e293b; padding: 4px 8px; font-size: 10px; color: #94a3b8; font-weight: bold;">💬 دردشة الغرفة الخاصة</div>
+            <div class="chat-messages" id="chatMsgBox">
+              <div class="msg-bubble msg-in">النظام: تم تأكيد الكود بنجاح! أنت الآن متصل مع صديقك في نفس الغرفة.</div>
+            </div>
+            <div class="chat-input-area">
+              <input type="text" id="chatInputText" placeholder="اكتب رسالة لصديقك..." style="flex: 1; background: #0f172a; border: none; padding: 6px 10px; border-radius: 6px; color: #fff; font-size: 11px; outline: none;" onkeypress="handleChatEnter(event)">
+              <button onclick="sendRoomMsg()" style="background: #0284c7; border: none; color: #fff; padding: 0 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">➤</button>
+            </div>
           </div>
 
-          <div class="controls-grid">
-            <button class="punch-btn" onclick="hitOpponent(15)">⚡ لكمة سريعة</button>
-            <button class="punch-btn" style="background: #d35400;" onclick="hitOpponent(30)">🔥 ضربة قاضية</button>
-          </div>
         </div>
 
       </div>
@@ -92,62 +105,67 @@
   </div>
 
   <script>
-    let currentRoom = "";
-    let myHpVal = 100;
-    let enemyHpVal = 100;
+    let activeRoomCode = "";
 
-    function joinRoom() {
+    function enterRoomWithCode() {
       let code = document.getElementById('roomCodeInput').value.trim();
       if(!code) {
-        alert("الرجاء إدخال كود الغرفة أولاً!");
+        alert("الرجاء كتابة كود الغرفة الذي أعطاك إياه صديقك أولاً!");
         return;
       }
-      currentRoom = code;
-      document.getElementById('lobbyScreen').style.display = 'none';
-      document.getElementById('arenaScreen').style.display = 'flex';
-      document.getElementById('enemyName').innerText = `الغرفة رقم: #${code} (متصل)`;
+      activeRoomCode = code;
+      document.getElementById('gateScreen').style.display = 'none';
+      document.getElementById('gameRoomScreen').style.display = 'flex';
+      document.getElementById('roomBadge').innerText = `الغرفة المشتركة: #${code}`;
+      document.getElementById('appHeaderTitle').innerText = `✂️ حجرة ورقة مقص (غرفة #${code})`;
     }
 
-    function hitOpponent(damage) {
-      if(enemyHpVal <= 0 || myHpVal <= 0) return;
-
-      // تقليل طاقة الخصم
-      enemyHpVal -= damage;
-      if(enemyHpVal < 0) enemyHpVal = 0;
-      document.getElementById('enemyHp').style.width = enemyHpVal + "%";
-      document.getElementById('ringAvatar').innerHTML = "💥👊";
-
-      setTimeout(() => {
-        document.getElementById('ringAvatar').innerHTML = "🥊💥";
-      }, 300);
-
-      if(enemyHpVal === 0) {
-        alert("🎉 فزت بالمباراة يا أسطورة وأبرحت الخصم ضرباً!");
-        resetGame();
-        return;
+    // منطق لعبة حجرة ورقة مقص
+    function playRPS(myChoice) {
+      const choices = ['🪨', '📄', '✂️'];
+      let friendChoice = choices[Math.floor(Math.random() * choices.length)];
+      
+      let resText = `أنت اخترت: ${myChoice} | صديقك اخترع: ${friendChoice}<br>`;
+      
+      if(myChoice === friendChoice) {
+        resText += `<b style="color: #fbbf24;">تعادل تام! 🤝</b>`;
+      } else if(
+        (myChoice === '🪨' && friendChoice === '✂️') ||
+        (myChoice === '📄' && friendChoice === '🪨') ||
+        (myChoice === '✂️' && friendChoice === '📄')
+      ) {
+        resText += `<b style="color: #4ade80;">مبروك! أنت فزت على صديقك في هذه الجولة! 🎉</b>`;
+      } else {
+        resText += `<b style="color: #f87171;">خسرت! صديقك كان أسرع وأذكياء! 😢</b>`;
       }
 
-      // ردة فعل الخصم الهجومية بعد ثانية
-      setTimeout(() => {
-        let counterDamage = Math.floor(Math.random() * 15) + 5;
-        myHpVal -= counterDamage;
-        if(myHpVal < 0) myHpVal = 0;
-        document.getElementById('myHp').style.width = myHpVal + "%";
-
-        if(myHpVal === 0) {
-          alert("💀 للأسف خسرت المعركة! الخصم كان أقوى.");
-          resetGame();
-        }
-      }, 800);
+      document.getElementById('rpsResult').innerHTML = resText;
     }
 
-    function resetGame() {
-      myHpVal = 100;
-      enemyHpVal = 100;
-      document.getElementById('myHp').style.width = "100%";
-      document.getElementById('enemyHp').style.width = "100%";
-      document.getElementById('arenaScreen').style.display = 'none';
-      document.getElementById('lobbyScreen').style.display = 'flex';
+    // منطق الشات داخل الغرفة
+    function handleChatEnter(e) { if(e.key === 'Enter') sendRoomMsg(); }
+
+    function sendRoomMsg() {
+      let input = document.getElementById('chatInputText');
+      let msgBox = document.getElementById('chatMsgBox');
+      let text = input.value.trim();
+      if(!text) return;
+
+      msgBox.innerHTML += `<div class="msg-bubble msg-out">أنت: ${text}</div>`;
+      input.value = "";
+      msgBox.scrollTop = msgBox.scrollHeight;
+
+      // رد افتراضي ذكي من الغرفة المشتركة مع الصديق
+      setTimeout(() => {
+        let replies = [
+          `صديقك في الغرفة #${activeRoomCode} رد:ههههه وصلتك الرسالة!`,
+          `صديقك رد: لا تتحمس كثير، الجولة الجاية بفوز عليك! 😎`,
+          `صديقك رد: وصل كلامك يا أسطورة، ركز باللعبة! 🎮`
+        ];
+        let chosen = replies[Math.floor(Math.random() * replies.length)];
+        msgBox.innerHTML += `<div class="msg-bubble msg-in">${chosen}</div>`;
+        msgBox.scrollTop = msgBox.scrollHeight;
+      }, 700);
     }
   </script>
 </body>

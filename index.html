@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS</title>
+  <title>Epic Phone OS - Ultimate Horror Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
       width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 0 35px rgba(255, 0, 0, 0.4); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
@@ -44,13 +44,35 @@
     }
     .back-btn { background: #2f3640; border: none; color: #fff; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
 
+    /* زر خروج مزيف لكنه يبدو حقيقي تماماً */
+    .fake-exit-btn { background: #500; border: 1px solid #f00; color: #ff6b6b; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
+
     .home-bar-area {
       height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); cursor: pointer;
     }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
+
+    /* شاشة الاختراق والرعب القصوى */
+    #ultimateHackedScreen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 200; display: none; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    .scary-img-box { font-size: 70px; animation: superShake 0.05s infinite; }
+    @keyframes superShake {
+      0% { transform: translate(4px, 4px) rotate(0deg); }
+      50% { transform: translate(-4px, -4px) rotate(-3deg); }
+      100% { transform: translate(4px, -4px) rotate(3deg); }
+    }
   </style>
 </head>
 <body>
+
+  <!-- شاشة الاختراق والمقلب المرعب -->
+  <div id="ultimateHackedScreen">
+    <div class="scary-img-box" id="scaryFaceIcon">😈🔒</div>
+    <h2 id="hackedTextMain" style="color: #ff0000; margin-top: 15px; font-size: 18px; line-height: 1.5; padding: 0 10px;">جاري إعداد النظام...</h2>
+  </div>
 
   <div class="phone-body">
     <div class="phone-screen">
@@ -75,7 +97,7 @@
         </div>
       </div>
 
-      <!-- 1. نافذة روبلوكس -->
+      <!-- 1. روبلوكس -->
       <div class="app-window" id="robloxApp">
         <div class="app-header">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
@@ -87,7 +109,7 @@
         </div>
       </div>
 
-      <!-- 2. نافذة واتساب -->
+      <!-- 2. واتساب -->
       <div class="app-window" id="whatsappApp">
         <div class="app-header" style="background:#075e54;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
@@ -99,20 +121,27 @@
         </div>
       </div>
 
-      <!-- 3. نافذة محمد الخطير -->
+      <!-- 3. تطبيق محمد الخطير (مع الموسيقى والفخ المزيف) -->
       <div class="app-window" id="dangerApp">
         <div class="app-header" style="background:#300; border-bottom:2px solid #f00;">
-          <button class="back-btn" onclick="goHome()" style="background:#500;">خروج</button>
+          <!-- زر خروج مزيف يبدو طبيعياً تماماً -->
+          <button class="fake-exit-btn" onclick="triggerFakeExitTrap()">خروج</button>
           <span style="color:#ff4757;">محمد الخطير 💀</span>
           <span></span>
         </div>
-        <div style="flex:1; background:#050000; padding:15px; color:#ff6b6b; font-size:13px; text-align:center;">
-          <h2 style="color:#ff0000; margin-bottom:10px;">تحذير مرعب!</h2>
-          <p>أنت الآن داخل التطبيق الخطير والمراقب بالكامل...</p>
+        <div style="flex:1; background:#050000; padding:15px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <h2 style="color:#ff0000; margin-bottom:10px; font-size:16px;">⚠️ تحذير مرعب!</h2>
+            <p style="color:#ff6b6b; font-size:12px; line-height:1.5;">أنت الآن داخل التطبيق الخطير والمراقب بالكامل. الموسيقى المرعبة تعمل ولن تستطيع الهروب بسهولة...</p>
+          </div>
+          <div style="display:flex; gap:5px;">
+            <input type="text" id="dangerInput" placeholder="تحدث مع الكيان..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f00; background:#100; color:#fff; font-size:11px; outline:none;">
+            <button onclick="sendDangerMsg()" style="background:#f00; border:none; color:#fff; padding:0 12px; border-radius:15px; font-weight:bold;">💀</button>
+          </div>
         </div>
       </div>
 
-      <!-- 4. نافذة يوتيوب -->
+      <!-- 4. يوتيوب -->
       <div class="app-window" id="youtubeApp">
         <div class="app-header" style="background:#990000;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
@@ -126,7 +155,6 @@
 
     </div>
 
-    <!-- زر الهوم السفلي -->
     <div class="home-bar-area" onclick="goHome()">
       <div class="home-bar"></div>
     </div>
@@ -137,10 +165,104 @@
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
       let target = document.getElementById(id);
       if(target) target.classList.add('active');
+      if(id === 'dangerApp') {
+        startHorrorMusic();
+      }
     }
 
     function goHome() {
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
+    }
+
+    /* --- نظام موسيقى الرعب الثقيلة --- */
+    let horrorAudioCtx = null, horrorInterval = null;
+    function startHorrorMusic() {
+      if(!horrorAudioCtx) horrorAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(horrorAudioCtx.state === 'suspended') horrorAudioCtx.resume();
+      if(horrorInterval) clearInterval(horrorInterval);
+
+      let scaryNotes = [55, 58, 49, 41, 65, 55]; 
+      let idx = 0;
+      horrorInterval = setInterval(() => {
+        let dangerWin = document.getElementById('dangerApp');
+        if(!dangerWin || !dangerWin.classList.contains('active')) {
+          clearInterval(horrorInterval);
+          return;
+        }
+        let osc = horrorAudioCtx.createOscillator();
+        let gain = horrorAudioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(scaryNotes[idx], horrorAudioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, horrorAudioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, horrorAudioCtx.currentTime + 1.2);
+        osc.connect(gain); gain.connect(horrorAudioCtx.destination);
+        osc.start(); osc.stop(horrorAudioCtx.currentTime + 1.2);
+        idx = (idx + 1) % scaryNotes.length;
+      }, 900);
+    }
+
+    /* --- مقلب الخروج المزيف والعد التنازلي وتهكير البيانات --- */
+    function triggerFakeExitTrap() {
+      let screen = document.getElementById('ultimateHackedScreen');
+      let textMain = document.getElementById('hackedTextMain');
+      let iconBox = document.getElementById('scaryFaceIcon');
+      
+      screen.style.display = 'flex';
+      iconBox.innerHTML = "😈🔒";
+      textMain.innerHTML = "تفكر نفسك بتخرج بهذي السهولة؟";
+
+      // بعد 4 ثوانٍ: يظهر نص التحذير والعد التنازلي 10 ثوانٍ
+      setTimeout(() => {
+        let timeLeft = 10;
+        iconBox.innerHTML = "⚠️⏳";
+        textMain.innerHTML = `<span style="color:#ffcc00; font-size:15px;">تحذير: يرجى الخروج من هذا الموقع بسرعة قبل نفاذ الوقت!</span><br><br><b style="font-size:32px; color:#ff0000;" id="countdownNum">${timeLeft}</b> ثوانٍ`;
+
+        let timer = setInterval(() => {
+          timeLeft--;
+          let numElem = document.getElementById('countdownNum');
+          if(numElem) numElem.innerText = timeLeft;
+
+          if(timeLeft <= 0) {
+            clearInterval(timer);
+            // انتهاء الوقت: صور مرعبة ورعب حقيقي
+            triggerRealHorrorJumpScare(screen, textMain, iconBox);
+          }
+        }, 1000);
+
+      }, 4000);
+    }
+
+    function triggerRealHorrorJumpScare(screen, textMain, iconBox) {
+      iconBox.innerHTML = "💀👁️‍🗨️🔪";
+      textMain.innerHTML = `<span style="font-size: 24px; color: #ff0000; font-weight:bold;">انتهى الوقت! لا مفر منك الآن!</span>`;
+
+      if(horrorAudioCtx) {
+        let osc = horrorAudioCtx.createOscillator();
+        let gain = horrorAudioCtx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(300, horrorAudioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(900, horrorAudioCtx.currentTime + 1.5);
+        gain.gain.setValueAtTime(0.4, horrorAudioCtx.currentTime);
+        osc.connect(gain); gain.connect(horrorAudioCtx.destination);
+        osc.start(); osc.stop(horrorAudioCtx.currentTime + 1.8);
+      }
+
+      // وبعد 3 ثوانٍ: محاكاة تهكير البيانات وارسالها بالكامل
+      setTimeout(() => {
+        iconBox.innerHTML = "💻📂⚠️";
+        textMain.innerHTML = `<span style="color: #00ff00; font-family: monospace; font-size: 13px;">
+          [ SYSTEM OVERRIDE ]<br>
+          جاري ارسال جميع بياناتك والصور والملفات الشخصية إلى السيرفر الخارجي...<br><br>
+          <b style="color:#ff0000; font-size:17px;">تم الاختراق بنجاح! ☠️</b>
+        </span>`;
+      }, 3000);
+    }
+
+    function sendDangerMsg() {
+      let input = document.getElementById('dangerInput');
+      if(!input.value.trim()) return;
+      alert("محمد الخطير: لقد قرأت رسالتك ('" + input.value + "') ولا يمكنك الهروب!");
+      input.value = "";
     }
   </script>
 </body>

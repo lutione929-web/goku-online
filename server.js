@@ -28,12 +28,7 @@ io.on('connection', (socket) => {
     if (room && room.players.length < 2) {
       room.players.push({ id: socket.id, name: data.name, isDev: data.isDev });
       socket.join(data.roomCode);
-      
-      // إرسال معلومات اللاعبين وتحديد الأدوار
-      io.to(data.roomCode).emit('startGame', { 
-        gameType: room.gameType, 
-        players: room.players 
-      });
+      io.to(data.roomCode).emit('startGame', { gameType: room.gameType, players: room.players });
     } else {
       socket.emit('errorMsg', 'الغرفة غير موجودة أو ممتلئة!');
     }
@@ -46,23 +41,21 @@ io.on('connection', (socket) => {
     return null;
   }
 
-  // أحداث غوكو
   socket.on('playerMove', (data) => {
     let rCode = getRoomCode(socket.id);
     if (rCode) socket.to(rCode).emit('playerMove', data);
   });
+
   socket.on('kamehamehaAttack', (data) => {
     let rCode = getRoomCode(socket.id);
     if (rCode) io.to(rCode).emit('spawnBeam', data);
   });
 
-  // أحداث إكس أو (Tic Tac Toe)
   socket.on('makeMove', (data) => {
     let rCode = getRoomCode(socket.id);
     if (rCode) socket.to(rCode).emit('opponentMove', data);
   });
 
-  // أحداث حجر ورق مقص
   socket.on('rpsPlay', (data) => {
     let rCode = getRoomCode(socket.id);
     if (!rCode) return;
@@ -70,7 +63,6 @@ io.on('connection', (socket) => {
     if (!room.rpsChoices) room.rpsChoices = {};
     room.rpsChoices[socket.id] = data.choice;
 
-    // لما يختار اللاعبين الاثنين
     if (Object.keys(room.rpsChoices).length === 2) {
       let pIds = Object.keys(room.rpsChoices);
       let p1 = pIds[0], p2 = pIds[1];
@@ -85,12 +77,11 @@ io.on('connection', (socket) => {
         }
       }
       io.to(rCode).emit('rpsResult', { choices: room.rpsChoices, winner, players: room.players });
-      room.rpsChoices = {}; // إعادة ضبط الجولة
+      room.rpsChoices = {};
     }
   });
 
   socket.on('disconnect', () => {
-    console.log('لاعب خرج:', socket.id);
     for (let code in rooms) {
       rooms[code].players = rooms[code].players.filter(p => p.id !== socket.id);
       if (rooms[code].players.length === 0) delete rooms[code];
@@ -99,6 +90,4 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`السيرفر شغال على البورت ${PORT}`);
-});
+server.listen(PORT, () => { console.log(`السيرفر شغال على البورت ${PORT}`); });

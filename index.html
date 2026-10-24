@@ -8,6 +8,18 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:5px}
+    
+    /* شاشة تسجيل الدخول (Login UI) */
+    #loginScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a12;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;padding:20px}
+    .login-box{background:#1e272e;border:2px solid #ff7675;padding:25px;border-radius:12px;text-align:center;width:100%;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+    .login-box h2{color:#ff7675;margin-bottom:15px;font-size:1.3rem}
+    .login-box input{width:100%;padding:10px;border-radius:8px;border:none;background:#2d3436;color:#fff;font-size:1rem;margin-bottom:12px;text-align:center}
+    .login-box button{width:100%;background:#0984e3;color:#fff;border:none;padding:10px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:bold}
+    .error-msg{color:#d63031;font-size:0.75rem;margin-top:5px;display:block}
+
+    /* واجهة اللعبة الأصلية (تكون مخفية حتى يسجل الدخول) */
+    #gameUI{display:none;flex-direction:column;align-items:center;width:100%}
+
     h1{font-size:1.2rem;margin:3px 0;background:linear-gradient(90deg,#ff7675,#fab1a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     
     .menu-bar{display:flex;gap:8px;margin-bottom:5px}
@@ -15,7 +27,6 @@
 
     #gameCanvas{background:#1e272e;border:2px solid #ff7675;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.5)}
     
-    /* شريط الطاقة Ki Bar */
     .ki-container{width:320px;background:#2d3436;border-radius:6px;margin-top:5px;overflow:hidden;border:1px solid #ff7675;height:14px;position:relative}
     .ki-fill{height:100%;background:linear-gradient(90deg,#0984e3,#00cec9);width:0%;transition:width 0.2s}
     .ki-text{position:absolute;width:100%;top:0;text-align:center;font-size:0.65rem;font-weight:bold;color:#fff}
@@ -25,7 +36,6 @@
     .chat-input-area input{flex:1;padding:5px;border-radius:6px;border:none;background:#2d3436;color:#fff;font-size:0.75rem}
     .chat-input-area button{background:#0984e3;color:#fff;border:none;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:0.75rem}
 
-    /* أزرار التحكم والمهارات */
     .controls{display:grid;grid-template-columns:repeat(3, 1fr);gap:4px;margin-top:6px;width:100%;max-width:320px}
     .btn{background:#2d3436;color:#fff;border:1px solid #ff7675;padding:10px;font-size:1rem;border-radius:6px;cursor:pointer;user-select:none;text-align:center}
     .btn:active{background:#ff7675}
@@ -36,78 +46,120 @@
 </head>
 <body>
 
-  <h1>⚡ Goku Fighter Online</h1>
-  
-  <div class="menu-bar">
-    <button class="menu-btn" onclick="openShop()">🛒 المتجر</button>
-    <button class="menu-btn" onclick="addFriend()">👥 أصدقاء</button>
-    <button class="menu-btn" style="background:#6c5ce7" onclick="transformGoku()">🔥 التحول (SSJ)</button>
+  <!-- شاشة تسجيل الدخول -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <h2>⚡ Goku Fighter Login</h2>
+      <input type="text" id="playerNameInput" placeholder="Enter name (English only)">
+      <button onclick="joinGame()">دخول اللعبة</button>
+      <span class="error-msg" id="errorMsg"></span>
+    </div>
   </div>
 
-  <canvas id="gameCanvas" width="320" height="200"></canvas>
+  <!-- واجهة اللعبة -->
+  <div id="gameUI">
+    <h1>⚡ Goku Fighter Online</h1>
+    
+    <div class="menu-bar">
+      <button class="menu-btn" onclick="openShop()">🛒 المتجر</button>
+      <button class="menu-btn" onclick="addFriend()">👥 أصدقاء</button>
+      <button class="menu-btn" style="background:#6c5ce7" onclick="transformGoku()">🔥 التحول (SSJ)</button>
+    </div>
 
-  <!-- شريط الطاقة Ki -->
-  <div class="ki-container">
-    <div class="ki-fill" id="kiFill"></div>
-    <div class="ki-text" id="kiText">طاقة Ki: 0%</div>
-  </div>
+    <canvas id="gameCanvas" width="320" height="200"></canvas>
 
-  <div class="chat-box" id="chatMessages"></div>
-  <div class="chat-input-area">
-    <input type="text" id="msgInput" placeholder="اكتب رسالتك...">
-    <button onclick="sendChat()">إرسال</button>
-  </div>
+    <div class="ki-container">
+      <div class="ki-fill" id="kiFill"></div>
+      <div class="ki-text" id="kiText">طاقة Ki: 0%</div>
+    </div>
 
-  <div class="controls">
-    <div class="btn btn-skill" onclick="chargeKi()">⚡ شحن Ki</div>
-    <div class="btn" ontouchstart="startMove('up')" onmousedown="startMove('up')" ontouchend="stopMove()" onmouseup="stopMove()">⬆️</div>
-    <div class="btn btn-super" onclick="useKamehameha()">💥 كامیهامیها</div>
-    <div class="btn" ontouchstart="startMove('left')" onmousedown="startMove('left')" ontouchend="stopMove()" onmouseup="stopMove()">⬅️</div>
-    <div class="btn" ontouchstart="startMove('down')" onmousedown="startMove('down')" ontouchend="stopMove()" onmouseup="stopMove()">⬇️</div>
-    <div class="btn" ontouchstart="startMove('right')" onmousedown="startMove('right')" ontouchend="stopMove()" onmouseup="stopMove()">➡️</div>
+    <div class="chat-box" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <input type="text" id="msgInput" placeholder="اكتب رسالتك...">
+      <button onclick="sendChat()">إرسال</button>
+    </div>
+
+    <div class="controls">
+      <div class="btn btn-skill" onclick="chargeKi()">⚡ شحن Ki</div>
+      <div class="btn" ontouchstart="startMove('up')" onmousedown="startMove('up')" ontouchend="stopMove()" onmouseup="stopMove()">⬆️</div>
+      <div class="btn btn-super" onclick="useKamehameha()">💥 كامیهامیها</div>
+      <div class="btn" ontouchstart="startMove('left')" onmousedown="startMove('left')" ontouchend="stopMove()" onmouseup="stopMove()">⬅️</div>
+      <div class="btn" ontouchstart="startMove('down')" onmousedown="startMove('down')" ontouchend="stopMove()" onmouseup="stopMove()">⬇️</div>
+      <div class="btn" ontouchstart="startMove('right')" onmousedown="startMove('right')" ontouchend="stopMove()" onmouseup="stopMove()">➡️</div>
+    </div>
   </div>
 
   <script>
+    let socket;
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const socket = io();
 
     let players = {};
     let myId = null;
+    let myName = "";
     let moveInterval = null;
     let ki = 0;
     let isSuperSaiyan = false;
 
-    socket.on('connect', () => {
-      myId = socket.id;
-      players[myId] = { x: 140, y: 80, name: 'Goku', color: '#ff7675', ssj: false, action: 'normal' };
-      draw();
-    });
+    function joinGame() {
+      const input = document.getElementById('playerNameInput');
+      const nameVal = input.value.trim();
+      const errorSpan = document.getElementById('errorMsg');
 
-    socket.on('playerMove', (data) => {
-      players[data.id] = data;
-      draw();
-    });
+      // التحقق من أن الاسم إنجليزي فقط وبدون حروف عربية
+      const englishRegex = /^[A-Za-z0-9_]{3,12}$/;
 
-    socket.on('playerAction', (data) => {
-      if(players[data.id]) {
-        players[data.id].action = data.action;
-        players[data.id].ssj = data.ssj;
-        draw();
-        setTimeout(() => { players[data.id].action = 'normal'; draw(); }, 600);
+      if (!englishRegex.test(nameVal)) {
+        errorSpan.innerText = "⚠️ يرجى إدخال اسم إنجليزي صحيح (من 3 لـ 12 حرف وبدون عربي)!";
+        return;
       }
-    });
 
-    socket.on('disconnect', (id) => {
-      delete players[id];
-      draw();
-    });
+      myName = nameVal;
+      
+      // اخفاء شاشة تسجيل الدخول واظهار واجهة اللعبة
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('gameUI').style.display = 'flex';
 
-    socket.on('chatMessage', (data) => {
-      const box = document.getElementById('chatMessages');
-      box.innerHTML += `<div><b>${data.name}:</b> ${data.text}</div>`;
-      box.scrollTop = box.scrollHeight;
-    });
+      // بدء الاتصال بالسيرفر بعد تسجيل الاسم
+      initSocket();
+    }
+
+    function initSocket() {
+      socket = io();
+
+      socket.on('connect', () => {
+        myId = socket.id;
+        players[myId] = { x: 140, y: 80, name: myName, color: '#ff7675', ssj: false, action: 'normal' };
+        draw();
+        // إرسال الاسم للسيرفر
+        socket.emit('playerJoin', { id: myId, name: myName, x: 140, y: 80, ssj: false, action: 'normal' });
+      });
+
+      socket.on('playerMove', (data) => {
+        players[data.id] = data;
+        draw();
+      });
+
+      socket.on('playerAction', (data) => {
+        if(players[data.id]) {
+          players[data.id].action = data.action;
+          players[data.id].ssj = data.ssj;
+          draw();
+          setTimeout(() => { players[data.id].action = 'normal'; draw(); }, 600);
+        }
+      });
+
+      socket.on('disconnect', (id) => {
+        delete players[id];
+        draw();
+      });
+
+      socket.on('chatMessage', (data) => {
+        const box = document.getElementById('chatMessages');
+        box.innerHTML += `<div><b>${data.name}:</b> ${data.text}</div>`;
+        box.scrollTop = box.scrollHeight;
+      });
+    }
 
     function startMove(dir) {
       if (!myId || !players[myId]) return;
@@ -127,7 +179,7 @@
       if (dir === 'right' && players[myId].x < canvas.width - 35) players[myId].x += step;
 
       draw();
-      socket.emit('playerMove', { id: myId, x: players[myId].x, y: players[myId].y, color: players[myId].color, ssj: isSuperSaiyan });
+      socket.emit('playerMove', { id: myId, x: players[myId].x, y: players[myId].y, name: myName, color: players[myId].color, ssj: isSuperSaiyan });
     }
 
     function chargeKi() {
@@ -147,7 +199,7 @@
       if(ki >= 100) {
         isSuperSaiyan = true;
         players[myId].ssj = true;
-        players[myId].color = '#fdcb6e'; // لون أصفر للسوبر سايان
+        players[myId].color = '#fdcb6e';
         draw();
         socket.emit('playerAction', { id: myId, action: 'transform', ssj: true });
         alert("⚡ تحول Goku إلى Super Saiyan الأسطوري!");
@@ -162,7 +214,6 @@
       draw();
       socket.emit('playerAction', { id: myId, action: 'kamehameha', ssj: isSuperSaiyan });
       
-      // خصم بعض الطاقة
       if(ki > 20) ki -= 20;
       updateKiBar();
     }
@@ -171,12 +222,12 @@
       const input = document.getElementById('msgInput');
       const text = input.value.trim();
       if(text !== '') {
-        socket.emit('chatMessage', { name: 'Goku-' + myId.slice(0,3), text: text });
+        socket.emit('chatMessage', { name: myName, text: text });
         input.value = '';
       }
     }
 
-    function openShop() { alert("🛒 المتجر قريبًا: ملابس وأقنعة جوكو وسوبر سايان بلو!"); }
+    function openShop() { alert("🛒 المتجر قريباً!"); }
     function addFriend() { prompt("أدخل اسم صديقك لإضافته:"); }
 
     function draw() {
@@ -185,7 +236,6 @@
         const p = players[id];
         let baseColor = p.ssj ? '#fdcb6e' : '#ff7675';
 
-        // رسم تأثيرات الهجوم (Kamehameha)
         if(p.action === 'kamehameha') {
           ctx.fillStyle = '#0984e3';
           ctx.beginPath();
@@ -193,21 +243,18 @@
           ctx.fill();
         }
 
-        // رسم شخصية جوكو (دائرة مميزة مع شعر أصفر عند التحول)
         ctx.fillStyle = baseColor;
         ctx.beginPath();
         ctx.arc(p.x + 15, p.y + 15, 14, 0, Math.PI * 2);
         ctx.fill();
         
-        // رسم علامة الشعر البسيطة لجوكو
         ctx.fillStyle = p.ssj ? '#e1b12c' : '#2d3436';
         ctx.fillRect(p.x + 10, p.y + 2, 10, 6);
 
-        // اسم الشخصية
         ctx.fillStyle = '#fff';
         ctx.font = '9px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(p.ssj ? 'Goku SSJ' : 'Goku', p.x + 15, p.y + 32);
+        ctx.fillText(p.name || 'Goku', p.x + 15, p.y + 32);
       }
     }
   </script>

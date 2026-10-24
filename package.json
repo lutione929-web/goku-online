@@ -1,7 +1,6 @@
 {
-  "name": "goku-online-server",
+  "name": "goku-arcade-hub",
   "version": "1.0.0",
-  "description": "Goku Fighter Online Server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

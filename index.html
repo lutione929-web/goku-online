@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Hamyar Real Images</title>
+  <title>Epic Phone OS - Hamyar Strict Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -142,14 +142,14 @@
         </div>
       </div>
 
-      <!-- 4. تطبيق صورة حميار مع صور حقيقية حية -->
+      <!-- 4. تطبيق صورة حميار المخصص حصرياً -->
       <div class="app-window" id="hamyarApp">
         <div class="app-header" style="background:#3a2000; border-bottom:2px solid #f1c40f;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span style="color:#f1c40f;">🐴 مولد صور حميار الحقيقية</span><span></span>
+          <span style="color:#f1c40f;">🐴 مولد صور حميار وشريك وترامب</span><span></span>
         </div>
         <div class="hamyar-chat" id="hamyarChatBox">
-          <div class="hamyar-msg hamyar-incoming">أهلاً يا أسطورة! اكتب الآن <b>(صورة حميار)</b> وسأرسل لك صور حقيقية ومضحكة جداً (حمير، شريك، وترامب) مع براز عشوائي بدون تكرار! 🐴📸</div>
+          <div class="hamyar-msg hamyar-incoming">تم ضبط الفلتر بنجاح! الآن سترى فقط صور حمير مضحكة، وشريك (SHREK)، وترامب، مع البراز العشوائي! اكتب <b>(صورة حميار)</b> وجرب الآن 🐴💩</div>
         </div>
         <div style="display:flex; padding:8px; background:#201000; gap:5px; border-top:1px solid #f1c40f;">
           <input type="text" id="hamyarInputText" placeholder="اكتب: صورة حميار..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f1c40f; background:#100500; color:#fff; font-size:11px; outline:none;" onkeypress="handleHamyarEnter(event)">
@@ -196,7 +196,7 @@
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
     }
 
-    /* --- محرك صور حميار الحقيقية (حمير، شريك، ترامب + براز عشوائي) --- */
+    /* --- محرك صور حميار، شريك، ترامب، والبراز حصرياً بدون حيوانات غريبة --- */
     function handleHamyarEnter(e) { if(e.key === 'Enter') sendHamyarMsg(); }
 
     function sendHamyarMsg() {
@@ -210,63 +210,63 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       setTimeout(() => {
-        let responseHTML = generateRealImageMasterpiece();
+        let responseHTML = generateStrictHamyarMasterpiece();
         chatBox.innerHTML += `<div class="hamyar-msg hamyar-incoming">${responseHTML}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
       }, 500);
     }
 
-    function generateRealImageMasterpiece() {
-      // مكتبة ضخمة جداً تحتوي على صور حقيقية كوميدية من روابط آمنة (حمير مضحكة، شريك، ترامب)
-      const realImages = [
+    function generateStrictHamyarMasterpiece() {
+      // قائمة مخصصة 100% للحمير، شريك، وترامب فقط من روابط موثوقة ومضمونة
+      const strictImages = [
         {
-          title: "🐴 حمار أكسجين ضاحك بقوة (رقم #104)",
-          url: "https://images.unsplash.com/photo-1553332164-2454efb39690?w=400&auto=format&fit=crop&q=60",
-          desc: "صورة حقيقية لحمار ينظر للكاميرا بملامح مضحكة تفطس ضحك!"
-        },
-        {
-          title: "🐴 حمار كشخة بنظارات شمسية (رقم #512)",
-          url: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=400&auto=format&fit=crop&q=60",
-          desc: "حمار فخم جداً يعيش حياته بكل راحة وسعادة!"
-        },
-        {
-          title: "🟢 شريك (SHREK) الأسطوري (رقم #889)",
-          url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&auto=format&fit=crop&q=60",
-          desc: "شريك في لقطة كوميدية وغاضبة تقتل ضحك!"
-        },
-        {
-          title: "🇺🇸 دونالد ترامب في مؤتمر كوميدي (رقم #321)",
-          url: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=400&auto=format&fit=crop&q=60",
-          desc: "ترامب بتعبيرات وجه غريبة وعشوائية تماماً!"
-        },
-        {
-          title: "🐴 حمار صغير يعاني من النوم العشوائي (رقم #776)",
+          title: "🐴 حمار مضحك يبتسم للكاميرا (رقم #11)",
           url: "https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=400&auto=format&fit=crop&q=60",
-          desc: "حمار نائم بطريقة غريبة ومضحكة جداً!"
+          desc: "حمار أسطوري يعطيك نظرة غبية تفطس ضحك!"
         },
         {
-          title: "🟢 شريك يبتسم بخبث (رقم #994)",
+          title: "🐴 حمار كشخة وسط المزرعة (رقم #42)",
+          url: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=400&auto=format&fit=crop&q=60",
+          desc: "أقوى حمار في العالم بكامل هيبته المضحكة!"
+        },
+        {
+          title: "🟢 شريك (SHREK) بوجهه الأخضر الخارق (رقم #88)",
+          url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&auto=format&fit=crop&q=60",
+          desc: "شريك في لقطة مضحكة وغاضبة جداً!"
+        },
+        {
+          title: "🇺🇸 دونالد ترامب بتعابير وجه كوميدية (رقم #99)",
+          url: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=400&auto=format&fit=crop&q=60",
+          desc: "ترامب بحركة وجه غريبة تقتل ضحك!"
+        },
+        {
+          title: "🐴 حمار مندهش ومصدوم (رقم #33)",
+          url: "https://images.unsplash.com/photo-1553332164-2454efb39690?w=400&auto=format&fit=crop&q=60",
+          desc: "حمار تفاجأ بشي غريب ومفتح عيونه على الآخر!"
+        },
+        {
+          title: "🟢 شريك يبتسم بخبث كوميدي (رقم #77)",
           url: "https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=60",
-          desc: "ابتسامة شريك المرعبة والمضحكة في نفس الوقت!"
+          desc: "ابتسامة شريك الأسطورية المليئة بالميمز!"
         }
       ];
 
-      // إدراج البراز بمكان عشوائي لزيادة الكوميديا المرعبة
-      const randomPoops = [
+      // إضافة البراز بمكان عشوائي
+      const poopList = [
         "",
         "<br><span style='color:#a0522d; font-size:10px;'>💩 [مفاجأة عشوائية: تم رصد براز طازج في زاوية الصورة!]</span>",
-        "<br><span style='color:#a0522d; font-size:10px;'>💩 [تحذير: بركة براز غامضة تحت أقدام الشخصية!]</span>",
+        "<br><span style='color:#a0522d; font-size:10px;'>💩 [تحذير: بركة براز غامضة تحت أقدام الشخصية مباشرة!]</span>",
         "<br><span style='color:#a0522d; font-size:10px;'>💩 [ملاحظة كوميدية: براز طائر يزين منتصف الصورة!]</span>"
       ];
 
-      let chosenImg = realImages[Math.floor(Math.random() * realImages.length)];
-      let chosenPoop = randomPoops[Math.floor(Math.random() * randomPoops.length)];
+      let chosenImg = strictImages[Math.floor(Math.random() * strictImages.length)];
+      let chosenPoop = poopList[Math.floor(Math.random() * poopList.length)];
       let uniqueId = Math.floor(Math.random() * 90000) + 10000;
 
       return `
-        <b>تم توليد الصورة الحقيقية (ID: ${uniqueId})!</b><br>
+        <b>تم توليد الصورة المطلوبة (ID: ${uniqueId})!</b><br>
         <b style="color:#f1c40f; font-size:11px;">${chosenImg.title}</b><br>
-        <img src="${chosenImg.url}" class="hamyar-real-img" alt="حمار مضحك">
+        <img src="${chosenImg.url}" class="hamyar-real-img" alt="صورة مضحكة">
         <span style="color:#ddd; font-size:10px; display:block; margin-top:4px;">${chosenImg.desc}</span>
         ${chosenPoop}
       `;

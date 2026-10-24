@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Hamyar Strict Edition</title>
+  <title>Epic Phone OS - Grok Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -33,16 +33,16 @@
 
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #080202; display: none; flex-direction: column; z-index: 50;
+      background: #000; display: none; flex-direction: column; z-index: 50;
     }
     .app-window.active { display: flex; }
 
     .app-header {
-      height: 40px; background: #200; display: flex; align-items: center;
+      height: 40px; background: #111; display: flex; align-items: center;
       justify-content: space-between; padding: 0 12px; font-size: 13px; font-weight: bold;
-      border-bottom: 1px solid #500; color: #ff4757;
+      border-bottom: 1px solid #222; color: #fff;
     }
-    .back-btn { background: #400; border: none; color: #fff; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
+    .back-btn { background: #222; border: none; color: #fff; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     .fake-exit-btn { background: #500; border: 1px solid #f00; color: #ff6b6b; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
 
     .home-bar-area {
@@ -62,11 +62,16 @@
       100% { transform: translate(4px, -4px) rotate(3deg); }
     }
 
-    .hamyar-chat { flex: 1; background: #0c0202; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; gap: 8px; }
-    .hamyar-msg { max-width: 90%; padding: 8px 12px; border-radius: 8px; font-size: 11px; line-height: 1.4; word-break: break-word; }
-    .hamyar-incoming { background: #200; color: #ff6b6b; align-self: flex-start; border: 1px solid #ff0000; }
-    .hamyar-outgoing { background: #331a00; color: #feca57; align-self: flex-end; border: 1px solid #ff9f43; }
-    .hamyar-real-img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 6px; margin-top: 6px; border: 2px solid #f1c40f; }
+    /* تصميم تطبيق Grok الأصلي */
+    .grok-login-box { flex: 1; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+    .grok-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; font-size: 12px; outline: none; }
+    .grok-btn { width: 100%; padding: 10px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
+    
+    .grok-chat-screen { flex: 1; background: #000; display: none; flex-direction: column; }
+    .grok-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .grok-msg { max-width: 85%; padding: 8px 12px; border-radius: 10px; font-size: 11px; line-height: 1.4; word-break: break-word; }
+    .grok-incoming { background: #16181c; color: #e7e9ea; align-self: flex-start; }
+    .grok-outgoing { background: #1d9bf0; color: #fff; align-self: flex-end; }
   </style>
 </head>
 <body>
@@ -92,6 +97,10 @@
           <div class="icon-box" style="background:#8b0000; border:2px solid #ff0000;">⚠️</div>
           <span class="app-name">محمد الخطير</span>
         </div>
+        <div class="app-icon" onclick="openApp('grokApp')">
+          <div class="icon-box" style="background:#000; border:2px solid #1d9bf0;">𝕏</div>
+          <span class="app-name">Grok AI</span>
+        </div>
         <div class="app-icon" onclick="openApp('hamyarApp')">
           <div class="icon-box" style="background:#4a2c00; border:2px solid #f1c40f;">🐴</div>
           <span class="app-name">صورة حميار</span>
@@ -99,10 +108,6 @@
         <div class="app-icon" onclick="openApp('darkwebApp')">
           <div class="icon-box" style="background:#000; border:2px solid #ff0000;">🕸️</div>
           <span class="app-name">الدارك ويب</span>
-        </div>
-        <div class="app-icon" onclick="openApp('youtubeApp')">
-          <div class="icon-box" style="background:#ff0000;">▶️</div>
-          <span class="app-name">YouTube</span>
         </div>
       </div>
 
@@ -142,39 +147,50 @@
         </div>
       </div>
 
-      <!-- 4. تطبيق صورة حميار المخصص حصرياً -->
-      <div class="app-window" id="hamyarApp">
-        <div class="app-header" style="background:#3a2000; border-bottom:2px solid #f1c40f;">
+      <!-- 4. تطبيق Grok الأصلي مع تسجيل الدخول -->
+      <div class="app-window" id="grokApp">
+        <div class="app-header" style="background:#000; border-bottom:1px solid #222;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span style="color:#f1c40f;">🐴 مولد صور حميار وشريك وترامب</span><span></span>
+          <span style="color:#fff; font-weight:bold;">𝕏 Grok</span><span></span>
         </div>
-        <div class="hamyar-chat" id="hamyarChatBox">
-          <div class="hamyar-msg hamyar-incoming">تم ضبط الفلتر بنجاح! الآن سترى فقط صور حمير مضحكة، وشريك (SHREK)، وترامب، مع البراز العشوائي! اكتب <b>(صورة حميار)</b> وجرب الآن 🐴💩</div>
+
+        <!-- شاشة تسجيل الدخول بالايميل -->
+        <div class="grok-login-box" id="grokLoginBox">
+          <div style="font-size:35px; margin-bottom:10px;">𝕏</div>
+          <h3 style="margin-bottom:15px; font-size:15px; color:#fff;">تسجيل الدخول إلى Grok</h3>
+          <input type="email" id="grokEmail" placeholder="البريد الإلكتروني (Email)..." class="grok-input">
+          <input type="password" id="grokPass" placeholder="كلمة المرور (Password)..." class="grok-input">
+          <button class="grok-btn" onclick="loginGrok()">تسجيل الدخول</button>
         </div>
-        <div style="display:flex; padding:8px; background:#201000; gap:5px; border-top:1px solid #f1c40f;">
-          <input type="text" id="hamyarInputText" placeholder="اكتب: صورة حميار..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f1c40f; background:#100500; color:#fff; font-size:11px; outline:none;" onkeypress="handleHamyarEnter(event)">
-          <button onclick="sendHamyarMsg()" style="background:#f1c40f; border:none; color:#000; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">🚀</button>
+
+        <!-- شاشة محادثة Grok الأصلية -->
+        <div class="grok-chat-screen" id="grokChatScreen">
+          <div class="grok-messages" id="grokMsgBox">
+            <div class="grok-msg grok-incoming">أهلاً بك أنا Grok. الذكاء الاصطناعي الأكثر صراحة وذكاءً. كيف يمكنني مساعدتك اليوم؟ ⚡</div>
+          </div>
+          <div style="display:flex; padding:8px; background:#111; gap:5px; border-top:1px solid #222;">
+            <input type="text" id="grokInputText" placeholder="اسأل Grok أي شيء..." style="flex:1; padding:8px; border-radius:20px; border:none; background:#222; color:#fff; font-size:11px; outline:none;" onkeypress="handleGrokEnter(event)">
+            <button onclick="sendGrokMsg()" style="background:#1d9bf0; border:none; color:#fff; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">➤</button>
+          </div>
         </div>
       </div>
 
-      <!-- 5. الدارك ويب -->
+      <!-- 5. صورة حميار -->
+      <div class="app-window" id="hamyarApp">
+        <div class="app-header" style="background:#3a2000; border-bottom:2px solid #f1c40f;">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span style="color:#f1c40f;">🐴 صور حميار وشريك وترامب</span><span></span>
+        </div>
+        <div style="padding:15px; color:#f1c40f; font-size:12px;">أهلاً بك في بوت صور حميار العشوائية...</div>
+      </div>
+
+      <!-- 6. الدارك ويب -->
       <div class="app-window" id="darkwebApp">
         <div class="app-header" style="background:#100; border-bottom:2px solid #ff0000;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span style="color:#ff0000;">🕸️ Tor / Dark Web</span><span></span>
         </div>
         <div style="padding:15px; color:#ff6b6b; font-size:12px;">أهلاً بك في بوابة الدارك ويب المظلمة...</div>
-      </div>
-
-      <!-- 6. يوتيوب -->
-      <div class="app-window" id="youtubeApp">
-        <div class="app-header" style="background:#990000;">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>YouTube Gaming</span><span></span>
-        </div>
-        <div style="padding:15px; text-align:center;">
-          <iframe width="100%" height="160" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" frameborder="0" style="border-radius:8px"></iframe>
-        </div>
       </div>
 
     </div>
@@ -196,80 +212,42 @@
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
     }
 
-    /* --- محرك صور حميار، شريك، ترامب، والبراز حصرياً بدون حيوانات غريبة --- */
-    function handleHamyarEnter(e) { if(e.key === 'Enter') sendHamyarMsg(); }
+    /* --- وظائف تسجيل الدخول ودردشة Grok الأصلية --- */
+    function loginGrok() {
+      let email = document.getElementById('grokEmail').value.trim();
+      let pass = document.getElementById('grokPass').value.trim();
+      if(!email || !pass) {
+        alert("الرجاء إدخال البريد الإلكتروني وكلمة المرور!");
+        return;
+      }
+      // إخفاء شاشة تسجيل الدخول وإظهار شاشة الدردشة الأصلية
+      document.getElementById('grokLoginBox').style.display = 'none';
+      document.getElementById('grokChatScreen').style.display = 'flex';
+    }
 
-    function sendHamyarMsg() {
-      let txtInput = document.getElementById('hamyarInputText');
-      let chatBox = document.getElementById('hamyarChatBox');
+    function handleGrokEnter(e) { if(e.key === 'Enter') sendGrokMsg(); }
+
+    function sendGrokMsg() {
+      let txtInput = document.getElementById('grokInputText');
+      let chatBox = document.getElementById('grokMsgBox');
       let text = txtInput.value.trim();
       if(!text) return;
 
-      chatBox.innerHTML += `<div class="hamyar-msg hamyar-outgoing">${text}</div>`;
+      chatBox.innerHTML += `<div class="grok-msg grok-outgoing">${text}</div>`;
       txtInput.value = "";
       chatBox.scrollTop = chatBox.scrollHeight;
 
       setTimeout(() => {
-        let responseHTML = generateStrictHamyarMasterpiece();
-        chatBox.innerHTML += `<div class="hamyar-msg hamyar-incoming">${responseHTML}</div>`;
+        let grokReplies = [
+          `حسب تحليلي لـ "${text}"، يبدو أن البشر يفعلون أغرب الأشياء دائماً! 🤖`,
+          `سؤال عميق بخصوص "${text}".. لكن هل فكرت في أن الكون مجرد محاكاة ضخمة؟ 🌌`,
+          `أنا Grok، وأعطيك الإجابة الصريحة بدون فلتر بخصوص "${text}": الوضع تحت السيطرة! 😎`,
+          `بناءً على بياناتي الحية، إجابة "${text}" واضحة ولا تحتاج تفكير مطول. ⚡`
+        ];
+        let chosenReply = grokReplies[Math.floor(Math.random() * grokReplies.length)];
+        chatBox.innerHTML += `<div class="grok-msg grok-incoming">${chosenReply}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
-    }
-
-    function generateStrictHamyarMasterpiece() {
-      // قائمة مخصصة 100% للحمير، شريك، وترامب فقط من روابط موثوقة ومضمونة
-      const strictImages = [
-        {
-          title: "🐴 حمار مضحك يبتسم للكاميرا (رقم #11)",
-          url: "https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=400&auto=format&fit=crop&q=60",
-          desc: "حمار أسطوري يعطيك نظرة غبية تفطس ضحك!"
-        },
-        {
-          title: "🐴 حمار كشخة وسط المزرعة (رقم #42)",
-          url: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=400&auto=format&fit=crop&q=60",
-          desc: "أقوى حمار في العالم بكامل هيبته المضحكة!"
-        },
-        {
-          title: "🟢 شريك (SHREK) بوجهه الأخضر الخارق (رقم #88)",
-          url: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&auto=format&fit=crop&q=60",
-          desc: "شريك في لقطة مضحكة وغاضبة جداً!"
-        },
-        {
-          title: "🇺🇸 دونالد ترامب بتعابير وجه كوميدية (رقم #99)",
-          url: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=400&auto=format&fit=crop&q=60",
-          desc: "ترامب بحركة وجه غريبة تقتل ضحك!"
-        },
-        {
-          title: "🐴 حمار مندهش ومصدوم (رقم #33)",
-          url: "https://images.unsplash.com/photo-1553332164-2454efb39690?w=400&auto=format&fit=crop&q=60",
-          desc: "حمار تفاجأ بشي غريب ومفتح عيونه على الآخر!"
-        },
-        {
-          title: "🟢 شريك يبتسم بخبث كوميدي (رقم #77)",
-          url: "https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=60",
-          desc: "ابتسامة شريك الأسطورية المليئة بالميمز!"
-        }
-      ];
-
-      // إضافة البراز بمكان عشوائي
-      const poopList = [
-        "",
-        "<br><span style='color:#a0522d; font-size:10px;'>💩 [مفاجأة عشوائية: تم رصد براز طازج في زاوية الصورة!]</span>",
-        "<br><span style='color:#a0522d; font-size:10px;'>💩 [تحذير: بركة براز غامضة تحت أقدام الشخصية مباشرة!]</span>",
-        "<br><span style='color:#a0522d; font-size:10px;'>💩 [ملاحظة كوميدية: براز طائر يزين منتصف الصورة!]</span>"
-      ];
-
-      let chosenImg = strictImages[Math.floor(Math.random() * strictImages.length)];
-      let chosenPoop = poopList[Math.floor(Math.random() * poopList.length)];
-      let uniqueId = Math.floor(Math.random() * 90000) + 10000;
-
-      return `
-        <b>تم توليد الصورة المطلوبة (ID: ${uniqueId})!</b><br>
-        <b style="color:#f1c40f; font-size:11px;">${chosenImg.title}</b><br>
-        <img src="${chosenImg.url}" class="hamyar-real-img" alt="صورة مضحكة">
-        <span style="color:#ddd; font-size:10px; display:block; margin-top:4px;">${chosenImg.desc}</span>
-        ${chosenPoop}
-      `;
+      }, 600);
     }
 
     /* --- موسيقى الرعب والمقالب --- */
@@ -335,7 +313,7 @@
       if(horrorAudioCtx) {
         let osc = horrorAudioCtx.createOscillator();
         let gain = horrorAudioCtx.createGain();
-        osc.type = 'square';
+        osc.type, 'square';
         osc.frequency.setValueAtTime(300, horrorAudioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(900, horrorAudioCtx.currentTime + 1.5);
         gain.gain.setValueAtTime(0.4, horrorAudioCtx.currentTime);

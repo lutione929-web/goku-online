@@ -149,10 +149,13 @@
     let isDragging = false;
 
     window.onload = function() {
+      socket = io();
+      initGameListeners();
+
       const savedName = localStorage.getItem('goku_player_name');
       if (savedName) {
         document.getElementById('playerNameInput').value = savedName;
-        joinGame();
+        setTimeout(() => { joinGame(); }, 400);
       }
     };
 
@@ -163,46 +166,25 @@
 
       const englishRegex = /^[A-Za-z0-9_]{3,12}$/;
       if (!englishRegex.test(nameVal)) {
-        errorSpan.innerText = "⚠️ اسم إنجليزي غير صالح (3 لـ 12 حرف بدون مسافات أو عربي)!";
+        errorSpan.innerText = "⚠️ اسم إنجليزي غير صالح (3 لـ 12 حرف بدون مسافات)!";
         return;
       }
 
       myName = nameVal;
       isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
+      if (isDev) myKills = 999999;
 
-      socket = io({ reconnection: true, reconnectionAttempts: 5 });
+      localStorage.setItem('goku_player_name', myName);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('gameUI').style.display = 'flex';
 
-      socket.on('connect', () => {
-        myId = socket.id;
-        socket.emit('playerJoin', { id: socket.id, name: myName, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
-          if (!response.success) {
-            errorSpan.innerText = "⚠️ " + response.message;
-            socket.disconnect();
-          } else {
-            myCoins = response.coins;
-            myKills = response.kills;
-            localStorage.setItem('goku_player_name', myName);
-
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('gameUI').style.display = 'flex';
-            updateStatsUI();
-          }
-        });
-      });
-
-      socket.on('reconnect', () => {
-        if (myName) {
-          socket.emit('playerJoin', { id: socket.id, name: myName, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
-            if (response.success) {
-              myCoins = response.coins;
-              myKills = response.kills;
-              updateStatsUI();
-            }
-          });
+      socket.emit('playerJoin', { id: socket.id, name: myName, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
+        if (response && response.success) {
+          myCoins = response.coins;
+          if(response.kills !== undefined) myKills = response.kills;
         }
+        updateStatsUI();
       });
-
-      initGameListeners();
     }
 
     function initGameListeners() {
@@ -293,12 +275,172 @@
     });
 
     function updateMovement() {
-      if (!myId || !players[myId] || !isDragging) return;
+      if (!socket.id || !players[socket.id] || !isDragging) return;
 
       const speed = 4;
-      let newX = players[myId].x + moveVector.x * speed;
-      let newY = players[myId].y + moveVector.y * speed;
+      let newX = players[socket.id].x + moveVector.x * speed;
+      let newY = players[socket.id].y + moveVector.y * speed;
 
       const maxX = canvas.width - 25;
       const maxY = canvas.height - 25;
 
+      if (newX < 2) newX = 2;
+      if (newX > maxX) newX = maxX;
+      if (newY < 2) newY = 2;
+      if (newY > maxY) newY = maxY;
+
+      players[socket.id].x = newX;
+      players[socket.id].y = newY;
+
+      draw();
+      socket.emit('playerMove', { id: socket.id, x: newX, y: newY, name: myName, isDev: isDev, form: currentForm });
+    }
+
+    function chargeKi() {
+      if(ki < 100) {
+        ki += 20;
+        if(ki > 100) ki = 100;
+        updateKiBar();
+      }
+    }
+
+    function updateKiBar() {
+      document.getElementById('kiFill').style.width = ki + '%';
+      document.getElementById('kiText').innerText = `طاقة Ki: ${ki}%`;
+    }
+
+    function transformGoku() {
+      if(ki >= 100) {
+        if(currentForm === 'normal' && unlockedForms.includes('ssj')) currentForm = 'ssj';
+        else if(currentForm === 'ssj' && unlockedForms.includes('ssj2')) currentForm = 'ssj2';
+        else if(currentForm === 'ssj2' && unlockedForms.includes('blue')) currentForm = 'blue';
+        else if(currentForm === 'blue' && unlockedForms.includes('ui')) currentForm = 'ui';
+        else currentForm = 'normal';
+
+        if(players[socket.id]) players[socket.id].form = currentForm;
+        draw();
+        socket.emit('playerAction', { id: socket.id, form: currentForm });
+        updateStatsUI();
+        alert("⚡ تم تفعيل التحول: " + currentForm.toUpperCase() + "!");
+      } else {
+        alert("❌ طاقة Ki غير كافية للتحول! اشحن حتى 100%");
+      }
+    }
+
+    function useKamehameha() {
+      if(!socket.id || !players[socket.id]) return;
+      drawKamehamehaEffect();
+      if(ki > 25) ki -= 25;
+      updateKiBar();
+    }
+
+    function drawKamehamehaEffect() {
+      ctx.fillStyle = '#0984e3';
+      ctx.beginPath();
+      ctx.arc(players[socket.id].x + 12, players[socket.id].y + 12, 30, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function openShop() {
+      document.getElementById('shopModal').style.display = 'flex';
+      document.getElementById('shopCoins').innerText = myCoins;
+    }
+    function closeShop() { document.getElementById('shopModal').style.display = 'none'; }
+
+    function openLeaderboard() {
+      document.getElementById('leaderboardModal').style.display = 'flex';
+    }
+    function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
+
+    function buyForm(formName, cost) {
+      socket.emit('buyTransformation', { form: formName, cost: cost }, (res) => {
+        if(res.success) {
+          myCoins = res.coins;
+          unlockedForms.push(formName);
+          document.getElementById('shopCoins').innerText = myCoins;
+          updateStatsUI();
+          alert("🎉 مبروك! تم شراء التحول بنجاح!");
+          closeShop();
+        } else {
+          alert("❌ " + res.message);
+        }
+      });
+    }
+
+    function updateStatsUI() {
+      document.getElementById('playerKillsText').innerText = `⚔️ Kills: ${myKills}`;
+      document.getElementById('playerCoinsText').innerText = `🪙 Coins: ${myCoins}`;
+      document.getElementById('playerFormText').innerText = `⚡ Form: ${currentForm.toUpperCase()}`;
+    }
+
+    function sendChat() {
+      const input = document.getElementById('msgInput');
+      const text = input.value.trim();
+      if(text !== '') {
+        socket.emit('chatMessage', { name: myName, isDev: isDev, text: text });
+        input.value = '';
+      }
+    }
+
+    function addFriend() { prompt("أدخل اسم صديقك لإضافته:"); }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let id in players) {
+        const p = players[id];
+        let x = p.x;
+        let y = p.y;
+        let form = p.form || 'normal';
+
+        let hairColor = '#1e272e';
+        let auraColor = 'transparent';
+
+        if(form === 'ssj') { hairColor = '#f1c40f'; auraColor = 'rgba(241, 196, 15, 0.4)'; }
+        else if(form === 'ssj2') { hairColor = '#f1c40f'; auraColor = 'rgba(255, 234, 167, 0.6)'; }
+        else if(form === 'blue') { hairColor = '#0984e3'; auraColor = 'rgba(9, 132, 227, 0.6)'; }
+        else if(form === 'ui') { hairColor = '#b2bec3'; auraColor = 'rgba(223, 230, 233, 0.8)'; }
+
+        if(auraColor !== 'transparent') {
+          ctx.fillStyle = auraColor;
+          ctx.beginPath();
+          ctx.arc(x + 12, y + 12, 18, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.fillStyle = '#d35400';
+        ctx.fillRect(x + 8, y + 16, 4, 6);
+        ctx.fillRect(x + 12, y + 16, 4, 6);
+        
+        ctx.fillStyle = '#2980b9';
+        ctx.fillRect(x + 7, y + 21, 5, 3);
+        ctx.fillRect(x + 12, y + 21, 5, 3);
+
+        ctx.fillStyle = '#2980b9';
+        ctx.fillRect(x + 7, y + 9, 10, 8);
+        
+        ctx.fillStyle = '#e67e22';
+        ctx.fillRect(x + 8, y + 15, 8, 2);
+
+        ctx.fillStyle = '#e1b12c';
+        ctx.fillRect(x + 3, y + 11, 4, 4);
+        ctx.fillRect(x + 17, y + 11, 4, 4);
+
+        ctx.fillStyle = '#e1b12c';
+        ctx.fillRect(x + 8, y + 4, 8, 6);
+
+        ctx.fillStyle = hairColor;
+        ctx.fillRect(x + 6, y + 1, 12, 4);
+        ctx.fillRect(x + 4, y + 2, 3, 4);
+        ctx.fillRect(x + 17, y + 2, 3, 4);
+        ctx.fillRect(x + 10, y, 4, 2);
+
+        ctx.fillStyle = p.isDev ? '#f1c40f' : '#fff';
+        ctx.font = p.isDev ? 'bold 10px sans-serif' : '9px sans-serif';
+        ctx.textAlign = 'center';
+        let displayName = p.isDev ? `[👑 DEV] ${p.name}` : (p.name || 'Goku');
+        ctx.fillText(displayName, x + 12, y + 31);
+      }
+    }
+  </script>
+</body>
+</html>

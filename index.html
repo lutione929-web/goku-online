@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - محاكي الهاتف الذكي</title>
+  <title>Epic Phone OS Elite</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; user-select: none; }
     body { background: #07070e; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; padding: 10px; }
@@ -15,153 +15,131 @@
       background: #111;
       border-radius: 40px;
       border: 4px solid #333;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(255,255,255,0.1);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(255,255,255,0.1);
       position: relative;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    /* الكاميرا والشريط العلوي */
     .phone-notch {
-      width: 120px;
-      height: 20px;
-      background: #000;
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      border-bottom-left-radius: 14px;
-      border-bottom-right-radius: 14px;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 120px; height: 20px; background: #000; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%); border-bottom-left-radius: 14px; border-bottom-right-radius: 14px;
+      z-index: 100; display: flex; align-items: center; justify-content: center;
     }
     .camera-lens { width: 8px; height: 8px; background: #1a1a3a; border-radius: 50%; border: 1px solid #333; }
 
     .status-bar {
-      height: 28px;
-      padding: 0 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      font-size: 11px;
-      font-weight: bold;
-      color: #fff;
-      z-index: 90;
+      height: 28px; padding: 0 16px; display: flex; justify-content: space-between; align-items: flex-end;
+      font-size: 11px; font-weight: bold; color: #fff; z-index: 90;
     }
 
-    /* شاشة الجوال الرئيسية */
     .phone-screen {
-      flex: 1;
-      background: radial-gradient(circle at top right, #1a0b2e, #090a15);
-      position: relative;
-      overflow: hidden;
+      flex: 1; background: radial-gradient(circle at top right, #1a0b2e, #090a15);
+      position: relative; overflow: hidden;
     }
 
     .home-screen {
-      padding: 25px 15px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      align-content: start;
+      padding: 25px 12px; display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 15px; align-content: start; transition: transform 0.3s ease;
     }
 
-    .app-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
+    .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; }
     .app-icon:active { transform: scale(0.9); }
     .icon-box {
-      width: 60px;
-      height: 60px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      margin-bottom: 6px;
+      width: 58px; height: 58px; border-radius: 16px; display: flex; align-items: center;
+      justify-content: center; font-size: 26px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); margin-bottom: 5px;
     }
-    .app-name { font-size: 11px; color: #ddd; text-shadow: 0 1px 2px #000; }
+    .app-name { font-size: 10px; color: #ddd; text-shadow: 0 1px 2px #000; text-align: center; }
 
-    /* ألوان الأيقونات */
+    /* ألوان أيقونات التطبيقات الجديدة */
     .bg-roblox { background: linear-gradient(135deg, #000, #333); border: 2px solid #e82020; }
+    .bg-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
     .bg-youtube { background: linear-gradient(135deg, #ff0000, #990000); }
     .bg-xo { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+    .bg-poop { background: linear-gradient(135deg, #8e44ad, #c0392b); border: 2px solid #f1c40f; }
+    .bg-browser { background: linear-gradient(135deg, #0984e3, #74b9ff); }
     .bg-music { background: linear-gradient(135deg, #00b894, #00cec9); }
 
     /* نافذة التطبيقات */
     .app-window {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: #121324;
-      display: none;
-      flex-direction: column;
-      z-index: 50;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: #121324; display: none; flex-direction: column; z-index: 50;
+      transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.1, 1, 0.1, 1);
     }
+    .app-window.active { transform: translateY(0); }
+
     .app-header {
-      height: 40px;
-      background: #1c1d36;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 15px;
-      font-size: 14px;
-      font-weight: bold;
+      height: 42px; background: #1c1d36; display: flex; align-items: center;
+      justify-content: space-between; padding: 0 12px; font-size: 13px; font-weight: bold;
       border-bottom: 1px solid #2a2b4a;
     }
+    .back-btn { background: #2f3640; border: none; color: #fff; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 11px; }
 
-    /* لعبة روبلوكس Obby */
-    #robloxCanvas { background: #1a1a2e; border-bottom: 2px solid #00f0ff; width: 100%; height: 260px; }
-    .controls-roblox { display: flex; justify-content: space-around; padding: 15px; background: #0f101d; }
-    .btn-ctrl { padding: 14px 22px; background: #25284a; border: 1px solid #00f0ff; color: #fff; border-radius: 12px; font-weight: bold; font-size: 16px; }
-
-    /* شريط الهوم السفلي للجوال */
+    /* شريط الهوم السفلي وسحب الشاشة للأعلى */
     .home-bar-area {
-      height: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0,0,0,0.2);
+      height: 25px; display: flex; justify-content: center; align-items: center;
+      background: rgba(0,0,0,0.3); touch-action: none; cursor: pointer;
     }
-    .home-bar {
-      width: 110px;
-      height: 4px;
-      background: #fff;
-      border-radius: 2px;
-      cursor: pointer;
-      opacity: 0.8;
-    }
-    .home-bar:active { opacity: 1; transform: scaleX(0.9); }
+    .home-bar { width: 110px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.8; }
 
-    /* لعبة إكس أو داخل الجوال */
+    /* تصميم تطبيق واتساب الحقيقي */
+    .wa-chat { flex: 1; background: #0b141a; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; }
+    .wa-msg { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; line-height: 1.4; }
+    .wa-incoming { background: #202c33; align-self: flex-start; color: #fff; }
+    .wa-outgoing { background: #005c4b; align-self: flex-end; color: #fff; }
+    .wa-input-area { display: flex; padding: 8px; background: #202c33; gap: 6px; align-items: center; }
+    .wa-input { flex: 1; padding: 8px; border-radius: 20px; border: none; background: #2a3942; color: #fff; font-size: 12px; outline: none; }
+    .wa-send { background: #00a884; border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+    /* رعب POOP JumpScare */
+    #poopScreen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 200; display: none; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+    }
+    #poopScreen img, #poopScreen h1 { animation: shake 0.1s infinite; }
+    @keyframes shake {
+      0% { transform: translate(2px, 2px) rotate(0deg); }
+      50% { transform: translate(-2px, -2px) rotate(-2deg); }
+      100% { transform: translate(2px, -2px) rotate(2deg); }
+    }
+
+    #robloxCanvas { background: #1a1a2e; border-bottom: 2px solid #00f0ff; width: 100%; height: 250px; }
+    .controls-roblox { display: flex; justify-content: space-around; padding: 12px; background: #0f101d; }
+    .btn-ctrl { padding: 12px 20px; background: #25284a; border: 1px solid #00f0ff; color: #fff; border-radius: 12px; font-weight: bold; font-size: 14px; }
     .xo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 20px; }
-    .xo-cell { height: 75px; background: #1f213d; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #00f0ff; }
+    .xo-cell { height: 75px; background: #1f213d; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #00f0ff; cursor: pointer; }
   </style>
 </head>
 <body>
 
-  <div class="phone-body">
+  <!-- شاشة رعب POOP JumpScare -->
+  <div id="poopScreen">
+    <h1 style="font-size: 70px;">😱💩</h1>
+    <h2 style="color: #ff4757; margin-top: 15px; font-size: 22px;">رعــــب حقيقيي يا محمد!!</h2>
+    <button onclick="closePoopScare()" style="margin-top: 25px; padding: 10px 20px; background: #ff4757; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">إغلاق الفجيعة 🏃‍♂️</button>
+  </div>
+
+  <div class="phone-body" id="phoneBody">
     <div class="phone-notch"><div class="camera-lens"></div></div>
 
-    <!-- شريط الحالة (الوقت والبطارية) -->
     <div class="status-bar">
       <span id="clock">12:00</span>
-      <span>📶 5G 🔋 99%</span>
+      <span>📶 5G 🔋 100%</span>
     </div>
 
-    <div class="phone-screen">
+    <div class="phone-screen" id="phoneScreen">
       
-      <!-- الشاشة الرئيسية للجوال -->
+      <!-- الشاشة الرئيسية -->
       <div class="home-screen" id="homeScreen">
         <div class="app-icon" onclick="openApp('robloxApp')">
           <div class="icon-box bg-roblox">⬛</div>
           <span class="app-name">Roblox</span>
+        </div>
+        <div class="app-icon" onclick="openApp('whatsappApp')">
+          <div class="icon-box bg-whatsapp">💬</div>
+          <span class="app-name">WhatsApp</span>
         </div>
         <div class="app-icon" onclick="openApp('youtubeApp')">
           <div class="icon-box bg-youtube">▶️</div>
@@ -171,44 +149,71 @@
           <div class="icon-box bg-xo">❌</div>
           <span class="app-name">TicTacToe</span>
         </div>
+        <div class="app-icon" onclick="openApp('browserApp')">
+          <div class="icon-box bg-browser">🌍</div>
+          <span class="app-name">متصفح</span>
+        </div>
+        <div class="app-icon" onclick="triggerPoopScare()">
+          <div class="icon-box bg-poop">💩</div>
+          <span class="app-name">POOP ⚠️</span>
+        </div>
         <div class="app-icon" onclick="togglePhoneMusic()">
           <div class="icon-box bg-music">🎵</div>
-          <span class="app-name">الموسيقى</span>
+          <span class="app-name">موسيقى</span>
         </div>
       </div>
 
-      <!-- تطبيق روبلوكس Obby -->
+      <!-- 1. تطبيق روبلوكس -->
       <div class="app-window" id="robloxApp">
         <div class="app-header">
-          <span>🎮 Roblox Obby Mini</span>
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span>🎮 Roblox Obby</span>
           <span style="color:#00f0ff" id="robloxScore">المرحلة: 1</span>
         </div>
-        <canvas id="robloxCanvas" width="300" height="260"></canvas>
+        <canvas id="robloxCanvas" width="300" height="250"></canvas>
         <div class="controls-roblox">
-          <button class="btn-ctrl" onclick="moveObby(-10)">◀ يسار</button>
+          <button class="btn-ctrl" onclick="moveObby(-12)">◀ يسار</button>
           <button class="btn-ctrl" onclick="jumpObby()">▲ قفز</button>
-          <button class="btn-ctrl" onclick="moveObby(10)">يمين ▶</button>
+          <button class="btn-ctrl" onclick="moveObby(12)">يمين ▶</button>
         </div>
       </div>
 
-      <!-- تطبيق يوتيوب -->
+      <!-- 2. تطبيق واتساب الحقيقي -->
+      <div class="app-window" id="whatsappApp">
+        <div class="app-header" style="background:#075e54;">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span>💬 WhatsApp (محمد)</span>
+          <span>📞</span>
+        </div>
+        <div class="wa-chat" id="waChatBox">
+          <div class="wa-msg wa-incoming">أهلاً بك يا أسطورة محمد في واتساب الجوال! 😎</div>
+          <div class="wa-msg wa-incoming">كيف أقدر أساعدك اليوم؟</div>
+        </div>
+        <div class="wa-input-area">
+          <input type="text" id="waInputText" class="wa-input" placeholder="اكتب رسالة...">
+          <button class="wa-send" onclick="sendWaMsg()">➤</button>
+        </div>
+      </div>
+
+      <!-- 3. تطبيق يوتيوب -->
       <div class="app-window" id="youtubeApp">
         <div class="app-header">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span style="color:#ff0000">▶ YouTube Gaming</span>
         </div>
         <div style="padding: 10px;">
-          <iframe width="100%" height="180" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen style="border-radius:10px"></iframe>
-          <h4 style="margin-top:10px; font-size:13px">🔥 مقاطع ألعاب وروبلوكس الحماسية</h4>
-          <p style="font-size:11px; color:#aaa; margin-top:5px">شاهد وافصل بين الألعاب داخل جوالك الشخصي!</p>
+          <iframe width="100%" height="170" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen style="border-radius:10px"></iframe>
+          <h4 style="margin-top:10px; font-size:12px">🔥 مقاطع روبلوكس وألعاب حماسية</h4>
         </div>
       </div>
 
-      <!-- تطبيق إكس أو -->
+      <!-- 4. تطبيق إكس أو -->
       <div class="app-window" id="xoApp">
         <div class="app-header">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span>❌ إكس أو أونلاين / بوت ⭕</span>
         </div>
-        <p id="xoStatus" style="text-align:center; padding:10px 0; font-size:13px; color:#f1c40f">دورك (X)</p>
+        <p style="text-align:center; padding:8px 0; font-size:12px; color:#f1c40f">دورك (X)</p>
         <div class="xo-grid">
           <div class="xo-cell" onclick="playXO(0)"></div>
           <div class="xo-cell" onclick="playXO(1)"></div>
@@ -222,89 +227,134 @@
         </div>
       </div>
 
+      <!-- 5. المتصفح -->
+      <div class="app-window" id="browserApp">
+        <div class="app-header" style="background:#0984e3;">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span>🌍 متصفح الإنترنت</span>
+        </div>
+        <div style="padding: 15px; text-align: center;">
+          <input type="text" value="https://www.epic-browser.com" style="width:100%; padding:8px; border-radius:8px; border:none; background:#222; color:#fff; font-size:11px; text-align:center; margin-bottom:15px">
+          <h3 style="color:#74b9ff; font-size:14px">أهلاً بك في شبكة الإنترنت المفتوحة!</h3>
+          <p style="font-size:11px; color:#aaa; margin-top:10px">تصفح ألعابك ومواقعك المفضلة وأنت داخل الجوال بكل حرية.</p>
+        </div>
+      </div>
+
     </div>
 
-    <!-- زر الهوم للعودة لشاشة الجوال الرئيسية -->
-    <div class="home-bar-area">
-      <div class="home-bar" onclick="goHome()" title="العودة للشاشة الرئيسية"></div>
+    <!-- شريط الهوم السفلي وسحب الشاشة للأعلى -->
+    <div class="home-bar-area" id="homeBarArea" title="اسحب للأعلى أو اضغط للعودة">
+      <div class="home-bar"></div>
     </div>
   </div>
 
   <script>
-    // التحديث المباشر للوقت داخل الجوال
     setInterval(() => {
       const now = new Date();
       document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     }, 1000);
 
     function openApp(appId) {
-      document.querySelectorAll('.app-window').forEach(win => win.style.display = 'none');
-      document.getElementById(appId).style.display = 'flex';
+      document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
+      let target = document.getElementById(appId);
+      target.style.display = 'flex';
+      setTimeout(() => target.classList.add('active'), 10);
       if(appId === 'robloxApp') startRobloxGame();
     }
 
     function goHome() {
-      document.querySelectorAll('.app-window').forEach(win => win.style.display = 'none');
+      document.querySelectorAll('.app-window').forEach(win => {
+        win.classList.remove('active');
+        setTimeout(() => win.style.display = 'none', 300);
+      });
     }
 
-    /* --- برمجة ميني جيم روبلوكس (Obby) --- */
-    let rCanvas, rCtx, px = 20, py = 200, pVy = 0, isJumping = false;
-    let obstacleX = 280;
+    /* --- ميزة سحب الشاشة للأعلى (Swipe Up) --- */
+    let startY = 0;
+    const barArea = document.getElementById('homeBarArea');
+    barArea.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; });
+    barArea.addEventListener('touchend', (e) => {
+      let endY = e.changedTouches[0].clientY;
+      if (startY - endY > 15) { // سحب للأعلى
+        goHome();
+      }
+    });
+    barArea.addEventListener('click', goHome); // ضغطة عادية تعمل كزر هوم
 
+    /* --- زر POOP المرعب (JumpScare) --- */
+    let scareAudioCtx = null;
+    function triggerPoopScare() {
+      document.getElementById('poopScreen').style.display = 'flex';
+      if(!scareAudioCtx) scareAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(scareAudioCtx.state === 'suspended') scareAudioCtx.resume();
+
+      // إصدار صوت مرعب وعالي عبر الأوديو كونتكس
+      let osc = scareAudioCtx.createOscillator();
+      let gain = scareAudioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(120, scareAudioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(800, scareAudioCtx.currentTime + 0.5);
+      gain.gain.setValueAtTime(0.2, scareAudioCtx.currentTime);
+      osc.connect(gain); gain.connect(scareAudioCtx.destination);
+      osc.start(); osc.stop(scareAudioCtx.currentTime + 0.8);
+    }
+
+    function closePoopScare() {
+      document.getElementById('poopScreen').style.display = 'none';
+    }
+
+    /* --- تطبيق واتساب الحقيقي --- */
+    function sendWaMsg() {
+      let txtInput = document.getElementById('waInputText');
+      let chatBox = document.getElementById('waChatBox');
+      let val = txtInput.value.trim();
+      if(!val) return;
+
+      // رسالة المستخدم
+      chatBox.innerHTML += `<div class="wa-msg wa-outgoing">${val}</div>`;
+      txtInput.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // رد تلقائي من البوت
+      setTimeout(() => {
+        chatBox.innerHTML += `<div class="wa-msg wa-incoming">وصلتني رسالتك يا محمد: "${val}" 😂 منور الواتساب!</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 800);
+    }
+
+    /* --- روبلوكس Obby --- */
+    let rCanvas, rCtx, px = 20, py = 190, pVy = 0, isJumping = false, obstacleX = 260;
     function startRobloxGame() {
       rCanvas = document.getElementById('robloxCanvas');
       rCtx = rCanvas.getContext('2d');
-      px = 20; py = 200; pVy = 0; obstacleX = 280;
+      px = 20; py = 190; pVy = 0; obstacleX = 260;
       requestAnimationFrame(robloxLoop);
     }
-
-    function moveObby(dir) {
-      px += dir;
-      if(px < 0) px = 0;
-      if(px > 270) px = 270;
-    }
-
-    function jumpObby() {
-      if(!isJumping) { pVy = -10; isJumping = true; }
-    }
-
+    function moveObby(dir) { px += dir; if(px < 0) px = 0; if(px > 270) px = 270; }
+    function jumpObby() { if(!isJumping) { pVy = -9; isJumping = true; } }
     function robloxLoop() {
-      pVy += 0.6; py += pVy;
-      if(py >= 200) { py = 200; isJumping = false; }
-
-      obstacleX -= 2;
-      if(obstacleX < -20) obstacleX = 300;
+      pVy += 0.55; py += pVy;
+      if(py >= 190) { py = 190; isJumping = false; }
+      obstacleX -= 2.5;
+      if(obstacleX < -20) obstacleX = 290;
 
       rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
-
-      // الأرضية
-      rCtx.fillStyle = '#00f0ff'; rCtx.fillRect(0, 230, 300, 30);
-
-      // اللاعب (شخصية روبلوكس)
+      rCtx.fillStyle = '#00f0ff'; rCtx.fillRect(0, 220, 300, 30);
       rCtx.fillStyle = '#ff4757'; rCtx.fillRect(px, py, 20, 30);
+      rCtx.fillStyle = '#ffa500'; rCtx.fillRect(obstacleX, 200, 20, 20);
 
-      // العقبة (Obby Lava)
-      rCtx.fillStyle = '#ffa500'; rCtx.fillRect(obstacleX, 210, 20, 20);
-
-      // فحص الاصطدام بالعقبة
-      if(px < obstacleX + 20 && px + 20 > obstacleX && py + 30 > 210) {
-        px = 20; // إعادة للبداية
-      }
-
-      if(document.getElementById('robloxApp').style.display === 'flex') {
+      if(px < obstacleX + 20 && px + 20 > obstacleX && py + 30 > 200) { px = 20; }
+      if(document.getElementById('robloxApp').classList.contains('active')) {
         requestAnimationFrame(robloxLoop);
       }
     }
 
-    /* --- برمجة لعبة إكس أو داخل الجوال --- */
+    /* --- إكس أو --- */
     let xoBoard = ['', '', '', '', '', '', '', '', ''];
-    let xoTurn = 'X';
     function playXO(i) {
       if(xoBoard[i] !== '') return;
       xoBoard[i] = 'X';
       document.querySelectorAll('.xo-cell')[i].innerText = 'X';
-      
-      // حركة البوت
       let empty = xoBoard.map((v, idx) => v === '' ? idx : null).filter(v => v !== null);
       if(empty.length > 0) {
         let bMove = empty[Math.floor(Math.random() * empty.length)];
@@ -313,7 +363,7 @@
       }
     }
 
-    /* --- موسيقى الجوال --- */
+    /* --- مشغل الموسيقى --- */
     let audioCtx = null, musicInterval = null, musicOn = false;
     function togglePhoneMusic() {
       if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -332,7 +382,7 @@
           osc.start(); osc.stop(audioCtx.currentTime + 0.2);
           i = (i + 1) % notes.length;
         }, 300);
-        alert("🎶 الموسيقى شغالة الحين داخل جوالك!");
+        alert("🎶 الموسيقى شغالة داخل الجوال!");
       }
     }
   </script>

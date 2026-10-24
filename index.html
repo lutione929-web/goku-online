@@ -7,9 +7,9 @@
   <script src="/socket.io/socket.io.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:5px}
+    body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:5px;touch-action:none}
     
-    /* شاشة تسجيل الدخول (Login UI) */
+    /* شاشة تسجيل الدخول */
     #loginScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a12;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;padding:20px}
     .login-box{background:#1e272e;border:2px solid #ff7675;padding:25px;border-radius:12px;text-align:center;width:100%;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
     .login-box h2{color:#ff7675;margin-bottom:15px;font-size:1.3rem}
@@ -17,7 +17,6 @@
     .login-box button{width:100%;background:#0984e3;color:#fff;border:none;padding:10px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:bold}
     .error-msg{color:#d63031;font-size:0.75rem;margin-top:5px;display:block}
 
-    /* واجهة اللعبة الأصلية (تكون مخفية حتى يسجل الدخول) */
     #gameUI{display:none;flex-direction:column;align-items:center;width:100%}
 
     h1{font-size:1.2rem;margin:3px 0;background:linear-gradient(90deg,#ff7675,#fab1a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -31,22 +30,22 @@
     .ki-fill{height:100%;background:linear-gradient(90deg,#0984e3,#00cec9);width:0%;transition:width 0.2s}
     .ki-text{position:absolute;width:100%;top:0;text-align:center;font-size:0.65rem;font-weight:bold;color:#fff}
 
-    .chat-box{width:320px;height:55px;background:#1e272e;border:1px solid #444;border-radius:6px;margin-top:5px;padding:4px;overflow-y:auto;font-size:0.75rem;text-align:right}
+    .chat-box{width:320px;height:50px;background:#1e272e;border:1px solid #444;border-radius:6px;margin-top:5px;padding:4px;overflow-y:auto;font-size:0.75rem;text-align:right}
     .chat-input-area{display:flex;gap:4px;width:320px;margin-top:4px}
     .chat-input-area input{flex:1;padding:5px;border-radius:6px;border:none;background:#2d3436;color:#fff;font-size:0.75rem}
     .chat-input-area button{background:#0984e3;color:#fff;border:none;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:0.75rem}
 
-    .controls{display:grid;grid-template-columns:repeat(3, 1fr);gap:4px;margin-top:6px;width:100%;max-width:320px}
-    .btn{background:#2d3436;color:#fff;border:1px solid #ff7675;padding:10px;font-size:1rem;border-radius:6px;cursor:pointer;user-select:none;text-align:center}
-    .btn:active{background:#ff7675}
-    .btn-skill{background:#6c5ce7;border-color:#a29bfe}
-    .btn-super{background:#d63031;border-color:#ff7675;font-weight:bold}
-    .empty{}
+    /* عصا التحكم Joystick السلسة */
+    .joystick-area{width:320px;height:105px;background:#1e272e;border:2px dashed #ff7675;border-radius:10px;margin-top:6px;display:flex;align-items:center;justify-content:center;position:relative;user-select:none}
+    .joystick-knob{width:50px;height:50px;background:#ff7675;border-radius:50%;position:absolute;box-shadow:0 4px 10px rgba(0,0,0,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    
+    .action-bar{display:flex;gap:8px;margin-top:6px;width:320px;justify-content:center}
+    .btn-action{flex:1;padding:9px;border-radius:6px;border:none;color:#fff;font-weight:bold;cursor:pointer;font-size:0.8rem}
   </style>
 </head>
 <body>
 
-  <!-- شاشة تسجيل الدخول -->
+  <!-- شاشة تسجيل الدخول والتحقق من التوثيق والاسم -->
   <div id="loginScreen">
     <div class="login-box">
       <h2>⚡ Goku Fighter Login</h2>
@@ -56,7 +55,7 @@
     </div>
   </div>
 
-  <!-- واجهة اللعبة -->
+  <!-- واجهة اللعبة الأساسية -->
   <div id="gameUI">
     <h1>⚡ Goku Fighter Online</h1>
     
@@ -66,7 +65,7 @@
       <button class="menu-btn" style="background:#6c5ce7" onclick="transformGoku()">🔥 التحول (SSJ)</button>
     </div>
 
-    <canvas id="gameCanvas" width="320" height="200"></canvas>
+    <canvas id="gameCanvas" width="320" height="170"></canvas>
 
     <div class="ki-container">
       <div class="ki-fill" id="kiFill"></div>
@@ -79,13 +78,14 @@
       <button onclick="sendChat()">إرسال</button>
     </div>
 
-    <div class="controls">
-      <div class="btn btn-skill" onclick="chargeKi()">⚡ شحن Ki</div>
-      <div class="btn" ontouchstart="startMove('up')" onmousedown="startMove('up')" ontouchend="stopMove()" onmouseup="stopMove()">⬆️</div>
-      <div class="btn btn-super" onclick="useKamehameha()">💥 كامیهامیها</div>
-      <div class="btn" ontouchstart="startMove('left')" onmousedown="startMove('left')" ontouchend="stopMove()" onmouseup="stopMove()">⬅️</div>
-      <div class="btn" ontouchstart="startMove('down')" onmousedown="startMove('down')" ontouchend="stopMove()" onmouseup="stopMove()">⬇️</div>
-      <div class="btn" ontouchstart="startMove('right')" onmousedown="startMove('right')" ontouchend="stopMove()" onmouseup="stopMove()">➡️</div>
+    <div class="action-bar">
+      <button class="btn-action" style="background:#6c5ce7" onclick="chargeKi()">⚡ شحن Ki</button>
+      <button class="btn-action" style="background:#d63031" onclick="useKamehameha()">💥 كامیهامیها</button>
+    </div>
+
+    <!-- الـ Joystick للتحكم بالسحب المستمر -->
+    <div class="joystick-area" id="joystickArea">
+      <div class="joystick-knob" id="joystickKnob">🕹️</div>
     </div>
   </div>
 
@@ -97,42 +97,46 @@
     let players = {};
     let myId = null;
     let myName = "";
-    let moveInterval = null;
+    let isDev = false;
     let ki = 0;
     let isSuperSaiyan = false;
+    let moveVector = { x: 0, y: 0 };
+    let isDragging = false;
 
     function joinGame() {
       const input = document.getElementById('playerNameInput');
       const nameVal = input.value.trim();
       const errorSpan = document.getElementById('errorMsg');
 
-      // التحقق من أن الاسم إنجليزي فقط وبدون حروف عربية
       const englishRegex = /^[A-Za-z0-9_]{3,12}$/;
-
       if (!englishRegex.test(nameVal)) {
-        errorSpan.innerText = "⚠️ يرجى إدخال اسم إنجليزي صحيح (من 3 لـ 12 حرف وبدون عربي)!";
+        errorSpan.innerText = "⚠️ اسم إنجليزي غير صالح (3 لـ 12 حرف بدون مسافات أو عربي)!";
         return;
       }
 
-      myName = nameVal;
-      
-      // اخفاء شاشة تسجيل الدخول واظهار واجهة اللعبة
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('gameUI').style.display = 'flex';
+      // تحديد تلقائي لتوثيق المطور لو كان اسمك EPIKDEV أو MOHAMMED
+      isDev = (nameVal.toUpperCase() === 'EPIKDEV' || nameVal.toUpperCase() === 'MOHAMMED');
 
-      // بدء الاتصال بالسيرفر بعد تسجيل الاسم
-      initSocket();
-    }
-
-    function initSocket() {
       socket = io();
 
-      socket.on('connect', () => {
-        myId = socket.id;
-        players[myId] = { x: 140, y: 80, name: myName, color: '#ff7675', ssj: false, action: 'normal' };
+      socket.emit('playerJoin', { id: socket.id, name: nameVal, isDev: isDev, x: 140, y: 70, ssj: false, action: 'normal' }, (response) => {
+        if (!response.success) {
+          errorSpan.innerText = "⚠️ " + response.message;
+          socket.disconnect();
+        } else {
+          myName = nameVal;
+          myId = socket.id;
+          document.getElementById('loginScreen').style.display = 'none';
+          document.getElementById('gameUI').style.display = 'flex';
+          initGameListeners();
+        }
+      });
+    }
+
+    function initGameListeners() {
+      socket.on('currentPlayers', (serverPlayers) => {
+        players = serverPlayers;
         draw();
-        // إرسال الاسم للسيرفر
-        socket.emit('playerJoin', { id: myId, name: myName, x: 140, y: 80, ssj: false, action: 'normal' });
       });
 
       socket.on('playerMove', (data) => {
@@ -156,30 +160,79 @@
 
       socket.on('chatMessage', (data) => {
         const box = document.getElementById('chatMessages');
-        box.innerHTML += `<div><b>${data.name}:</b> ${data.text}</div>`;
+        let badge = data.isDev ? ' <span style="color:#f1c40f">[👑 DEV]</span>' : '';
+        box.innerHTML += `<div><b>${data.name}${badge}:</b> ${data.text}</div>`;
         box.scrollTop = box.scrollHeight;
       });
+
+      setInterval(updateMovement, 25);
     }
 
-    function startMove(dir) {
-      if (!myId || !players[myId]) return;
-      movePlayer(dir);
-      moveInterval = setInterval(() => movePlayer(dir), 80);
+    // إعدادات عصا التحكم الـ Joystick
+    const area = document.getElementById('joystickArea');
+    const knob = document.getElementById('joystickKnob');
+
+    function handleTouch(e) {
+      e.preventDefault();
+      const rect = area.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      let dx = clientX - (rect.left + rect.width / 2);
+      let dy = clientY - (rect.top + rect.height / 2);
+      let dist = Math.sqrt(dx * dx + dy * dy);
+      let maxDist = 40;
+
+      if (dist > maxDist) {
+        dx = (dx / dist) * maxDist;
+        dy = (dy / dist) * maxDist;
+      }
+
+      knob.style.transform = `translate(${dx}px, ${dy}px)`;
+      moveVector = { x: dx / maxDist, y: dy / maxDist };
+      isDragging = true;
     }
 
-    function stopMove() {
-      clearInterval(moveInterval);
+    function endTouch() {
+      knob.style.transform = `translate(0px, 0px)`;
+      moveVector = { x: 0, y: 0 };
+      isDragging = false;
     }
 
-    function movePlayer(dir) {
-      const step = 8;
-      if (dir === 'up' && players[myId].y > 0) players[myId].y -= step;
-      if (dir === 'down' && players[myId].y < canvas.height - 35) players[myId].y += step;
-      if (dir === 'left' && players[myId].x > 0) players[myId].x -= step;
-      if (dir === 'right' && players[myId].x < canvas.width - 35) players[myId].x += step;
+    area.addEventListener('touchstart', handleTouch);
+    area.addEventListener('touchmove', handleTouch);
+    area.addEventListener('touchend', endTouch);
+
+    area.addEventListener('mousedown', (e) => {
+      window.addEventListener('mousemove', handleTouch);
+      window.addEventListener('mouseup', () => {
+        window.removeEventListener('mousemove', handleTouch);
+        endTouch();
+      }, { once: true });
+      handleTouch(e);
+    });
+
+    // تحديث الحركة ومنع التعليق عند الحواف تماماً
+    function updateMovement() {
+      if (!myId || !players[myId] || !isDragging) return;
+
+      const speed = 4.5;
+      let newX = players[myId].x + moveVector.x * speed;
+      let newY = players[myId].y + moveVector.y * speed;
+
+      const maxX = canvas.width - 26;
+      const maxY = canvas.height - 26;
+
+      if (newX < 2) newX = 2;
+      if (newX > maxX) newX = maxX;
+      if (newY < 2) newY = 2;
+      if (newY > maxY) newY = maxY;
+
+      players[myId].x = newX;
+      players[myId].y = newY;
 
       draw();
-      socket.emit('playerMove', { id: myId, x: players[myId].x, y: players[myId].y, name: myName, color: players[myId].color, ssj: isSuperSaiyan });
+      socket.emit('playerMove', { id: myId, x: newX, y: newY, name: myName, isDev: isDev, ssj: isSuperSaiyan });
     }
 
     function chargeKi() {
@@ -199,7 +252,6 @@
       if(ki >= 100) {
         isSuperSaiyan = true;
         players[myId].ssj = true;
-        players[myId].color = '#fdcb6e';
         draw();
         socket.emit('playerAction', { id: myId, action: 'transform', ssj: true });
         alert("⚡ تحول Goku إلى Super Saiyan الأسطوري!");
@@ -213,7 +265,6 @@
       players[myId].action = 'kamehameha';
       draw();
       socket.emit('playerAction', { id: myId, action: 'kamehameha', ssj: isSuperSaiyan });
-      
       if(ki > 20) ki -= 20;
       updateKiBar();
     }
@@ -222,7 +273,7 @@
       const input = document.getElementById('msgInput');
       const text = input.value.trim();
       if(text !== '') {
-        socket.emit('chatMessage', { name: myName, text: text });
+        socket.emit('chatMessage', { name: myName, isDev: isDev, text: text });
         input.value = '';
       }
     }
@@ -239,22 +290,24 @@
         if(p.action === 'kamehameha') {
           ctx.fillStyle = '#0984e3';
           ctx.beginPath();
-          ctx.arc(p.x + 15, p.y + 15, 28, 0, Math.PI * 2);
+          ctx.arc(p.x + 13, p.y + 13, 24, 0, Math.PI * 2);
           ctx.fill();
         }
 
         ctx.fillStyle = baseColor;
         ctx.beginPath();
-        ctx.arc(p.x + 15, p.y + 15, 14, 0, Math.PI * 2);
+        ctx.arc(p.x + 13, p.y + 13, 12, 0, Math.PI * 2);
         ctx.fill();
         
         ctx.fillStyle = p.ssj ? '#e1b12c' : '#2d3436';
-        ctx.fillRect(p.x + 10, p.y + 2, 10, 6);
+        ctx.fillRect(p.x + 8, p.y + 2, 10, 5);
 
-        ctx.fillStyle = '#fff';
-        ctx.font = '9px sans-serif';
+        // رسم التوثيق الذهبي للمطور فوق الشخصية مباشرة
+        ctx.fillStyle = p.isDev ? '#f1c40f' : '#fff';
+        ctx.font = p.isDev ? 'bold 10px sans-serif' : '9px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(p.name || 'Goku', p.x + 15, p.y + 32);
+        let displayName = p.isDev ? `[👑 DEV] ${p.name}` : (p.name || 'Goku');
+        ctx.fillText(displayName, p.x + 13, p.y + 28);
       }
     }
   </script>

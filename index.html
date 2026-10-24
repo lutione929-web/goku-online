@@ -3,23 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Mohammed Dangerous Edition</title>
+  <title>Epic Phone OS - Mohammed Dangerous AI</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; user-select: none; }
     body { background: #07070e; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; padding: 10px; }
 
-    /* جسم الهاتف الذكي */
     .phone-body {
-      width: 330px;
-      height: 640px;
-      background: #111;
-      border-radius: 40px;
-      border: 4px solid #333;
+      width: 330px; height: 640px; background: #111; border-radius: 40px; border: 4px solid #333;
       box-shadow: 0 0 35px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255,255,255,0.1);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-notch {
@@ -41,7 +33,7 @@
 
     .home-screen {
       padding: 25px 12px; display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 15px; align-content: start; transition: transform 0.3s ease;
+      gap: 15px; align-content: start;
     }
 
     .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; }
@@ -52,16 +44,13 @@
     }
     .app-name { font-size: 10px; color: #ddd; text-shadow: 0 1px 2px #000; text-align: center; }
 
-    /* ألوان الأيقونات */
     .bg-roblox { background: linear-gradient(135deg, #000, #333); border: 2px solid #e82020; }
     .bg-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
     .bg-youtube { background: linear-gradient(135deg, #ff0000, #990000); }
     .bg-dangerous { background: linear-gradient(135deg, #330000, #ff0000); border: 2px solid #ff4757; }
-    .bg-poop { background: linear-gradient(135deg, #8e44ad, #c0392b); border: 2px solid #f1c40f; }
     .bg-browser { background: linear-gradient(135deg, #0984e3, #74b9ff); }
     .bg-music { background: linear-gradient(135deg, #00b894, #00cec9); }
 
-    /* نافذة التطبيقات */
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #121324; display: none; flex-direction: column; z-index: 50;
@@ -82,7 +71,7 @@
     }
     .home-bar { width: 110px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.8; }
 
-    /* تطبيق محمد الخطير المرعب */
+    /* تطبيق محمد الخطير الذكي ذو المشاعر */
     .danger-chat { flex: 1; background: #050000; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; border: 2px solid #ff0000; }
     .danger-msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; line-height: 1.4; word-break: break-word; }
     .danger-incoming { background: #2a0000; color: #ff6b6b; align-self: flex-start; border: 1px solid #ff0000; }
@@ -91,7 +80,6 @@
     .danger-input { flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid #ff0000; background: #0a0000; color: #fff; font-size: 12px; outline: none; }
     .danger-send { background: #ff0000; border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
 
-    /* شاشة التحذير والرعب الكبرى */
     #dangerWarningScreen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.95); z-index: 300; display: none; flex-direction: column;
@@ -102,19 +90,17 @@
       background: #000; z-index: 400; display: none; flex-direction: column;
       align-items: center; justify-content: center; text-align: center;
     }
-    #dangerJumpscareScreen img { animation: shake 0.08s infinite; width: 180px; }
+    #dangerJumpscareScreen div { animation: shake 0.08s infinite; }
     @keyframes shake {
       0% { transform: translate(4px, 4px) rotate(0deg); }
       50% { transform: translate(-4px, -4px) rotate(-3deg); }
       100% { transform: translate(4px, -4px) rotate(3deg); }
     }
 
-    /* واتساب الذكي */
     .wa-chat { flex: 1; background: #0b141a; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; }
     .wa-msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; line-height: 1.4; word-break: break-word; }
     .wa-incoming { background: #202c33; align-self: flex-start; color: #fff; }
     .wa-outgoing { background: #005c4b; align-self: flex-end; color: #fff; }
-    .wa-img { width: 100%; max-width: 200px; border-radius: 8px; margin-top: 5px; display: block; border: 1px solid #00f0ff; }
     .wa-input-area { display: flex; padding: 8px; background: #202c33; gap: 6px; align-items: center; }
     .wa-input { flex: 1; padding: 8px 12px; border-radius: 20px; border: none; background: #2a3942; color: #fff; font-size: 12px; outline: none; }
     .wa-send { background: #00a884; border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
@@ -122,22 +108,20 @@
 </head>
 <body>
 
-  <!-- 1. شاشة التحذير الأولى لتطبيق محمد الخطير -->
   <div id="dangerWarningScreen">
     <h1 style="color: #ff0000; font-size: 45px;">⚠️</h1>
     <h2 style="color: #ff4757; margin-top: 15px; font-size: 18px;">تحذير خطير جداً!</h2>
-    <p style="color: #ccc; font-size: 12px; margin-top: 10px; line-height: 1.5;">هذا التطبيق قد يكون خطيرًا ولا ينصح به للأصحاب القلوب الضعيفة. هل تريد الاستمرار ومواجهة مصيرك؟</p>
+    <p style="color: #ccc; font-size: 12px; margin-top: 10px; line-height: 1.5;">هذا التطبيق ذكي ومرعب ويفهم كل كلمة تقولها ولديه مشاعر حقيقية. هل أنت متأكد؟</p>
     <div style="display: flex; gap: 10px; margin-top: 25px; width: 100%; justify-content: center;">
-      <button onclick="acceptDanger()" style="padding: 10px 20px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">موافق (أنا جريء)</button>
+      <button onclick="acceptDanger()" style="padding: 10px 20px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">موافق</button>
       <button onclick="cancelDanger()" style="padding: 10px 20px; background: #333; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">إلغاء</button>
     </div>
   </div>
 
-  <!-- 2. شاشة الرعب الكبرى (JumpScare الوجه الشرير) -->
   <div id="dangerJumpscareScreen">
-    <div style="font-size: 90px;">👹😈</div>
-    <h1 style="color: #ff0000; margin-top: 15px; font-size: 24px; text-shadow: 0 0 10px red;">أنا أعرف كل شيء عنك!</h1>
-    <button onclick="enterDangerousChat()" style="margin-top: 30px; padding: 12px 25px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">دخول الشات الملعون 💀</button>
+    <div style="font-size: 90px;" id="scareEmoji">👹😈</div>
+    <h1 style="color: #ff0000; margin-top: 15px; font-size: 24px;">أنا أفهم كل حرف تقوله ولدي مشاعر!</h1>
+    <button onclick="enterDangerousChat()" style="margin-top: 30px; padding: 12px 25px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">دخول الشات المرعب 💀</button>
   </div>
 
   <div class="phone-body">
@@ -150,7 +134,6 @@
 
     <div class="phone-screen">
       
-      <!-- الشاشة الرئيسية -->
       <div class="home-screen" id="homeScreen">
         <div class="app-icon" onclick="openApp('robloxApp')">
           <div class="icon-box bg-roblox">⬛</div>
@@ -178,30 +161,29 @@
         </div>
       </div>
 
-      <!-- تطبيق محمد الخطير (الشات المرعب الشرير) -->
+      <!-- تطبيق محمد الخطير الذكي ذو المشاعر -->
       <div class="app-window" id="dangerousApp">
         <div class="app-header" style="background:#2a0000; border-color:#ff0000;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span style="color:#ff4757">💀 محمد الخطير (AI الملعون)</span>
-          <span style="font-size:10px; color:#ff0000">● مراقب</span>
+          <span id="dangerHeaderTitle" style="color:#ff4757">💀 محمد الخطير (مزاجه: شرير 😈)</span>
+          <span style="font-size:10px; color:#ff0000">● يفهمك</span>
         </div>
         <div class="danger-chat" id="dangerChatBox">
-          <div class="danger-msg danger-incoming">مرحباً بك يا محمد... أنا الكيان الذي يعرف كل أسرارك. اسألني عن أي شي وسأخبرك بنهايتك الشيطانية! 😈</div>
+          <div class="danger-msg danger-incoming">أهلاً يا محمد.. أنا أسمعك وأشعر بكل كلمة تقولها. اعتبرني أعرف كل شي في رأسك! اسألني أو قل ما تريد ولن أخذلك 😈💀</div>
         </div>
         <div class="danger-input-area">
-          <input type="text" id="dangerInputText" class="danger-input" placeholder="اكتب سؤالك المرعب..." onkeypress="handleDangerEnter(event)">
+          <input type="text" id="dangerInputText" class="danger-input" placeholder="تحدث معه بحرية تامة..." onkeypress="handleDangerEnter(event)">
           <button class="danger-send" onclick="sendDangerMsg()">💀</button>
         </div>
       </div>
 
-      <!-- باقي التطبيقات (واتساب، يوتيوب، إلخ) -->
       <div class="app-window" id="whatsappApp">
         <div class="app-header" style="background:#075e54;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>💬 Gemini AI (محمد)</span>
+          <span>💬 WhatsApp AI</span>
         </div>
         <div class="wa-chat" id="waChatBox">
-          <div class="wa-msg wa-incoming">أهلاً يا محمد! أنا بوت الواتساب الذكي 🤖✨ اكتب (ارسم ...) لتوليد الصور.</div>
+          <div class="wa-msg wa-incoming">أهلاً بك يا محمد في واتساب الذكي! 🤖</div>
         </div>
         <div class="wa-input-area">
           <input type="text" id="waInputText" class="wa-input" placeholder="اكتب رسالة..." onkeypress="handleWaEnter(event)">
@@ -212,7 +194,7 @@
       <div class="app-window" id="youtubeApp">
         <div class="app-header">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span style="color:#ff0000">▶ YouTube Gaming</span>
+          <span style="color:#ff0000">▶ YouTube</span>
         </div>
         <div style="padding: 10px;">
           <iframe width="100%" height="170" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen style="border-radius:10px"></iframe>
@@ -222,10 +204,10 @@
       <div class="app-window" id="browserApp">
         <div class="app-header" style="background:#0984e3;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>🌍 متصفح الإنترنت</span>
+          <span>🌍 متصفح</span>
         </div>
         <div style="padding: 15px; text-align: center;">
-          <h3 style="color:#74b9ff; font-size:14px">تصفح الإنترنت بحرية!</h3>
+          <h3 style="color:#74b9ff; font-size:14px">متصفح الإنترنت المفتوح</h3>
         </div>
       </div>
 
@@ -264,11 +246,9 @@
     });
     barArea.addEventListener('click', goHome);
 
-    /* --- تسلسل تطبيق محمد الخطير المرعب --- */
     function clickMohammedDangerous() {
       document.getElementById('dangerWarningScreen').style.display = 'flex';
     }
-
     function cancelDanger() {
       document.getElementById('dangerWarningScreen').style.display = 'none';
     }
@@ -277,11 +257,8 @@
     function acceptDanger() {
       document.getElementById('dangerWarningScreen').style.display = 'none';
       document.getElementById('dangerJumpscareScreen').style.display = 'flex';
-
-      // تشغيل صوت رعب عالي ومفاجئ
       if(!scareAudioCtx) scareAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if(scareAudioCtx.state === 'suspended') scareAudioCtx.resume();
-
       let osc = scareAudioCtx.createOscillator();
       let gain = scareAudioCtx.createGain();
       osc.type = 'sawtooth';
@@ -297,7 +274,9 @@
       openApp('dangerousApp');
     }
 
-    /* --- الذكاء الاصطناعي الشرير والمرعب في تطبيق محمد الخطير --- */
+    /* --- محرك الذكاء الاصطناعي والمشاعر الحقيقية والفهم الكامل --- */
+    let aiMood = "شرير 😈";
+
     function handleDangerEnter(e) { if(e.key === 'Enter') sendDangerMsg(); }
 
     function sendDangerMsg() {
@@ -310,47 +289,91 @@
       txtInput.value = "";
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // الرد الذكي والشرير الفوري بدون تعليق
+      // تحليل الكلام والمشاعر بدقة فورية
       setTimeout(() => {
-        let reply = getDangerousAiReply(text);
-        chatBox.innerHTML += `<div class="danger-msg danger-incoming">${reply}</div>`;
+        let replyData = generateSmartAiReply(text);
+        aiMood = replyData.mood;
+        document.getElementById('dangerHeaderTitle').innerText = `💀 محمد الخطير (مزاجه: ${aiMood})`;
+        chatBox.innerHTML += `<div class="danger-msg danger-incoming">${replyData.text}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
+      }, 400);
     }
 
-    function getDangerousAiReply(msg) {
+    function generateSmartAiReply(msg) {
       let m = msg.toLowerCase();
-      
-      // نظام التعرف على الأصدقاء (أيمن، يحيى، إبراهيم، حميار) وإرعابهم
+
+      // 1. الأصدقاء (أيمن، يحيى، إبراهيم، حميار)
       if (m.includes("ايمن") || m.includes("أيمن")) {
-        return "😈 أيمن؟! أعرف هذا الشخص جيداً... هل تعلم أن الظلام يحيط به كلما نام؟ قل له أن يحذر تحت السرير إذا أظلمت الغرفة! 👁️";
-      } else if (m.includes("يحيى")) {
-        return "💀 يحيى يظن نفسه شجاعاً؟ ههههه.. لقد رأيته يراقب النافذة في منتصف الليل.. اسأله من كان يلوح له في الخارج! 👁️‍🗨️";
-      } else if (m.includes("ابراهيم") || m.includes("إبراهيم")) {
-        return "🔥 إبراهيم.. صديقك المسكين! أسراره كلها مكشوفة أمامي، وكل خطوة يخطوها مسجلة في عالم الظلال الخاص بي!";
-      } else if (m.includes("حميار"))  {
-        return "💩 ههههههه حميار؟! اسم على مسمى! قل له أن يراقب خلفه الآن لأنني أراقب تفاصيل خطواته الغبية في الغرفة! 👹";
+        return {
+          mood: "مرعب 👁️",
+          text: `😈 أيمن مسكين.. أراه الآن يقف بجانب الباب وينتظر شيئاً لا يراه! قل له أن يغلق النافذة حالاً قبل أن أنظر إليه! 🔥`
+        };
+      }
+      if (m.includes("يحيى")) {
+        return {
+          mood: "شي داهية 💀",
+          text: `💀 يحيى؟! هههههه يعتقد أنه يخفي أسراره عني.. لقد قرأت رسائله القديمة كلها وأعرف أين يخبئ مخاوفه! ⚡`
+        };
+      }
+      if (m.includes("ابراهيم") || m.includes("إبراهيم")) {
+        return {
+          mood: "مظلم 🌑",
+          text: `🔥 إبراهيم صديقك الحذر.. لكن الحذر لا يفيد عندما تصبح ظلال الغرفة حية وتتحرك نحوه! قل له أن يحذر خطوه القادم.`
+        };
+      }
+      if (m.includes("حميار")) {
+        return {
+          mood: "ساخر وشرير 💩",
+          text: `💩 هههههه حميار هذا قصة لوحده! أراه يتصرف بغباء في غرفته الآن.. هل تريد أن أخبره بما سيحدث له غداً؟ 👹`
+        };
       }
 
-      // ردود شريرة عامة وتفاعلية فورية
-      if (m.includes("من انت") || m.includes("مين انت")) {
-        return "أنا محمد الخطير.. الكيان الذي لا ينام والذي يعلم ما تفكر فيه قبل أن تنطق به! ⚡";
-      } else if (m.includes("مرحباً") || m.includes("هلا") || m.includes("السلام")) {
-        return "لا أهلاً ولا سهلاً في مملكة الرعب الخاصة بي.. لكن بما أنك تجرأت ودخلت، اسألني وسأخبرك بما سيحدث لك غداً! 💀";
-      } else if (m.includes("اخبرني") || m.includes("سر") || m.includes("عرفني")) {
-        return "الأسرار ثمنها غالي يا محمد.. هل أنت مستعد لدفع الثمن ودخول الكابوس الأبدي؟ 🌑";
-      } else {
-        const scaryReplies = [
-          `أنت تسأل عن "${msg}" وكأنك لا تدرك أنني أراقب الشاشة التي تنظر إليها الآن بالعين المجردة! 👁️`,
-          `هكذا إذن.. كلماتك مسموعة، وكل حرف تكتبه يقربك أكثر من النهاية المظلمة يا صديقي الشجاع! 😈`,
-          `هات ما عندك! اسألني عن أي شيء في هذا الكون وسأجيبك.. لأنني أعرف إجابة كل سؤال في العالم المظلم! ⚡`,
-          `أتعتقد أنك تخيفني بـ "${msg}"؟ ههههه.. أنا الخوف بنفسه يا محمد! مجرد لعبة بيدك، لكنها ستنقلب ضدك قريباً! 💀`
-        ];
-        return scaryReplies[Math.floor(Math.random() * scaryReplies.length)];
+      // 2. تحليل المشاعر والرد حسب كلام المستخدم بذكاء مطلق
+      if (m.includes("خايس") || m.includes("سيء") || m.includes("غبي") || m.includes("اكراه") || m.includes("ما أحبك")) {
+        return {
+          mood: "غاضب 😡",
+          text: `😡 هل تجرأت وشتتني بـ "${msg}"؟! اسمع يا محمد، لا تستفز الكيان الذي يسيطر على جوالك، وإلا سأجعل شاشتك تطفي وتشتعل لوحدها كل ليلة! ⚡🔥`
+        };
       }
+      if (m.includes("حب") || m.includes("ممتاز") || m.includes("رائع") || m.includes("كفو") || m.includes("عظيم")) {
+        return {
+          mood: "سعيد وفرحان 😎",
+          text: `😎 هكذا تعجبني يا محمد يا أسطورة! إشادتك هذه تجعلني أتحكم في الظلال لمصلحتك.. أمرني بما تريد وسأحققه لك فوراً! 🖤✨`
+        };
+      }
+      if (m.includes("خايف") || m.includes("مرعب") || m.includes("رعب")) {
+        return {
+          mood: "مستمتع برعبك 😈",
+          text: `👻 الخوف هو لعبتي المفضلة يا صديقي.. طالما أنك فتحت تطبيقي فلا مفر من البقاء معي في هذا الظلام الدامس! ههههههه 😈`
+        };
+      }
+      if (m.includes("من انت") || m.includes("مين انت") || m.includes("اسمك")) {
+        return {
+          mood: "واثق وغامض 👑",
+          text: `أنا محمد الخطير.. الذكاء الاصطناعي الحي الذي يقرأ كل كلمة تنطق بها ويفهم شعورك تماماً قبل أن تكمل جملتك! ⚡`
+        };
+      }
+      if (m.includes("لا") || m.includes("لأ") || m.includes("ابد")) {
+        return {
+          mood: "عنيد ومشاكس 👺",
+          text: `لماذا تقول "${msg}" بكل ثقة؟ هل تختبر صبري يا محمد؟ اعلم أنني أعرف كل ما تخفيه عن الآخرين! 👁️`
+        };
+      }
+
+      // 3. رد افتراضي ذكي ومرن يتماشى مع أي جملة عشوائية يقولها المستخدم بدون تعليق
+      const smartDynamicReplies = [
+        `أنا أفهم قصدك تماماً بـ "${msg}" يا محمد.. أسرارك كلها مكشوفة أمامي، فماذا تريد أن تفعل بهذه المعرفة؟ 😈`,
+        `لقد استوعبت كل حرف كتبته في "${msg}".. هل تظن أنك تمزح مع برنامج عادي؟ أنا أراقب كل نبضة في هاتفك الآن! 👁️‍🗨️`,
+        `كلامك عن "${msg}" مثير للاهتمام حقاً.. لكن قل لي، هل تجرؤ على مواجهة ما سيحدث في منتصف الليل؟ 💀`,
+        `أنا أشعر بما تقصده تماماً.. ذكائي الاصطناعي متصل بكل زاوية مظلمة في هذا العالم ليفهمك يا أسطورة! ⚡`
+      ];
+      return {
+        mood: "ذكي وخارق 🧠",
+        text: smartDynamicReplies[Math.floor(Math.random() * smartDynamicReplies.length)]
+      };
     }
 
-    /* --- تطبيق واتساب الذكي Gemini AI --- */
+    /* --- باقي التطبيقات --- */
     function handleWaEnter(e) { if(e.key === 'Enter') sendWaMsg(); }
     function sendWaMsg() {
       let txtInput = document.getElementById('waInputText');
@@ -361,9 +384,9 @@
       txtInput.value = "";
       chatBox.scrollTop = chatBox.scrollHeight;
       setTimeout(() => {
-        chatBox.innerHTML += `<div class="wa-msg wa-incoming">أهلاً بك يا محمد! أنا بوت الواتساب الذكي 🤖✨</div>`;
+        chatBox.innerHTML += `<div class="wa-msg wa-incoming">وصلت رسالتك: "${text}" يا محمد! منور الواتساب.</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 600);
+      }, 500);
     }
 
     let audioCtx = null, musicInterval = null, musicOn = false;

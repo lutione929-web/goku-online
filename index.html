@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Dark Web Edition</title>
+  <title>Epic Phone OS - Hamyar AI Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -50,7 +50,7 @@
     }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
 
-    /* شاشة الاختراق والرعب القصوى */
+    /* شاشة الاختراق والمقلب */
     #ultimateHackedScreen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #000; z-index: 200; display: none; flex-direction: column;
@@ -63,17 +63,17 @@
       100% { transform: translate(4px, -4px) rotate(3deg); }
     }
 
-    /* أسلوب الدارك ويب */
-    .dw-menu { display: flex; flex-direction: column; gap: 8px; padding: 12px; flex: 1; overflow-y: auto; }
-    .dw-card { background: #150202; border: 1px solid #500; padding: 10px; border-radius: 8px; cursor: pointer; }
-    .dw-card:active { background: #300; }
-    .dw-title { font-size: 13px; font-weight: bold; color: #ff4757; margin-bottom: 3px; }
-    .dw-desc { font-size: 10px; color: #aaa; }
+    /* شات تطبيق حميار AI */
+    .hamyar-chat { flex: 1; background: #0c0202; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; gap: 8px; }
+    .hamyar-msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 11px; line-height: 1.4; word-break: break-word; }
+    .hamyar-incoming { background: #200; color: #ff6b6b; align-self: flex-start; border: 1px solid #ff0000; }
+    .hamyar-outgoing { background: #331a00; color: #feca57; align-self: flex-end; border: 1px solid #ff9f43; }
+    .hamyar-img-card { width: 100%; max-width: 180px; border-radius: 6px; margin-top: 5px; border: 1px solid #ff4757; background: #111; padding: 5px; text-align: center; }
   </style>
 </head>
 <body>
 
-  <!-- شاشة الاختراق والمقلب المرعب -->
+  <!-- شاشة الاختراق -->
   <div id="ultimateHackedScreen">
     <div class="scary-img-box" id="scaryFaceIcon">😈🔒</div>
     <h2 id="hackedTextMain" style="color: #ff0000; margin-top: 15px; font-size: 18px; line-height: 1.5; padding: 0 10px;">جاري إعداد النظام...</h2>
@@ -96,7 +96,11 @@
           <div class="icon-box" style="background:#8b0000; border:2px solid #ff0000;">⚠️</div>
           <span class="app-name">محمد الخطير</span>
         </div>
-        <!-- أيقونة تطبيق الدارك ويب الجديدة -->
+        <!-- أيقونة تطبيق إنشاء صورة حميار الجديدة -->
+        <div class="app-icon" onclick="openApp('hamyarApp')">
+          <div class="icon-box" style="background:#4a2c00; border:2px solid #f1c40f;">🐴</div>
+          <span class="app-name">صورة حميار</span>
+        </div>
         <div class="app-icon" onclick="openApp('darkwebApp')">
           <div class="icon-box" style="background:#000; border:2px solid #ff0000;">🕸️</div>
           <span class="app-name">الدارك ويب</span>
@@ -125,7 +129,7 @@
         <div style="flex:1; background:#0b141a; padding:10px; color:#fff; font-size:12px;">أهلاً بك في الواتساب الذكي!</div>
       </div>
 
-      <!-- 3. تطبيق محمد الخطير (مع الموسيقى والفخ المزيف) -->
+      <!-- 3. محمد الخطير -->
       <div class="app-window" id="dangerApp">
         <div class="app-header" style="background:#300; border-bottom:2px solid #f00;">
           <button class="fake-exit-btn" onclick="triggerFakeExitTrap()">خروج</button>
@@ -134,7 +138,7 @@
         <div style="flex:1; background:#050000; padding:15px; display:flex; flex-direction:column; justify-content:space-between;">
           <div>
             <h2 style="color:#ff0000; margin-bottom:10px; font-size:16px;">⚠️ تحذير مرعب!</h2>
-            <p style="color:#ff6b6b; font-size:12px; line-height:1.5;">أنت داخل التطبيق المراقب. جرب زر الخروج المزيف في الأعلى...</p>
+            <p style="color:#ff6b6b; font-size:12px; line-height:1.5;">أنت داخل التطبيق المراقب. جرب زر الخروج المزيف...</p>
           </div>
           <div style="display:flex; gap:5px;">
             <input type="text" id="dangerInput" placeholder="تحدث مع الكيان..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f00; background:#100; color:#fff; font-size:11px; outline:none;">
@@ -143,38 +147,31 @@
         </div>
       </div>
 
-      <!-- 4. تطبيق الدارك ويب المرعب (Dark Web) الجديد -->
+      <!-- 4. تطبيق إنشاء صورة حميار الجديد (Hamyar AI Bot) -->
+      <div class="app-window" id="hamyarApp">
+        <div class="app-header" style="background:#3a2000; border-bottom:2px solid #f1c40f;">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span style="color:#f1c40f;">🐴 بوت إنشاء صورة حميار AI</span><span></span>
+        </div>
+        <div class="hamyar-chat" id="hamyarChatBox">
+          <div class="hamyar-msg hamyar-incoming">أهلاً بك يا أسطورة في بوت "صورة حميار"! اكتب لي (صورة حميار) وسأولد لك أكثر من 1000 صورة حمار مضحكة، شريك (SHREK)، وترامب مع مفاجآت عشوائية فتاكة! 🐴🔥</div>
+        </div>
+        <div style="display:flex; padding:8px; background:#201000; gap:5px; border-top:1px solid #f1c40f;">
+          <input type="text" id="hamyarInputText" placeholder="اكتب: صورة حميار..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f1c40f; background:#100500; color:#fff; font-size:11px; outline:none;" onkeypress="handleHamyarEnter(event)">
+          <button onclick="sendHamyarMsg()" style="background:#f1c40f; border:none; color:#000; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">🚀</button>
+        </div>
+      </div>
+
+      <!-- 5. الدارك ويب -->
       <div class="app-window" id="darkwebApp">
         <div class="app-header" style="background:#100; border-bottom:2px solid #ff0000;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span style="color:#ff0000;">🕸️ Tor / Dark Web</span><span></span>
         </div>
-        <div class="dw-menu" id="dwContentBox">
-          <p style="color:#ff6b6b; font-size:11px; text-align:center; margin-bottom:5px;">⚠️ أهلاً بك في البوابة المظلمة. اختر قسم الرعب:</p>
-          
-          <div class="dw-card" onclick="openDwSection('market')">
-            <div class="dw-title">🛒 متجر الأسرار الملعونة</div>
-            <div class="dw-desc">شراء ساعات وأغراض لأشخاص اختفوا ظروف غامضة.</div>
-          </div>
-
-          <div class="dw-card" onclick="openDwSection('chat')">
-            <div class="dw-title">💬 غرفة دردشة الموتى</div>
-            <div class="dw-desc">تحدث مع حسابات متصلة من عام 2014 ولا زالت ترد!</div>
-          </div>
-
-          <div class="dw-card" onclick="openDwSection('stream')">
-            <div class="dw-title">🎥 بث الغرفة السرية (Red Room)</div>
-            <div class="dw-desc">كاميرا مراقبة حية لغرفة مظلمة يتحرك فيها ظل غريب.</div>
-          </div>
-
-          <div class="dw-card" onclick="openDwSection('button')" style="border: 1px dashed #ff0000;">
-            <div class="dw-title" style="color:#ff0000;">🚨 زر الحقيقة الممنوعة (لا تضغطه!)</div>
-            <div class="dw-desc">سحب بيانات الجوال الفوري وكشف موقعك.</div>
-          </div>
-        </div>
+        <div style="padding:15px; color:#ff6b6b; font-size:12px;">أهلاً بك في بوابة الدارك ويب المظلمة...</div>
       </div>
 
-      <!-- 5. يوتيوب -->
+      <!-- 6. يوتيوب -->
       <div class="app-window" id="youtubeApp">
         <div class="app-header" style="background:#990000;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
@@ -204,66 +201,63 @@
 
     function goHome() {
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
-      // إعادة تعيين محتوى الدارك ويب لو خرج
-      document.getElementById('dwContentBox').style.display = 'block';
-      let oldView = document.getElementById('dwActiveView');
-      if(oldView) oldView.remove();
     }
 
-    /* --- محتوى أقسام الدارك ويب المرعبة --- */
-    function openDwSection(section) {
-      let box = document.getElementById('dwContentBox');
-      box.style.display = 'none';
+    /* --- محرك مولد صور حميار الـ 1000+ مع ترامب وشريك والبراز العشوائي --- */
+    function handleHamyarEnter(e) { if(e.key === 'Enter') sendHamyarMsg(); }
 
-      let activeView = document.createElement('div');
-      activeView.id = 'dwActiveView';
-      activeView.style.cssText = "flex:1; padding:15px; display:flex; flex-direction:column; justify-content:space-between; color:#fff; font-size:12px;";
+    function sendHamyarMsg() {
+      let txtInput = document.getElementById('hamyarInputText');
+      let chatBox = document.getElementById('hamyarChatBox');
+      let text = txtInput.value.trim();
+      if(!text) return;
 
-      if(section === 'market') {
-        activeView.innerHTML = `
-          <div>
-            <h3 style="color:#ff4757; margin-bottom:8px;">🛒 متجر الأسرار الملعونة</h3>
-            <p style="color:#aaa; font-size:11px; line-height:1.4;">العنصر المحدد: ساعة يد قديمة مأخوذة من مسرح جريمة غامضة.</p>
-            <div style="background:#200; border:1px solid #f00; padding:10px; margin-top:10px; border-radius:6px; text-align:center;">
-              <b style="color:#ff6b6b;">السعر: ذكرياتك الأخيرة!</b>
-            </div>
-          </div>
-          <button onclick="alert('⚠️ تم تأكيد الشراء! ستصلك الساعة الملعونة في منتصف الليل تحت وسادتك...'); goHome();" style="background:#f00; border:none; color:#fff; padding:10px; font-weight:bold; border-radius:6px; cursor:pointer;">تأكيد الطلب الملعون</button>
-        `;
-      } else if(section === 'chat') {
-        activeView.innerHTML = `
-          <div>
-            <h3 style="color:#ff4757; margin-bottom:8px;">💬 غرفة دردشة الموتى</h3>
-            <div style="background:#110; padding:8px; border-radius:6px; height:180px; overflow-y:auto; font-size:11px; color:#ff6b6b;">
-              <b>[User_999]</b>: هل تسمع صوت طرقات على باب غرفتك يا محمد؟<br><br>
-              <b>[Ghost_X]</b>: لقد انضم إلينا.. لا ترتفت خلفك!
-            </div>
-          </div>
-          <button onclick="goHome()" style="background:#500; border:none; color:#fff; padding:8px; border-radius:6px; cursor:pointer;">هروب سريع</button>
-        `;
-      } else if(section === 'stream') {
-        activeView.innerHTML = `
-          <div style="text-align:center;">
-            <h3 style="color:#ff4757; margin-bottom:8px;">🎥 غرفة المراقبة الحية</h3>
-            <div style="background:#000; border:2px solid #f00; height:150px; display:flex; align-items:center; justify-content:center; font-size:40px; border-radius:6px;">
-              👤👁️
-            </div>
-            <p style="color:#ff6b6b; margin-top:8px; font-size:11px;">بث مباشر من غرفة مظلمة.. الظل يقترب من الكاميرا الآن!</p>
-          </div>
-          <button onclick="goHome()" style="background:#500; border:none; color:#fff; padding:8px; border-radius:6px; cursor:pointer;">إغلاق البث</button>
-        `;
-      } else if(section === 'button') {
-        activeView.innerHTML = `
-          <div style="text-align:center; padding-top:20px;">
-            <h3 style="color:#ff0000; margin-bottom:10px;">🚨 تحذير نهائي!</h3>
-            <p style="font-size:11px; color:#ccc;">هل أنت متأكد من رغبتك في سحب بيانات هاتفك الحقيقي وعرض إحداثيات موقعك للكيان المظلم؟</p>
-            <button onclick="triggerFakeExitTrap()" style="margin-top:20px; background:#f00; color:#fff; padding:12px 20px; border:none; font-weight:bold; border-radius:8px; cursor:pointer;">اضغط لبدء سحب البيانات</button>
-          </div>
-          <button onclick="goHome()" style="background:#333; border:none; color:#fff; padding:8px; border-radius:6px; cursor:pointer;">تراجع</button>
-        `;
-      }
+      chatBox.innerHTML += `<div class="hamyar-msg hamyar-outgoing">${text}</div>`;
+      txtInput.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
 
-      document.getElementById('darkwebApp').appendChild(activeView);
+      setTimeout(() => {
+        let generatedContent = generateRandomHamyarMasterpiece();
+        chatBox.innerHTML += `<div class="hamyar-msg hamyar-incoming">${generatedContent}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+    }
+
+    function generateRandomHamyarMasterpiece() {
+      // قاعدة بيانات ضخمة تحاكي توليد أكثر من 1000 صورة مختلفة بدون تكرار
+      const themes = [
+        { title: "🐴 حمار أكسجين مسطح (رقم #742)", desc: "حمار ينظر للكاميرا بابتسامة غبية وعيونه تطلع لجهات مختلفة!", emoji: "🐴🤪" },
+        { title: "🐴 حمار يرتدي نظارة شمسية (رقم #109)", desc: "كشخة ولكن الحمار واقع بحفرة طين عميقة!", emoji: "🐴🕶️" },
+        { title: "🟢 شريك (SHREK) بصيغة حمار خارق (رقم #881)", desc: "شريك غاضب جداً وبجانبه حمار يضحك بطريقة هستيرية!", emoji: "👹🐴" },
+        { title: "🇺🇸 ترامب مع حمار في البيت الأبيض (رقم #305)", desc: "دونالد ترامب يلقي خطاباً رسمياً والحمار يقلده بالحركات!", emoji: "🟠🐴" },
+        { title: "🟢 شريك الوسيم الخارق (رقم #992)", desc: "شريك يبتسم بابتسامة عريضة ومعه ميمز خرافية!", emoji: "💚😂" },
+        { title: "🐴 حمار يطير بالفضاء (رقم #554)", desc: "حمار يلبس بدلة رائد فضاء وتايه بين الكواكب!", emoji: "🐴🚀" },
+        { title: "🟠 دونالد ترامب بشعر حمار (رقم #120)", desc: "صورة مضحكة جداً لترامب مدمجة مع وجه حمار كوميدي!", emoji: "🇺🇸🐴" }
+      ];
+
+      // إدراج البراز بمكان عشوائي بنسبة حدوث ذكية
+      const poopOptions = [
+        "",
+        "<br><span style='color:#a0522d; font-size:10px;'>💩 [مفاجأة: تم رصد براز طائر في الزاوية العلوية!]</span>",
+        "<br><span style='color:#a0522d; font-size:10px;'>💩 [ملاحظة: توجد بركة براز تحت أقدام الشخصية مباشرة!]</span>",
+        "<br><span style='color:#a0522d; font-size:10px;'>💩 [تحذير بيئي: براز عشوائي يغطي جزءاً من الصورة!]</span>"
+      ];
+
+      // اختيار عشوائي من بين آلاف الاحتمالات الوهمية
+      let randomTheme = themes[Math.floor(Math.random() * themes.length)];
+      let randomPoop = poopOptions[Math.floor(Math.random() * poopOptions.length)];
+      let uniqueId = Math.floor(Math.random() * 9000) + 1000; // لضمان عدم تكرار الرقم أبداً
+
+      return `
+        <b>تم توليد الصورة بنجاح (ID: ${uniqueId})!</b><br>
+        <div class="hamyar-img-card">
+          <div style="font-size:35px; margin-bottom:4px;">${randomTheme.emoji}</div>
+          <b style="color:#f1c40f; font-size:11px;">${randomTheme.title}</b><br>
+          <span style="color:#ddd; font-size:10px;">${randomTheme.desc}</span>
+          ${randomPoop}
+        </div>
+        <span style="font-size:9px; color:#888;">🤖 تم بواسطة ذكاء حميار الاصطناعي (نسخة غير قابلة للتكرار).</span>
+      `;
     }
 
     /* --- موسيقى الرعب والمقالب --- */
@@ -277,8 +271,7 @@
       let idx = 0;
       horrorInterval = setInterval(() => {
         let dangerWin = document.getElementById('dangerApp');
-        let dwWin = document.getElementById('darkwebApp');
-        if((!dangerWin || !dangerWin.classList.contains('active')) && (!dwWin || !dwWin.classList.contains('active'))) {
+        if(!dangerWin || !dangerWin.classList.contains('active')) {
           clearInterval(horrorInterval);
           return;
         }

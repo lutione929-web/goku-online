@@ -2,427 +2,339 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arcade Hub Elite</title>
-  <script src="/socket.io/socket.io.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Epic Phone OS - محاكي الهاتف الذكي</title>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{background:radial-gradient(circle at center, #1b1b2f 0%, #0f0c1b 100%);color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:5px;touch-action:none}
-    
-    .screen{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:350px;background:linear-gradient(135deg, #1f1a3a, #121024);border:2px solid #e1b12c;padding:20px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.8)}
-    .screen h2{color:#f1c40f;margin-bottom:15px;font-size:1.3rem;text-align:center;text-shadow:0 0 10px rgba(241,196,15,0.4)}
-    
-    input, select{width:100%;padding:12px;border-radius:10px;border:1px solid #4834d4;background:#130f40;color:#fff;font-size:0.95rem;margin-bottom:12px;text-align:center;outline:none}
-    button{width:100%;background:linear-gradient(90deg, #6c5ce7, #4834d4);color:#fff;border:none;padding:12px;border-radius:10px;font-size:1rem;cursor:pointer;font-weight:bold;margin-top:6px;box-shadow:0 4px 15px rgba(108,92,231,0.4);transition:0.2s}
-    button:active{transform:scale(0.97)}
-    
-    .btn-guest{background:linear-gradient(90deg, #636e72, #2d3436); margin-top:8px}
-    .error-msg{color:#ff7675;font-size:0.75rem;margin-top:5px;text-align:center}
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; user-select: none; }
+    body { background: #07070e; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; padding: 10px; }
 
-    .music-bar{position:fixed;top:10px;left:10px;background:rgba(255,255,255,0.1);padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:1px solid #f1c40f;z-index:999}
+    /* جسم الهاتف الذكي */
+    .phone-body {
+      width: 330px;
+      height: 640px;
+      background: #111;
+      border-radius: 40px;
+      border: 4px solid #333;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(255,255,255,0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-    #gokuGameUI{display:none;flex-direction:column;align-items:center;width:100%}
-    #gameCanvas{background:#0d0a1a;border:2px solid #e1b12c;border-radius:12px;box-shadow:0 0 20px rgba(225,177,44,0.3)}
-    .joystick-area{width:320px;height:80px;background:rgba(25,20,50,0.8);border:2px dashed #6c5ce7;border-radius:12px;margin-top:8px;display:flex;align-items:center;justify-content:center;position:relative}
-    .joystick-knob{width:40px;height:40px;background:linear-gradient(135deg, #ff7675, #d63031);border-radius:50%;position:absolute;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
+    /* الكاميرا والشريط العلوي */
+    .phone-notch {
+      width: 120px;
+      height: 20px;
+      background: #000;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .camera-lens { width: 8px; height: 8px; background: #1a1a3a; border-radius: 50%; border: 1px solid #333; }
 
-    .arcade-game-container{display:none;flex-direction:column;align-items:center;background:linear-gradient(135deg, #1f1a3a, #121024);padding:20px;border-radius:16px;border:2px solid #f1c40f;width:340px;box-shadow:0 10px 30px rgba(0,0,0,.8)}
-    .tictactoe-grid{display:grid;grid-template-columns:repeat(3, 75px);grid-template-rows:repeat(3, 75px);gap:6px;margin:12px 0}
-    .t-cell{background:#130f40;font-size:2.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px;color:#f1c40f;font-weight:bold;border:1px solid #4834d4}
+    .status-bar {
+      height: 28px;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 11px;
+      font-weight: bold;
+      color: #fff;
+      z-index: 90;
+    }
+
+    /* شاشة الجوال الرئيسية */
+    .phone-screen {
+      flex: 1;
+      background: radial-gradient(circle at top right, #1a0b2e, #090a15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-screen {
+      padding: 25px 15px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-content: start;
+    }
+
+    .app-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .app-icon:active { transform: scale(0.9); }
+    .icon-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      margin-bottom: 6px;
+    }
+    .app-name { font-size: 11px; color: #ddd; text-shadow: 0 1px 2px #000; }
+
+    /* ألوان الأيقونات */
+    .bg-roblox { background: linear-gradient(135deg, #000, #333); border: 2px solid #e82020; }
+    .bg-youtube { background: linear-gradient(135deg, #ff0000, #990000); }
+    .bg-xo { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+    .bg-music { background: linear-gradient(135deg, #00b894, #00cec9); }
+
+    /* نافذة التطبيقات */
+    .app-window {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #121324;
+      display: none;
+      flex-direction: column;
+      z-index: 50;
+    }
+    .app-header {
+      height: 40px;
+      background: #1c1d36;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      font-size: 14px;
+      font-weight: bold;
+      border-bottom: 1px solid #2a2b4a;
+    }
+
+    /* لعبة روبلوكس Obby */
+    #robloxCanvas { background: #1a1a2e; border-bottom: 2px solid #00f0ff; width: 100%; height: 260px; }
+    .controls-roblox { display: flex; justify-content: space-around; padding: 15px; background: #0f101d; }
+    .btn-ctrl { padding: 14px 22px; background: #25284a; border: 1px solid #00f0ff; color: #fff; border-radius: 12px; font-weight: bold; font-size: 16px; }
+
+    /* شريط الهوم السفلي للجوال */
+    .home-bar-area {
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.2);
+    }
+    .home-bar {
+      width: 110px;
+      height: 4px;
+      background: #fff;
+      border-radius: 2px;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+    .home-bar:active { opacity: 1; transform: scaleX(0.9); }
+
+    /* لعبة إكس أو داخل الجوال */
+    .xo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 20px; }
+    .xo-cell { height: 75px; background: #1f213d; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #00f0ff; }
   </style>
 </head>
 <body>
 
-  <div class="music-bar" id="musicToggleBtn">🎵 الموسيقى: <span id="musicStatus">متوقفة</span></div>
+  <div class="phone-body">
+    <div class="phone-notch"><div class="camera-lens"></div></div>
 
-  <!-- شاشة تسجيل الدخول -->
-  <div id="loginScreen" class="screen" style="display:flex;">
-    <h2>⚡ تسجيل الدخول الأسطوري</h2>
-    <input type="text" id="playerNameInput" placeholder="أدخل اسمك (إنجليزي)">
-    <button id="loginBtn">دخول المنصة 🚀</button>
-    <button id="guestBtn" class="btn-guest">👤 المتابعة كـ ضيف (بدون تسجيل)</button>
-    <span class="error-msg" id="loginError"></span>
-  </div>
-
-  <!-- شاشة اللوبي -->
-  <div id="lobbyScreen" class="screen">
-    <h2>🎮 لوحة تحكم الألعاب</h2>
-    <select id="gameSelect">
-      <option value="goku">🔥 Goku Fighter Online</option>
-      <option value="tictactoe">❌ إكس أو (Tic Tac Toe)</option>
-      <option value="rps">✊ حجر ورق مقص</option>
-    </select>
-
-    <select id="modeSelect">
-      <option value="offline">🤖 ضد بوت (أوفلاين فردي)</option>
-      <option value="online">🌐 أونلاين (مع صديق بالكود)</option>
-    </select>
-
-    <div id="onlineInputs" style="display:none; width:100%;">
-      <button id="createRoomBtn" style="background:linear-gradient(90deg, #00b894, #00cec9);">إنشاء غرفة وتوليد كود 🔑</button>
-      <hr style="width:100%; margin:10px 0; border-color:#4834d4">
-      <input type="text" id="roomCodeInput" placeholder="أدخل كود صديقك هنا">
-      <button id="joinRoomBtn" style="background:linear-gradient(90deg, #e17055, #d63031);">انضمام لغرفة صديق 🚀</button>
+    <!-- شريط الحالة (الوقت والبطارية) -->
+    <div class="status-bar">
+      <span id="clock">12:00</span>
+      <span>📶 5G 🔋 99%</span>
     </div>
 
-    <button id="startOfflineBtn" style="background:linear-gradient(90deg, #f1c40f, #e1b12c); color:#000;">بدء اللعب الفردي 🎮</button>
-    <span class="error-msg" id="lobbyError"></span>
-  </div>
+    <div class="phone-screen">
+      
+      <!-- الشاشة الرئيسية للجوال -->
+      <div class="home-screen" id="homeScreen">
+        <div class="app-icon" onclick="openApp('robloxApp')">
+          <div class="icon-box bg-roblox">⬛</div>
+          <span class="app-name">Roblox</span>
+        </div>
+        <div class="app-icon" onclick="openApp('youtubeApp')">
+          <div class="icon-box bg-youtube">▶️</div>
+          <span class="app-name">YouTube</span>
+        </div>
+        <div class="app-icon" onclick="openApp('xoApp')">
+          <div class="icon-box bg-xo">❌</div>
+          <span class="app-name">TicTacToe</span>
+        </div>
+        <div class="app-icon" onclick="togglePhoneMusic()">
+          <div class="icon-box bg-music">🎵</div>
+          <span class="app-name">الموسيقى</span>
+        </div>
+      </div>
 
-  <div id="waitingScreen" class="screen">
-    <h2>⏳ بانتظار انضمام صديقك...</h2>
-    <p style="font-size:0.85rem; margin-bottom:10px;">أعطِ الكود لصديقك:</p>
-    <h1 id="displayRoomCode" style="color:#f1c40f; letter-spacing:3px; background:#130f40; padding:10px; border-radius:8px; border:1px solid #4834d4">-----</h1>
-  </div>
+      <!-- تطبيق روبلوكس Obby -->
+      <div class="app-window" id="robloxApp">
+        <div class="app-header">
+          <span>🎮 Roblox Obby Mini</span>
+          <span style="color:#00f0ff" id="robloxScore">المرحلة: 1</span>
+        </div>
+        <canvas id="robloxCanvas" width="300" height="260"></canvas>
+        <div class="controls-roblox">
+          <button class="btn-ctrl" onclick="moveObby(-10)">◀ يسار</button>
+          <button class="btn-ctrl" onclick="jumpObby()">▲ قفز</button>
+          <button class="btn-ctrl" onclick="moveObby(10)">يمين ▶</button>
+        </div>
+      </div>
 
-  <div id="gokuGameUI">
-    <h1 id="gokuTitle" style="font-size:0.95rem; color:#f1c40f; margin-bottom:4px;">🔥 Goku Fighter</h1>
-    <canvas id="gameCanvas" width="320" height="140"></canvas>
-    <div style="display:flex; gap:5px; margin-top:6px">
-      <button id="kamehamehaBtn" style="background:#d63031; padding:6px 15px; width:auto">💥 كامیهامیها</button>
-      <button id="backToLobbyGoku" style="background:#636e72; padding:6px 15px; width:auto">🏠 القائمة</button>
-    </div>
-    <div class="joystick-area" id="joystickArea">
-      <div class="joystick-knob" id="joystickKnob">🕹️</div>
-    </div>
-  </div>
+      <!-- تطبيق يوتيوب -->
+      <div class="app-window" id="youtubeApp">
+        <div class="app-header">
+          <span style="color:#ff0000">▶ YouTube Gaming</span>
+        </div>
+        <div style="padding: 10px;">
+          <iframe width="100%" height="180" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen style="border-radius:10px"></iframe>
+          <h4 style="margin-top:10px; font-size:13px">🔥 مقاطع ألعاب وروبلوكس الحماسية</h4>
+          <p style="font-size:11px; color:#aaa; margin-top:5px">شاهد وافصل بين الألعاب داخل جوالك الشخصي!</p>
+        </div>
+      </div>
 
-  <div id="tictactoeUI" class="arcade-game-container">
-    <h3 style="color:#f1c40f">❌ إكس أو أونلاين / بوت ⭕</h3>
-    <p id="tInfo" style="font-size:0.8rem; margin:4px 0; color:#fff">الوضع: ضد بوت</p>
-    <p id="tTurnStatus" style="font-size:0.85rem; margin:4px 0; color:#00cec9; font-weight:bold">دورك الآن</p>
-    <div class="tictactoe-grid" id="tGrid">
-      <div class="t-cell" data-index="0"></div>
-      <div class="t-cell" data-index="1"></div>
-      <div class="t-cell" data-index="2"></div>
-      <div class="t-cell" data-index="3"></div>
-      <div class="t-cell" data-index="4"></div>
-      <div class="t-cell" data-index="5"></div>
-      <div class="t-cell" data-index="6"></div>
-      <div class="t-cell" data-index="7"></div>
-      <div class="t-cell" data-index="8"></div>
-    </div>
-    <div style="display:flex; gap:5px; width:100%">
-      <button id="tResetBtn" style="background:#e17055; padding:8px; display:none;">إعادة اللعب</button>
-      <button class="backToLobbyBtn" style="background:#636e72; padding:8px">القائمة الرئيسية</button>
-    </div>
-  </div>
+      <!-- تطبيق إكس أو -->
+      <div class="app-window" id="xoApp">
+        <div class="app-header">
+          <span>❌ إكس أو أونلاين / بوت ⭕</span>
+        </div>
+        <p id="xoStatus" style="text-align:center; padding:10px 0; font-size:13px; color:#f1c40f">دورك (X)</p>
+        <div class="xo-grid">
+          <div class="xo-cell" onclick="playXO(0)"></div>
+          <div class="xo-cell" onclick="playXO(1)"></div>
+          <div class="xo-cell" onclick="playXO(2)"></div>
+          <div class="xo-cell" onclick="playXO(3)"></div>
+          <div class="xo-cell" onclick="playXO(4)"></div>
+          <div class="xo-cell" onclick="playXO(5)"></div>
+          <div class="xo-cell" onclick="playXO(6)"></div>
+          <div class="xo-cell" onclick="playXO(7)"></div>
+          <div class="xo-cell" onclick="playXO(8)"></div>
+        </div>
+      </div>
 
-  <div id="rpsUI" class="arcade-game-container">
-    <h3 style="color:#00cec9">✊ حجر 📄 ورق ✂️ مقص</h3>
-    <p id="rpsOpponent" style="font-size:0.8rem; margin:4px 0">التحدي ضد: البوت الذكي</p>
-    <p id="rpsStatus" style="font-size:0.85rem; margin:8px 0; color:#f1c40f">اختر حركتك:</p>
-    <div style="display:flex; gap:8px; width:100%" id="rpsBtns">
-      <button class="rps-choice" data-choice="rock">✊ حجر</button>
-      <button class="rps-choice" data-choice="paper">📄 ورق</button>
-      <button class="rps-choice" data-choice="scissors">✂️ مقص</button>
     </div>
-    <button id="rpsResetBtn" style="background:#00b894; padding:8px; margin-top:8px; display:none;">جولة جديدة</button>
-    <button class="backToLobbyBtn" style="background:#636e72; padding:8px; margin-top:6px">القائمة الرئيسية</button>
+
+    <!-- زر الهوم للعودة لشاشة الجوال الرئيسية -->
+    <div class="home-bar-area">
+      <div class="home-bar" onclick="goHome()" title="العودة للشاشة الرئيسية"></div>
+    </div>
   </div>
 
   <script>
-    let socket = io();
-    let myName = "", isDev = false, roomCode = "";
-    let currentGame = "", currentMode = "offline";
-    let myId = "";
+    // التحديث المباشر للوقت داخل الجوال
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }, 1000);
 
-    window.addEventListener('DOMContentLoaded', () => {
-      // ربط الأحداث برمجياً لتجنب أي مشاكل في الاستجابة
-      document.getElementById('loginBtn').addEventListener('click', saveAndLogin);
-      document.getElementById('guestBtn').addEventListener('click', loginAsGuest);
-      document.getElementById('modeSelect').addEventListener('change', toggleModeInputs);
-      document.getElementById('createRoomBtn').addEventListener('click', createRoom);
-      document.getElementById('joinRoomBtn').addEventListener('click', joinRoom);
-      document.getElementById('startOfflineBtn').addEventListener('click', startChosenGame);
-      document.getElementById('musicToggleBtn').addEventListener('click', toggleMusic);
-      document.getElementById('kamehamehaBtn').addEventListener('click', useKamehameha);
-      document.getElementById('backToLobbyGoku').addEventListener('click', backToLobby);
-      document.getElementById('tResetBtn').addEventListener('click', resetTicTacToe);
-      document.getElementById('rpsResetBtn').addEventListener('click', resetRps);
+    function openApp(appId) {
+      document.querySelectorAll('.app-window').forEach(win => win.style.display = 'none');
+      document.getElementById(appId).style.display = 'flex';
+      if(appId === 'robloxApp') startRobloxGame();
+    }
 
-      document.querySelectorAll('.backToLobbyBtn').forEach(btn => {
-        btn.addEventListener('click', backToLobby);
-      });
+    function goHome() {
+      document.querySelectorAll('.app-window').forEach(win => win.style.display = 'none');
+    }
 
-      document.querySelectorAll('.t-cell').forEach(cell => {
-        cell.addEventListener('click', () => {
-          makeTMove(parseInt(cell.getAttribute('data-index')));
-        });
-      });
+    /* --- برمجة ميني جيم روبلوكس (Obby) --- */
+    let rCanvas, rCtx, px = 20, py = 200, pVy = 0, isJumping = false;
+    let obstacleX = 280;
 
-      document.querySelectorAll('.rps-choice').forEach(btn => {
-        btn.addEventListener('click', () => {
-          playRps(btn.getAttribute('data-choice'));
-        });
-      });
+    function startRobloxGame() {
+      rCanvas = document.getElementById('robloxCanvas');
+      rCtx = rCanvas.getContext('2d');
+      px = 20; py = 200; pVy = 0; obstacleX = 280;
+      requestAnimationFrame(robloxLoop);
+    }
 
-      // التحقق من الحفظ التلقائي
-      const savedName = localStorage.getItem('arcade_player_name');
-      if (savedName && savedName.length > 0) {
-        enterLobbyDirectly(savedName);
+    function moveObby(dir) {
+      px += dir;
+      if(px < 0) px = 0;
+      if(px > 270) px = 270;
+    }
+
+    function jumpObby() {
+      if(!isJumping) { pVy = -10; isJumping = true; }
+    }
+
+    function robloxLoop() {
+      pVy += 0.6; py += pVy;
+      if(py >= 200) { py = 200; isJumping = false; }
+
+      obstacleX -= 2;
+      if(obstacleX < -20) obstacleX = 300;
+
+      rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
+
+      // الأرضية
+      rCtx.fillStyle = '#00f0ff'; rCtx.fillRect(0, 230, 300, 30);
+
+      // اللاعب (شخصية روبلوكس)
+      rCtx.fillStyle = '#ff4757'; rCtx.fillRect(px, py, 20, 30);
+
+      // العقبة (Obby Lava)
+      rCtx.fillStyle = '#ffa500'; rCtx.fillRect(obstacleX, 210, 20, 20);
+
+      // فحص الاصطدام بالعقبة
+      if(px < obstacleX + 20 && px + 20 > obstacleX && py + 30 > 210) {
+        px = 20; // إعادة للبداية
       }
-    });
 
-    function enterLobbyDirectly(name) {
-      myName = name;
-      isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('lobbyScreen').style.display = 'flex';
-    }
-
-    function saveAndLogin() {
-      const input = document.getElementById('playerNameInput');
-      const nameVal = input.value.trim();
-      let finalName = nameVal.length > 0 ? nameVal : ("Player_" + Math.floor(Math.random() * 900 + 100));
-      localStorage.setItem('arcade_player_name', finalName);
-      enterLobbyDirectly(finalName);
-    }
-
-    function loginAsGuest() {
-      const randomGuest = "Guest_" + Math.floor(Math.random() * 900 + 100);
-      localStorage.setItem('arcade_player_name', randomGuest);
-      enterLobbyDirectly(randomGuest);
-    }
-
-    function toggleModeInputs() {
-      currentMode = document.getElementById('modeSelect').value;
-      if(currentMode === 'online') {
-        document.getElementById('onlineInputs').style.display = 'block';
-        document.getElementById('startOfflineBtn').style.display = 'none';
-      } else {
-        document.getElementById('onlineInputs').style.display = 'none';
-        document.getElementById('startOfflineBtn').style.display = 'block';
+      if(document.getElementById('robloxApp').style.display === 'flex') {
+        requestAnimationFrame(robloxLoop);
       }
     }
 
-    function createRoom() {
-      currentGame = document.getElementById('gameSelect').value;
-      socket.emit('createRoom', { name: myName, isDev, gameType: currentGame });
-    }
-
-    function joinRoom() {
-      const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
-      if(!code) {
-        document.getElementById('lobbyError').innerText = "⚠️ أدخل الكود أولاً!";
-        return;
-      }
-      roomCode = code;
-      socket.emit('joinRoom', { roomCode: code, name: myName, isDev });
-    }
-
-    socket.on('roomCreated', (data) => {
-      roomCode = data.roomCode;
-      document.getElementById('lobbyScreen').style.display = 'none';
-      document.getElementById('waitingScreen').style.display = 'flex';
-      document.getElementById('displayRoomCode').innerText = roomCode;
-    });
-
-    socket.on('errorMsg', (msg) => {
-      document.getElementById('lobbyError').innerText = "⚠️ " + msg;
-    });
-
-    socket.on('startGame', (data) => {
-      myId = socket.id;
-      currentGame = data.gameType;
-      document.getElementById('lobbyScreen').style.display = 'none';
-      document.getElementById('waitingScreen').style.display = 'none';
-      let opponent = data.players.find(p => p.id !== myId)?.name || "صديقك";
-
-      if(currentGame === 'goku') {
-        document.getElementById('gokuGameUI').style.display = 'flex';
-        initGokuGame(data.players);
-      } else if(currentGame === 'tictactoe') {
-        document.getElementById('tictactoeUI').style.display = 'flex';
-        initTicTacToeOnline(data.players);
-      } else if(currentGame === 'rps') {
-        document.getElementById('rpsUI').style.display = 'flex';
-        document.getElementById('rpsOpponent').innerText = `✊ التحدي أونلاين ضد: ${opponent}`;
-      }
-    });
-
-    function startChosenGame() {
-      currentGame = document.getElementById('gameSelect').value;
-      currentMode = 'offline';
-      document.getElementById('lobbyScreen').style.display = 'none';
-
-      if(currentGame === 'goku') {
-        document.getElementById('gokuGameUI').style.display = 'flex';
-        initGokuGame([{id: 'bot', name: 'Bot Fighter', x: 200, y: 60}]);
-      } else if(currentGame === 'tictactoe') {
-        document.getElementById('tictactoeUI').style.display = 'flex';
-        initTicTacToeOffline();
-      } else if(currentGame === 'rps') {
-        document.getElementById('rpsUI').style.display = 'flex';
-        document.getElementById('rpsOpponent').innerText = "✊ التحدي ضد: البوت الذكي";
+    /* --- برمجة لعبة إكس أو داخل الجوال --- */
+    let xoBoard = ['', '', '', '', '', '', '', '', ''];
+    let xoTurn = 'X';
+    function playXO(i) {
+      if(xoBoard[i] !== '') return;
+      xoBoard[i] = 'X';
+      document.querySelectorAll('.xo-cell')[i].innerText = 'X';
+      
+      // حركة البوت
+      let empty = xoBoard.map((v, idx) => v === '' ? idx : null).filter(v => v !== null);
+      if(empty.length > 0) {
+        let bMove = empty[Math.floor(Math.random() * empty.length)];
+        xoBoard[bMove] = 'O';
+        document.querySelectorAll('.xo-cell')[bMove].innerText = 'O';
       }
     }
 
-    function backToLobby() {
-      document.getElementById('gokuGameUI').style.display = 'none';
-      document.getElementById('tictactoeUI').style.display = 'none';
-      document.getElementById('rpsUI').style.display = 'none';
-      document.getElementById('lobbyScreen').style.display = 'flex';
-    }
-
-    let audioCtx = null, musicInterval = null, isMusicPlaying = false;
-    function toggleMusic() {
+    /* --- موسيقى الجوال --- */
+    let audioCtx = null, musicInterval = null, musicOn = false;
+    function togglePhoneMusic() {
       if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume();
-
-      if(isMusicPlaying) {
-        clearInterval(musicInterval);
-        isMusicPlaying = false;
-        document.getElementById('musicStatus').innerText = "متوقفة";
+      if(musicOn) {
+        clearInterval(musicInterval); musicOn = false;
+        alert("🎵 تم إيقاف الموسيقى");
       } else {
-        isMusicPlaying = true;
-        document.getElementById('musicStatus').innerText = "شغالة 🎶";
-        let notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
-        let i = 0;
+        musicOn = true;
+        let notes = [261, 329, 392, 523]; let i = 0;
         musicInterval = setInterval(() => {
-          if(!isMusicPlaying) return;
           let osc = audioCtx.createOscillator();
           let gain = audioCtx.createGain();
-          osc.type = 'triangle';
           osc.frequency.setValueAtTime(notes[i], audioCtx.currentTime);
-          gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.25);
+          gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.2);
           i = (i + 1) % notes.length;
         }, 300);
+        alert("🎶 الموسيقى شغالة الحين داخل جوالك!");
       }
     }
-
-    let canvas, ctx, players = {}, myX = 140, myY = 60;
-    function initGokuGame(roomPlayers) {
-      canvas = document.getElementById('gameCanvas');
-      ctx = canvas.getContext('2d');
-      players = {};
-      roomPlayers.forEach((p, index) => {
-        players[p.id] = { ...p, x: 80 + (index * 80), y: 60 };
-      });
-
-      if(currentMode === 'offline') {
-        players['bot'] = { name: 'Bot Fighter', x: 200, y: 60, isDev: false };
-        setInterval(() => {
-          if(players['bot']) {
-            players['bot'].x += (Math.random() > 0.5 ? 2 : -2);
-            drawGoku();
-          }
-        }, 500);
-      }
-
-      socket.on('playerMove', (data) => {
-        if(players[data.id]) { players[data.id].x = data.x; players[data.id].y = data.y; }
-        else { players[data.id] = data; }
-        drawGoku();
-      });
-      socket.on('spawnBeam', () => { drawGoku(); });
-      drawGoku();
-
-      setInterval(() => {
-        if(isDragging) {
-          myX += moveVector.x * 4;
-          myY += moveVector.y * 4;
-          if(players[socket.id]) { players[socket.id].x = myX; players[socket.id].y = myY; }
-          if(currentMode === 'online') socket.emit('playerMove', { id: socket.id, x: myX, y: myY, name: myName, isDev });
-          drawGoku();
-        }
-      }, 25);
-    }
-
-    let moveVector = {x:0, y:0}, isDragging = false;
-    let area, knob;
-    
-    window.addEventListener('load', () => {
-      area = document.getElementById('joystickArea');
-      knob = document.getElementById('joystickKnob');
-      if(area) {
-        area.addEventListener('touchstart', handleJoystick);
-        area.addEventListener('touchmove', handleJoystick);
-        area.addEventListener('touchend', () => { knob.style.transform='translate(0,0)'; isDragging=false; });
-      }
-    });
-
-    function handleJoystick(e) {
-      e.preventDefault();
-      let rect = area.getBoundingClientRect();
-      let clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      let clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      let dx = clientX - (rect.left + rect.width/2);
-      let dy = clientY - (rect.top + rect.height/2);
-      let dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist > 30) { dx = (dx/dist)*30; dy = (dy/dist)*30; }
-      knob.style.transform = `translate(${dx}px, ${dy}px)`;
-      moveVector = {x: dx/30, y: dy/30};
-      isDragging = true;
-    }
-
-    function useKamehameha() { if(currentMode === 'online') socket.emit('kamehamehaAttack', { x: myX, y: myY }); drawGoku(); }
-
-    function drawGoku() {
-      if(!ctx) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#00b894'; ctx.fillRect(0, 110, canvas.width, 30);
-      for(let id in players) {
-        let p = players[id];
-        ctx.fillStyle = p.isDev ? '#f1c40f' : '#ff7675';
-        ctx.fillRect(p.x || 140, p.y || 60, 20, 25);
-        ctx.fillStyle = '#fff'; ctx.font = '8px sans-serif'; ctx.textAlign='center';
-        ctx.fillText(p.name || 'Goku', (p.x || 140) + 10, (p.y || 60) - 4);
-      }
-    }
-
-    let tBoard = ['', '', '', '', '', '', '', '', ''];
-    let mySymbol = 'X', isMyTurn = true, tGameOver = false;
-
-    function initTicTacToeOffline() {
-      tBoard = ['', '', '', '', '', '', '', '', ''];
-      tGameOver = false;
-      mySymbol = 'X'; isMyTurn = true;
-      document.getElementById('tInfo').innerText = "الوضع: ضد البوت الذكي";
-      document.getElementById('tTurnStatus').innerText = "دورك (X)";
-      document.querySelectorAll('.t-cell').forEach(c => c.innerText = '');
-      document.getElementById('tResetBtn').style.display = 'none';
-    }
-
-    function initTicTacToeOnline(roomPlayers) {
-      tBoard = ['', '', '', '', '', '', '', '', ''];
-      tGameOver = false;
-      document.querySelectorAll('.t-cell').forEach(c => c.innerText = '');
-      document.getElementById('tResetBtn').style.display = 'none';
-
-      if(roomPlayers[0].id === socket.id) {
-        mySymbol = 'X'; isMyTurn = true;
-        document.getElementById('tInfo').innerText = `ضد: ${roomPlayers[1].name} (رمزك: X)`;
-        document.getElementById('tTurnStatus').innerText = "دورك الآن!";
-      } else {
-        mySymbol = 'O'; isMyTurn = false;
-        document.getElementById('tInfo').innerText = `ضد: ${roomPlayers[0].name} (رمزك: O)`;
-        document.getElementById('tTurnStatus').innerText = "انتظار دور الخصم...";
-      }
-    }
-
-    function makeTMove(index) {
-      if(!isMyTurn || tBoard[index] !== '' || tGameOver) return;
-      tBoard[index] = mySymbol;
-      document.querySelector(`.t-cell[data-index="${index}"]`).innerText = mySymbol;
-
-      if(currentMode === 'online') {
-        socket.emit('makeMove', { index, symbol: mySymbol });
-      }
-
-      if(checkWin(mySymbol)) {
-        document.getElementById('tTurnStatus').innerText = "🎉 مبروك! فزت بالمباراة!";
-        tGameOver = true;
-        document.getElementById('tResetBtn').style.display = 'block';
-        return;
-      }
-      if(tBoard.every(cell => cell !== '')) {
-        document.getElementById('tTurnStatus').innerText = "🤝 تعادل!";
-        tGameOver = true;
-        document.getElementById('tResetBtn').style.display = 'block';
-        return;
+  </script>
+</body>
+</html>

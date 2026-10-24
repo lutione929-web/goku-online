@@ -33,14 +33,14 @@
 </head>
 <body>
 
-  <div class="music-bar" onclick="toggleMusic()">🎵 الموسيقى: <span id="musicStatus">متوقفة</span></div>
+  <div class="music-bar" id="musicToggleBtn">🎵 الموسيقى: <span id="musicStatus">متوقفة</span></div>
 
   <!-- شاشة تسجيل الدخول -->
   <div id="loginScreen" class="screen" style="display:flex;">
     <h2>⚡ تسجيل الدخول الأسطوري</h2>
     <input type="text" id="playerNameInput" placeholder="أدخل اسمك (إنجليزي)">
-    <button onclick="saveAndLogin()">دخول المنصة 🚀</button>
-    <button onclick="loginAsGuest()" class="btn-guest">👤 المتابعة كـ ضيف (بدون تسجيل)</button>
+    <button id="loginBtn">دخول المنصة 🚀</button>
+    <button id="guestBtn" class="btn-guest">👤 المتابعة كـ ضيف (بدون تسجيل)</button>
     <span class="error-msg" id="loginError"></span>
   </div>
 
@@ -53,19 +53,19 @@
       <option value="rps">✊ حجر ورق مقص</option>
     </select>
 
-    <select id="modeSelect" onchange="toggleModeInputs()">
+    <select id="modeSelect">
       <option value="offline">🤖 ضد بوت (أوفلاين فردي)</option>
       <option value="online">🌐 أونلاين (مع صديق بالكود)</option>
     </select>
 
     <div id="onlineInputs" style="display:none; width:100%;">
-      <button onclick="createRoom()" style="background:linear-gradient(90deg, #00b894, #00cec9);">إنشاء غرفة وتوليد كود 🔑</button>
+      <button id="createRoomBtn" style="background:linear-gradient(90deg, #00b894, #00cec9);">إنشاء غرفة وتوليد كود 🔑</button>
       <hr style="width:100%; margin:10px 0; border-color:#4834d4">
       <input type="text" id="roomCodeInput" placeholder="أدخل كود صديقك هنا">
-      <button onclick="joinRoom()" style="background:linear-gradient(90deg, #e17055, #d63031);">انضمام لغرفة صديق 🚀</button>
+      <button id="joinRoomBtn" style="background:linear-gradient(90deg, #e17055, #d63031);">انضمام لغرفة صديق 🚀</button>
     </div>
 
-    <button onclick="startChosenGame()" id="startOfflineBtn" style="background:linear-gradient(90deg, #f1c40f, #e1b12c); color:#000;">بدء اللعب الفردي 🎮</button>
+    <button id="startOfflineBtn" style="background:linear-gradient(90deg, #f1c40f, #e1b12c); color:#000;">بدء اللعب الفردي 🎮</button>
     <span class="error-msg" id="lobbyError"></span>
   </div>
 
@@ -79,8 +79,8 @@
     <h1 id="gokuTitle" style="font-size:0.95rem; color:#f1c40f; margin-bottom:4px;">🔥 Goku Fighter</h1>
     <canvas id="gameCanvas" width="320" height="140"></canvas>
     <div style="display:flex; gap:5px; margin-top:6px">
-      <button onclick="useKamehameha()" style="background:#d63031; padding:6px 15px; width:auto">💥 كامیهامیها</button>
-      <button onclick="backToLobby()" style="background:#636e72; padding:6px 15px; width:auto">🏠 القائمة</button>
+      <button id="kamehamehaBtn" style="background:#d63031; padding:6px 15px; width:auto">💥 كامیهامیها</button>
+      <button id="backToLobbyGoku" style="background:#636e72; padding:6px 15px; width:auto">🏠 القائمة</button>
     </div>
     <div class="joystick-area" id="joystickArea">
       <div class="joystick-knob" id="joystickKnob">🕹️</div>
@@ -92,19 +92,19 @@
     <p id="tInfo" style="font-size:0.8rem; margin:4px 0; color:#fff">الوضع: ضد بوت</p>
     <p id="tTurnStatus" style="font-size:0.85rem; margin:4px 0; color:#00cec9; font-weight:bold">دورك الآن</p>
     <div class="tictactoe-grid" id="tGrid">
-      <div class="t-cell" onclick="makeTMove(0)"></div>
-      <div class="t-cell" onclick="makeTMove(1)"></div>
-      <div class="t-cell" onclick="makeTMove(2)"></div>
-      <div class="t-cell" onclick="makeTMove(3)"></div>
-      <div class="t-cell" onclick="makeTMove(4)"></div>
-      <div class="t-cell" onclick="makeTMove(5)"></div>
-      <div class="t-cell" onclick="makeTMove(6)"></div>
-      <div class="t-cell" onclick="makeTMove(7)"></div>
-      <div class="t-cell" onclick="makeTMove(8)"></div>
+      <div class="t-cell" data-index="0"></div>
+      <div class="t-cell" data-index="1"></div>
+      <div class="t-cell" data-index="2"></div>
+      <div class="t-cell" data-index="3"></div>
+      <div class="t-cell" data-index="4"></div>
+      <div class="t-cell" data-index="5"></div>
+      <div class="t-cell" data-index="6"></div>
+      <div class="t-cell" data-index="7"></div>
+      <div class="t-cell" data-index="8"></div>
     </div>
     <div style="display:flex; gap:5px; width:100%">
-      <button onclick="resetTicTacToe()" style="background:#e17055; padding:8px; display:none;" id="tResetBtn">إعادة اللعب</button>
-      <button onclick="backToLobby()" style="background:#636e72; padding:8px">القائمة الرئيسية</button>
+      <button id="tResetBtn" style="background:#e17055; padding:8px; display:none;">إعادة اللعب</button>
+      <button class="backToLobbyBtn" style="background:#636e72; padding:8px">القائمة الرئيسية</button>
     </div>
   </div>
 
@@ -113,12 +113,12 @@
     <p id="rpsOpponent" style="font-size:0.8rem; margin:4px 0">التحدي ضد: البوت الذكي</p>
     <p id="rpsStatus" style="font-size:0.85rem; margin:8px 0; color:#f1c40f">اختر حركتك:</p>
     <div style="display:flex; gap:8px; width:100%" id="rpsBtns">
-      <button onclick="playRps('rock')">✊ حجر</button>
-      <button onclick="playRps('paper')">📄 ورق</button>
-      <button onclick="playRps('scissors')">✂️ مقص</button>
+      <button class="rps-choice" data-choice="rock">✊ حجر</button>
+      <button class="rps-choice" data-choice="paper">📄 ورق</button>
+      <button class="rps-choice" data-choice="scissors">✂️ مقص</button>
     </div>
-    <button onclick="resetRps()" style="background:#00b894; padding:8px; margin-top:8px; display:none;" id="rpsResetBtn">جولة جديدة</button>
-    <button onclick="backToLobby()" style="background:#636e72; padding:8px; margin-top:6px">القائمة الرئيسية</button>
+    <button id="rpsResetBtn" style="background:#00b894; padding:8px; margin-top:8px; display:none;">جولة جديدة</button>
+    <button class="backToLobbyBtn" style="background:#636e72; padding:8px; margin-top:6px">القائمة الرئيسية</button>
   </div>
 
   <script>
@@ -127,12 +127,42 @@
     let currentGame = "", currentMode = "offline";
     let myId = "";
 
-    window.onload = function() {
+    window.addEventListener('DOMContentLoaded', () => {
+      // ربط الأحداث برمجياً لتجنب أي مشاكل في الاستجابة
+      document.getElementById('loginBtn').addEventListener('click', saveAndLogin);
+      document.getElementById('guestBtn').addEventListener('click', loginAsGuest);
+      document.getElementById('modeSelect').addEventListener('change', toggleModeInputs);
+      document.getElementById('createRoomBtn').addEventListener('click', createRoom);
+      document.getElementById('joinRoomBtn').addEventListener('click', joinRoom);
+      document.getElementById('startOfflineBtn').addEventListener('click', startChosenGame);
+      document.getElementById('musicToggleBtn').addEventListener('click', toggleMusic);
+      document.getElementById('kamehamehaBtn').addEventListener('click', useKamehameha);
+      document.getElementById('backToLobbyGoku').addEventListener('click', backToLobby);
+      document.getElementById('tResetBtn').addEventListener('click', resetTicTacToe);
+      document.getElementById('rpsResetBtn').addEventListener('click', resetRps);
+
+      document.querySelectorAll('.backToLobbyBtn').forEach(btn => {
+        btn.addEventListener('click', backToLobby);
+      });
+
+      document.querySelectorAll('.t-cell').forEach(cell => {
+        cell.addEventListener('click', () => {
+          makeTMove(parseInt(cell.getAttribute('data-index')));
+        });
+      });
+
+      document.querySelectorAll('.rps-choice').forEach(btn => {
+        btn.addEventListener('click', () => {
+          playRps(btn.getAttribute('data-choice'));
+        });
+      });
+
+      // التحقق من الحفظ التلقائي
       const savedName = localStorage.getItem('arcade_player_name');
       if (savedName && savedName.length > 0) {
         enterLobbyDirectly(savedName);
       }
-    };
+    });
 
     function enterLobbyDirectly(name) {
       myName = name;
@@ -144,16 +174,14 @@
     function saveAndLogin() {
       const input = document.getElementById('playerNameInput');
       const nameVal = input.value.trim();
-      if(nameVal.length === 0) {
-        document.getElementById('loginError').innerText = "⚠️ يرجى كتابة اسمك أو الدخول كـ ضيف!";
-        return;
-      }
-      localStorage.setItem('arcade_player_name', nameVal);
-      enterLobbyDirectly(nameVal);
+      let finalName = nameVal.length > 0 ? nameVal : ("Player_" + Math.floor(Math.random() * 900 + 100));
+      localStorage.setItem('arcade_player_name', finalName);
+      enterLobbyDirectly(finalName);
     }
 
     function loginAsGuest() {
       const randomGuest = "Guest_" + Math.floor(Math.random() * 900 + 100);
+      localStorage.setItem('arcade_player_name', randomGuest);
       enterLobbyDirectly(randomGuest);
     }
 
@@ -307,11 +335,17 @@
     }
 
     let moveVector = {x:0, y:0}, isDragging = false;
-    const area = document.getElementById('joystickArea');
-    const knob = document.getElementById('joystickKnob');
-    area.addEventListener('touchstart', handleJoystick);
-    area.addEventListener('touchmove', handleJoystick);
-    area.addEventListener('touchend', () => { knob.style.transform='translate(0,0)'; isDragging=false; });
+    let area, knob;
+    
+    window.addEventListener('load', () => {
+      area = document.getElementById('joystickArea');
+      knob = document.getElementById('joystickKnob');
+      if(area) {
+        area.addEventListener('touchstart', handleJoystick);
+        area.addEventListener('touchmove', handleJoystick);
+        area.addEventListener('touchend', () => { knob.style.transform='translate(0,0)'; isDragging=false; });
+      }
+    });
 
     function handleJoystick(e) {
       e.preventDefault();
@@ -351,16 +385,14 @@
       mySymbol = 'X'; isMyTurn = true;
       document.getElementById('tInfo').innerText = "الوضع: ضد البوت الذكي";
       document.getElementById('tTurnStatus').innerText = "دورك (X)";
-      let cells = document.getElementsByClassName('t-cell');
-      for(let c of cells) c.innerText = '';
+      document.querySelectorAll('.t-cell').forEach(c => c.innerText = '');
       document.getElementById('tResetBtn').style.display = 'none';
     }
 
     function initTicTacToeOnline(roomPlayers) {
       tBoard = ['', '', '', '', '', '', '', '', ''];
       tGameOver = false;
-      let cells = document.getElementsByClassName('t-cell');
-      for(let c of cells) c.innerText = '';
+      document.querySelectorAll('.t-cell').forEach(c => c.innerText = '');
       document.getElementById('tResetBtn').style.display = 'none';
 
       if(roomPlayers[0].id === socket.id) {
@@ -377,7 +409,7 @@
     function makeTMove(index) {
       if(!isMyTurn || tBoard[index] !== '' || tGameOver) return;
       tBoard[index] = mySymbol;
-      document.getElementsByClassName('t-cell')[index].innerText = mySymbol;
+      document.querySelector(`.t-cell[data-index="${index}"]`).innerText = mySymbol;
 
       if(currentMode === 'online') {
         socket.emit('makeMove', { index, symbol: mySymbol });
@@ -394,44 +426,3 @@
         tGameOver = true;
         document.getElementById('tResetBtn').style.display = 'block';
         return;
-      }
-
-      isMyTurn = false;
-      document.getElementById('tTurnStatus').innerText = "انتظار الخصم...";
-
-      if(currentMode === 'offline' && !tGameOver) {
-        setTimeout(botTicTacToeMove, 500);
-      }
-    }
-
-    function botTicTacToeMove() {
-      let emptyCells = [];
-      tBoard.forEach((val, idx) => { if(val === '') emptyCells.push(idx); });
-      if(emptyCells.length === 0 || tGameOver) return;
-      let randIdx = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-      tBoard[randIdx] = 'O';
-      document.getElementsByClassName('t-cell')[randIdx].innerText = 'O';
-
-      if(checkWin('O')) {
-        document.getElementById('tTurnStatus').innerText = "❌ فاز البوت الذكي!";
-        tGameOver = true;
-        document.getElementById('tResetBtn').style.display = 'block';
-        return;
-      }
-      isMyTurn = true;
-      document.getElementById('tTurnStatus').innerText = "دورك الآن (X)";
-    }
-
-    socket.on('opponentMove', (data) => {
-      let oppSymbol = (mySymbol === 'X') ? 'O' : 'X';
-      tBoard[data.index] = oppSymbol;
-      document.getElementsByClassName('t-cell')[data.index].innerText = oppSymbol;
-
-      if(checkWin(oppSymbol)) {
-        document.getElementById('tTurnStatus').innerText = "❌ خسرت! فاز الخصم.";
-        tGameOver = true;
-        document.getElementById('tResetBtn').style.display = 'block';
-        return;
-      }
-      isMyTurn = true;
-      document.getElementById('tTurnStatus').innerText = "دو

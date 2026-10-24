@@ -14,8 +14,10 @@
     button{cursor:pointer;color:#fff;margin-top:6px;font-weight:bold}
     .btn-main{background:linear-gradient(90deg,#e17055,#d63031)}
     #status{opacity:.8;font-size:.9rem;margin-bottom:8px;text-align:center;color:#00b894}
-    #gameWrap{display:none;position:relative;margin-top:10px}
-    canvas{display:block;max-width:100%;background:#111;border:2px solid #ff7675;border-radius:8px}
+    #gameWrap{display:none;position:relative;margin-top:10px;text-align:center}
+    canvas{display:block;max-width:100%;background:#111;border:2px solid #ff7675;border-radius:8px;margin:0 auto}
+    .controls{display:flex;justify-content:center;gap:8px;margin-top:12px}
+    .controls button{width:70px;height:50px;background:#2d3436;border:1px solid #ff7675;border-radius:8px;font-size:1.4rem}
     .hidden{display:none!important}
   </style>
 </head>
@@ -31,21 +33,37 @@
   </div>
 
   <div id="gameWrap">
-    <canvas id="canvas" width="360" height="480"></canvas>
+    <canvas id="canvas" width="360" height="320"></canvas>
+    <div class="controls">
+      <button onclick="move(-15, 0)">⬅️</button>
+      <button onclick="move(0, -15)">⬆️</button>
+      <button onclick="move(0, 15)">⬇️</button>
+      <button onclick="move(15, 0)">➡️</button>
+    </div>
   </div>
 
   <script>
+    let p = { x: 180, y: 160, r: 25, color: '#e17055' };
+    
     function startGame() {
       document.getElementById('menu').classList.add('hidden');
       document.getElementById('gameWrap').style.display = 'block';
-      document.getElementById('status').innerText = 'جاري اللعب...';
+      document.getElementById('status').innerText = 'استخدم أزرار التحريك بالأسفل!';
       initGame();
+    }
+
+    function move(dx, dy) {
+      p.x += dx;
+      p.y += dy;
+      if(p.x < 25) p.x = 25;
+      if(p.x > 335) p.x = 335;
+      if(p.y < 25) p.y = 25;
+      if(p.y > 295) p.y = 295;
     }
 
     function initGame() {
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d');
-      let p = { x: 180, y: 240, r: 25, color: '#e17055' };
 
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);

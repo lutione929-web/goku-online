@@ -3,63 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Goku & Arcade Hub Online</title>
+  <title>Arcade Hub Elite</title>
   <script src="/socket.io/socket.io.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:5px;touch-action:none}
+    body{background:radial-gradient(circle at center, #1b1b2f 0%, #0f0c1b 100%);color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:5px;touch-action:none}
     
-    .screen{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:340px;background:#1e272e;border:2px solid #ff7675;padding:20px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
-    .screen h2{color:#ff7675;margin-bottom:15px;font-size:1.2rem;text-align:center}
-    input, select{width:100%;padding:10px;border-radius:8px;border:none;background:#2d3436;color:#fff;font-size:0.9rem;margin-bottom:10px;text-align:center}
-    button{width:100%;background:#0984e3;color:#fff;border:none;padding:10px;border-radius:8px;font-size:0.9rem;cursor:pointer;font-weight:bold;margin-top:5px}
-    .error-msg{color:#d63031;font-size:0.75rem;margin-top:5px}
+    .screen{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:350px;background:linear-gradient(135deg, #1f1a3a, #121024);border:2px solid #e1b12c;padding:20px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.8)}
+    .screen h2{color:#f1c40f;margin-bottom:15px;font-size:1.3rem;text-align:center;text-shadow:0 0 10px rgba(241,196,15,0.4)}
+    
+    input, select{width:100%;padding:12px;border-radius:10px;border:1px solid #4834d4;background:#130f40;color:#fff;font-size:0.95rem;margin-bottom:12px;text-align:center;outline:none}
+    button{width:100%;background:linear-gradient(90deg, #6c5ce7, #4834d4);color:#fff;border:none;padding:12px;border-radius:10px;font-size:1rem;cursor:pointer;font-weight:bold;margin-top:6px;box-shadow:0 4px 15px rgba(108,92,231,0.4);transition:0.2s}
+    button:active{transform:scale(0.97)}
+    
+    .error-msg{color:#ff7675;font-size:0.75rem;margin-top:5px;text-align:center}
+
+    .music-bar{position:fixed;top:10px;left:10px;background:rgba(255,255,255,0.1);padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:1px solid #f1c40f;z-index:999}
 
     #gokuGameUI{display:none;flex-direction:column;align-items:center;width:100%}
-    #gameCanvas{background:#1e272e;border:2px solid #ff7675;border-radius:10px}
-    .joystick-area{width:320px;height:80px;background:#1e272e;border:2px dashed #ff7675;border-radius:10px;margin-top:5px;display:flex;align-items:center;justify-content:center;position:relative}
-    .joystick-knob{width:40px;height:40px;background:#ff7675;border-radius:50%;position:absolute;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    #gameCanvas{background:#0d0a1a;border:2px solid #e1b12c;border-radius:12px;box-shadow:0 0 20px rgba(225,177,44,0.3)}
+    .joystick-area{width:320px;height:80px;background:rgba(25,20,50,0.8);border:2px dashed #6c5ce7;border-radius:12px;margin-top:8px;display:flex;align-items:center;justify-content:center;position:relative}
+    .joystick-knob{width:40px;height:40px;background:linear-gradient(135deg, #ff7675, #d63031);border-radius:50%;position:absolute;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
 
-    .arcade-game-container{display:none;flex-direction:column;align-items:center;background:#1e272e;padding:15px;border-radius:10px;border:2px solid #f1c40f;width:320px}
-    .tictactoe-grid{display:grid;grid-template-columns:repeat(3, 70px);grid-template-rows:repeat(3, 70px);gap:5px;margin:10px 0}
-    .t-cell{background:#2d3436;font-size:2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:6px;color:#f1c40f;font-weight:bold}
+    .arcade-game-container{display:none;flex-direction:column;align-items:center;background:linear-gradient(135deg, #1f1a3a, #121024);padding:20px;border-radius:16px;border:2px solid #f1c40f;width:340px;box-shadow:0 10px 30px rgba(0,0,0,.8)}
+    .tictactoe-grid{display:grid;grid-template-columns:repeat(3, 75px);grid-template-rows:repeat(3, 75px);gap:6px;margin:12px 0}
+    .t-cell{background:#130f40;font-size:2.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px;color:#f1c40f;font-weight:bold;border:1px solid #4834d4}
   </style>
 </head>
 <body>
 
+  <div class="music-bar" onclick="toggleMusic()">🎵 الموسيقى: <span id="musicStatus">متوقفة</span></div>
+
+  <!-- شاشة تسجيل الدخول مع الحفظ التلقائي -->
   <div id="loginScreen" class="screen" style="display:flex;">
-    <h2>⚡ تسجيل الدخول للمنصة</h2>
+    <h2>⚡ تسجيل الدخول الأسطوري</h2>
     <input type="text" id="playerNameInput" placeholder="أدخل اسمك (إنجليزي)">
-    <button onclick="goToLobby()">التالي</button>
+    <button onclick="saveAndLogin()">دخول المنصة</button>
     <span class="error-msg" id="loginError"></span>
   </div>
 
+  <!-- شاشة اللوبي واختيار وضع اللعب (أونلاين أو ضد بوت) -->
   <div id="lobbyScreen" class="screen">
-    <h2>🎮 اختر اللعبة وغرفتك</h2>
+    <h2>🎮 لوحة تحكم الألعاب</h2>
     <select id="gameSelect">
       <option value="goku">🔥 Goku Fighter Online</option>
       <option value="tictactoe">❌ إكس أو (Tic Tac Toe)</option>
       <option value="rps">✊ حجر ورق مقص</option>
     </select>
-    <button onclick="createRoom()" style="background:#00b894;">إنشاء غرفة وتوليد كود 🔑</button>
-    <hr style="width:100%; margin:15px 0; border-color:#444">
-    <input type="text" id="roomCodeInput" placeholder="أدخل كود صديقك هنا">
-    <button onclick="joinRoom()" style="background:#e17055;">انضمام لغرفة صديق 🚀</button>
+
+    <select id="modeSelect" onchange="toggleModeInputs()">
+      <option value="offline">🤖 ضد بوت (أوفلاين فردي)</option>
+      <option value="online">🌐 أونلاين (مع صديق بالكود)</option>
+    </select>
+
+    <div id="onlineInputs" style="display:none; width:100%;">
+      <button onclick="createRoom()" style="background:linear-gradient(90deg, #00b894, #00cec9);">إنشاء غرفة وتوليد كود 🔑</button>
+      <hr style="width:100%; margin:10px 0; border-color:#4834d4">
+      <input type="text" id="roomCodeInput" placeholder="أدخل كود صديقك هنا">
+      <button onclick="joinRoom()" style="background:linear-gradient(90deg, #e17055, #d63031);">انضمام لغرفة صديق 🚀</button>
+    </div>
+
+    <button onclick="startChosenGame()" id="startOfflineBtn" style="background:linear-gradient(90deg, #f1c40f, #e1b12c); color:#000;">بدء اللعب الفردي 🎮</button>
     <span class="error-msg" id="lobbyError"></span>
   </div>
 
   <div id="waitingScreen" class="screen">
     <h2>⏳ بانتظار انضمام صديقك...</h2>
-    <p style="font-size:0.9rem; margin-bottom:15px;">أعطِ هذا الكود لصديقك:</p>
-    <h1 id="displayRoomCode" style="color:#f1c40f; letter-spacing:3px; background:#2d3436; padding:10px; border-radius:6px">-----</h1>
+    <p style="font-size:0.85rem; margin-bottom:10px;">أعطِ الكود لصديقك:</p>
+    <h1 id="displayRoomCode" style="color:#f1c40f; letter-spacing:3px; background:#130f40; padding:10px; border-radius:8px; border:1px solid #4834d4">-----</h1>
   </div>
 
   <!-- واجهة غوكو -->
   <div id="gokuGameUI">
-    <h1 id="gokuVs" style="font-size:0.9rem; color:#ff7675; margin-bottom:4px;">VS</h1>
+    <h1 id="gokuTitle" style="font-size:0.95rem; color:#f1c40f; margin-bottom:4px;">🔥 Goku Fighter</h1>
     <canvas id="gameCanvas" width="320" height="140"></canvas>
-    <div style="display:flex; gap:5px; margin-top:5px">
-      <button onclick="useKamehameha()" style="background:#d63031; padding:6px">💥 كامیهامیها</button>
+    <div style="display:flex; gap:5px; margin-top:6px">
+      <button onclick="useKamehameha()" style="background:#d63031; padding:6px 15px; width:auto">💥 كامیهامیها</button>
+      <button onclick="backToLobby()" style="background:#636e72; padding:6px 15px; width:auto">🏠 القائمة</button>
     </div>
     <div class="joystick-area" id="joystickArea">
       <div class="joystick-knob" id="joystickKnob">🕹️</div>
@@ -68,9 +88,9 @@
 
   <!-- واجهة إكس أو -->
   <div id="tictactoeUI" class="arcade-game-container">
-    <h3 style="color:#f1c40f">❌ إكس أو أونلاين ⭕</h3>
-    <p id="tInfo" style="font-size:0.8rem; margin:5px 0; color:#fff">الخصم: جارٍ الاتصال...</p>
-    <p id="tTurnStatus" style="font-size:0.85rem; margin:5px 0; color:#00b894; font-weight:bold">دورك الآن</p>
+    <h3 style="color:#f1c40f">❌ إكس أو أونلاين / بوت ⭕</h3>
+    <p id="tInfo" style="font-size:0.8rem; margin:4px 0; color:#fff">الوضع: ضد بوت</p>
+    <p id="tTurnStatus" style="font-size:0.85rem; margin:4px 0; color:#00cec9; font-weight:bold">دورك الآن</p>
     <div class="tictactoe-grid" id="tGrid">
       <div class="t-cell" onclick="makeTMove(0)"></div>
       <div class="t-cell" onclick="makeTMove(1)"></div>
@@ -82,43 +102,71 @@
       <div class="t-cell" onclick="makeTMove(7)"></div>
       <div class="t-cell" onclick="makeTMove(8)"></div>
     </div>
-    <button onclick="resetTicTacToe()" style="background:#e17055; padding:5px; margin-top:5px; display:none;" id="tResetBtn">إعادة اللعب</button>
+    <div style="display:flex; gap:5px; width:100%">
+      <button onclick="resetTicTacToe()" style="background:#e17055; padding:8px; display:none;" id="tResetBtn">إعادة اللعب</button>
+      <button onclick="backToLobby()" style="background:#636e72; padding:8px">القائمة الرئيسية</button>
+    </div>
   </div>
 
   <!-- واجهة حجر ورق مقص -->
   <div id="rpsUI" class="arcade-game-container">
-    <h3 style="color:#0984e3">✊ حجر 📄 ورق ✂️ مقص</h3>
-    <p id="rpsOpponent" style="font-size:0.8rem; margin:5px 0">تخوض التحدي ضد: ...</p>
-    <p id="rpsStatus" style="font-size:0.85rem; margin:10px 0; color:#f1c40f">اختر حركتك:</p>
-    <div style="display:flex; gap:10px" id="rpsBtns">
+    <h3 style="color:#00cec9">✊ حجر 📄 ورق ✂️ مقص</h3>
+    <p id="rpsOpponent" style="font-size:0.8rem; margin:4px 0">التحدي ضد: البوت الذكي</p>
+    <p id="rpsStatus" style="font-size:0.85rem; margin:8px 0; color:#f1c40f">اختر حركتك:</p>
+    <div style="display:flex; gap:8px; width:100%" id="rpsBtns">
       <button onclick="playRps('rock')">✊ حجر</button>
       <button onclick="playRps('paper')">📄 ورق</button>
       <button onclick="playRps('scissors')">✂️ مقص</button>
     </div>
-    <button onclick="resetRps()" style="background:#00b894; padding:5px; margin-top:10px; display:none;" id="rpsResetBtn">العب جولة أخرى</button>
+    <button onclick="resetRps()" style="background:#00b894; padding:8px; margin-top:8px; display:none;" id="rpsResetBtn">جولة جديدة</button>
+    <button onclick="backToLobby()" style="background:#636e72; padding:8px; margin-top:6px">القائمة الرئيسية</button>
   </div>
 
   <script>
     let socket = io();
     let myName = "", isDev = false, roomCode = "";
-    let currentGame = "";
+    let currentGame = "", currentMode = "offline";
     let myId = "";
 
-    function goToLobby() {
+    // نظام حفظ وحفظ التلقائي للاسم
+    window.onload = function() {
+      const savedName = localStorage.getItem('arcade_player_name');
+      if (savedName) {
+        myName = savedName;
+        isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('lobbyScreen').style.display = 'flex';
+      }
+    };
+
+    function saveAndLogin() {
       const input = document.getElementById('playerNameInput');
-      myName = input.value.trim();
-      if(!/^[A-Za-z0-9_]{3,12}$/.test(myName)) {
+      const nameVal = input.value.trim();
+      if(!/^[A-Za-z0-9_]{3,12}$/.test(nameVal)) {
         document.getElementById('loginError').innerText = "⚠️ اسم إنجليزي (3-12 حرف) مطلوب!";
         return;
       }
+      myName = nameVal;
       isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
+      localStorage.setItem('arcade_player_name', myName);
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('lobbyScreen').style.display = 'flex';
     }
 
+    function toggleModeInputs() {
+      currentMode = document.getElementById('modeSelect').value;
+      if(currentMode === 'online') {
+        document.getElementById('onlineInputs').style.display = 'block';
+        document.getElementById('startOfflineBtn').style.display = 'none';
+      } else {
+        document.getElementById('onlineInputs').style.display = 'none';
+        document.getElementById('startOfflineBtn').style.display = 'block';
+      }
+    }
+
     function createRoom() {
-      const gameType = document.getElementById('gameSelect').value;
-      socket.emit('createRoom', { name: myName, isDev, gameType });
+      currentGame = document.getElementById('gameSelect').value;
+      socket.emit('createRoom', { name: myName, isDev, gameType: currentGame });
     }
 
     function joinRoom() {
@@ -147,42 +195,104 @@
       currentGame = data.gameType;
       document.getElementById('lobbyScreen').style.display = 'none';
       document.getElementById('waitingScreen').style.display = 'none';
-
       let opponent = data.players.find(p => p.id !== myId)?.name || "صديقك";
 
       if(currentGame === 'goku') {
         document.getElementById('gokuGameUI').style.display = 'flex';
-        document.getElementById('gokuVs').innerText = `⚡ ضد: ${opponent}`;
         initGokuGame(data.players);
       } else if(currentGame === 'tictactoe') {
         document.getElementById('tictactoeUI').style.display = 'flex';
-        initTicTacToe(data.players);
+        initTicTacToeOnline(data.players);
       } else if(currentGame === 'rps') {
         document.getElementById('rpsUI').style.display = 'flex';
-        document.getElementById('rpsOpponent').innerText = `✊ التحدي ضد: ${opponent}`;
+        document.getElementById('rpsOpponent').innerText = `✊ التحدي أونلاين ضد: ${opponent}`;
       }
     });
+
+    function startChosenGame() {
+      currentGame = document.getElementById('gameSelect').value;
+      currentMode = 'offline';
+      document.getElementById('lobbyScreen').style.display = 'none';
+
+      if(currentGame === 'goku') {
+        document.getElementById('gokuGameUI').style.display = 'flex';
+        initGokuGame([{id: 'bot', name: 'Bot Fighter', x: 200, y: 60}]);
+      } else if(currentGame === 'tictactoe') {
+        document.getElementById('tictactoeUI').style.display = 'flex';
+        initTicTacToeOffline();
+      } else if(currentGame === 'rps') {
+        document.getElementById('rpsUI').style.display = 'flex';
+        document.getElementById('rpsOpponent').innerText = "✊ التحدي ضد: البوت الذكي";
+      }
+    }
+
+    function backToLobby() {
+      document.getElementById('gokuGameUI').style.display = 'none';
+      document.getElementById('tictactoeUI').style.display = 'none';
+      document.getElementById('rpsUI').style.display = 'none';
+      document.getElementById('lobbyScreen').style.display = 'flex';
+    }
+
+    /* --- موسيقى الخلفية الحماسية والخفيفة التفاعلية --- */
+    let audioCtx = null;
+    let musicInterval = null;
+    let isMusicPlaying = false;
+
+    function toggleMusic() {
+      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+
+      if(isMusicPlaying) {
+        clearInterval(musicInterval);
+        isMusicPlaying = false;
+        document.getElementById('musicStatus').innerText = "متوقفة";
+      } else {
+        isMusicPlaying = true;
+        document.getElementById('musicStatus').innerText = "شغالة 🎶";
+        let notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
+        let i = 0;
+        musicInterval = setInterval(() => {
+          if(!isMusicPlaying) return;
+          let osc = audioCtx.createOscillator();
+          let gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(notes[i], audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.25);
+          i = (i + 1) % notes.length;
+        }, 300);
+      }
+    }
 
     /* --- لعبة غوكو --- */
     let canvas, ctx, players = {}, myX = 140, myY = 60;
     function initGokuGame(roomPlayers) {
       canvas = document.getElementById('gameCanvas');
       ctx = canvas.getContext('2d');
-      
+      players = {};
       roomPlayers.forEach((p, index) => {
-        players[p.id] = { ...p, x: 100 + (index * 60), y: 60 };
+        players[p.id] = { ...p, x: 80 + (index * 80), y: 60 };
       });
+
+      if(currentMode === 'offline') {
+        players['bot'] = { name: 'Goku Bot', x: 200, y: 60, isDev: false };
+        setInterval(() => {
+          if(players['bot']) {
+            players['bot']->x += (Math.random() > 0.5 ? 2 : -2);
+            drawGoku();
+          }
+        }, 500);
+      }
 
       socket.on('playerMove', (data) => {
-        if(players[data.id]) {
-          players[data.id].x = data.x;
-          players[data.id].y = data.y;
-        } else {
-          players[data.id] = data;
-        }
+        if(players[data.id]) { players[data.id].x = data.x; players[data.id].y = data.y; }
+        else { players[data.id] = data; }
         drawGoku();
       });
-
       socket.on('spawnBeam', () => { drawGoku(); });
       drawGoku();
 
@@ -190,11 +300,8 @@
         if(isDragging) {
           myX += moveVector.x * 4;
           myY += moveVector.y * 4;
-          if(players[socket.id]) {
-            players[socket.id].x = myX;
-            players[socket.id].y = myY;
-          }
-          socket.emit('playerMove', { id: socket.id, x: myX, y: myY, name: myName, isDev });
+          if(players[socket.id]) { players[socket.id].x = myX; players[socket.id].y = myY; }
+          if(currentMode === 'online') socket.emit('playerMove', { id: socket.id, x: myX, y: myY, name: myName, isDev });
           drawGoku();
         }
       }, 25);
@@ -203,7 +310,6 @@
     let moveVector = {x:0, y:0}, isDragging = false;
     const area = document.getElementById('joystickArea');
     const knob = document.getElementById('joystickKnob');
-    
     area.addEventListener('touchstart', handleJoystick);
     area.addEventListener('touchmove', handleJoystick);
     area.addEventListener('touchend', () => { knob.style.transform='translate(0,0)'; isDragging=false; });
@@ -222,12 +328,12 @@
       isDragging = true;
     }
 
-    function useKamehameha() { socket.emit('kamehamehaAttack', { x: myX, y: myY }); }
+    function useKamehameha() { if(currentMode === 'online') socket.emit('kamehamehaAttack', { x: myX, y: myY }); drawGoku(); }
 
     function drawGoku() {
       if(!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#00b894'; ctx.fillRect(0, 100, canvas.width, 40);
+      ctx.fillStyle = '#00b894'; ctx.fillRect(0, 110, canvas.width, 30);
       for(let id in players) {
         let p = players[id];
         ctx.fillStyle = p.isDev ? '#f1c40f' : '#ff7675';
@@ -237,24 +343,36 @@
       }
     }
 
-    /* --- إكس أو --- */
+    /* --- إكس أو (أونلاين أو ضد بوت) --- */
     let tBoard = ['', '', '', '', '', '', '', '', ''];
-    let mySymbol = 'X';
-    let isMyTurn = true;
-    let tGameOver = false;
+    let mySymbol = 'X', isMyTurn = true, tGameOver = false;
 
-    function initTicTacToe(roomPlayers) {
-      // أول لاعب يدخل يكون X والثاني O
+    function initTicTacToeOffline() {
+      tBoard = ['', '', '', '', '', '', '', '', ''];
+      tGameOver = false;
+      mySymbol = 'X'; isMyTurn = true;
+      document.getElementById('tInfo').innerText = "الوضع: ضد البوت الذكي";
+      document.getElementById('tTurnStatus').innerText = "دورك (X)";
+      let cells = document.getElementsByClassName('t-cell');
+      for(let c of cells) c.innerText = '';
+      document.getElementById('tResetBtn').style.display = 'none';
+    }
+
+    function initTicTacToeOnline(roomPlayers) {
+      tBoard = ['', '', '', '', '', '', '', '', ''];
+      tGameOver = false;
+      let cells = document.getElementsByClassName('t-cell');
+      for(let c of cells) c.innerText = '';
+      document.getElementById('tResetBtn').style.display = 'none';
+
       if(roomPlayers[0].id === socket.id) {
-        mySymbol = 'X';
-        isMyTurn = true;
-        document.getElementById('tInfo').innerText = `تلعب ضد: ${roomPlayers[1].name} (رمزك: X)`;
-        document.getElementById('tTurnStatus').innerText = "دورك الآن! اختر خانة";
+        mySymbol = 'X'; isMyTurn = true;
+        document.getElementById('tInfo').innerText = `ضد: ${roomPlayers[1].name} (رمزك: X)`;
+        document.getElementById('tTurnStatus').innerText = "دورك الآن!";
       } else {
-        mySymbol = 'O';
-        isMyTurn = false;
-        document.getElementById('tInfo').innerText = `تلعب ضد: ${roomPlayers[0].name} (رمزك: O)`;
-        document.getElementById('tTurnStatus').innerText = `انتظار دور الخصم...`;
+        mySymbol = 'O'; isMyTurn = false;
+        document.getElementById('tInfo').innerText = `ضد: ${roomPlayers[0].name} (رمزك: O)`;
+        document.getElementById('tTurnStatus').innerText = "انتظار دور الخصم...";
       }
     }
 
@@ -262,10 +380,13 @@
       if(!isMyTurn || tBoard[index] !== '' || tGameOver) return;
       tBoard[index] = mySymbol;
       document.getElementsByClassName('t-cell')[index].innerText = mySymbol;
-      socket.emit('makeMove', { index, symbol: mySymbol });
-      
+
+      if(currentMode === 'online') {
+        socket.emit('makeMove', { index, symbol: mySymbol });
+      }
+
       if(checkWin(mySymbol)) {
-        document.getElementById('tTurnStatus').innerText = "🎉 مبروك! لقد فزت!";
+        document.getElementById('tTurnStatus').innerText = "🎉 مبروك! فزت بالمباراة!";
         tGameOver = true;
         document.getElementById('tResetBtn').style.display = 'block';
         return;
@@ -278,7 +399,29 @@
       }
 
       isMyTurn = false;
-      document.getElementById('tTurnStatus').innerText = "انتظار دور الخصم...";
+      document.getElementById('tTurnStatus').innerText = "انتظار الخصم...";
+
+      if(currentMode === 'offline' && !tGameOver) {
+        setTimeout(botTicTacToeMove, 500);
+      }
+    }
+
+    function botTicTacToeMove() {
+      let emptyCells = [];
+      tBoard.forEach((val, idx) => { if(val === '') emptyCells.push(idx); });
+      if(emptyCells.length === 0 || tGameOver) return;
+      let randIdx = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+      tBoard[randIdx] = 'O';
+      document.getElementsByClassName('t-cell')[randIdx].innerText = 'O';
+
+      if(checkWin('O')) {
+        document.getElementById('tTurnStatus').innerText = "❌ فاز البوت الذكي!";
+        tGameOver = true;
+        document.getElementById('tResetBtn').style.display = 'block';
+        return;
+      }
+      isMyTurn = true;
+      document.getElementById('tTurnStatus').innerText = "دورك الآن (X)";
     }
 
     socket.on('opponentMove', (data) => {
@@ -289,71 +432,4 @@
       if(checkWin(oppSymbol)) {
         document.getElementById('tTurnStatus').innerText = "❌ خسرت! فاز الخصم.";
         tGameOver = true;
-        document.getElementById('tResetBtn').style.display = 'block';
-        return;
-      }
-      if(tBoard.every(cell => cell !== '')) {
-        document.getElementById('tTurnStatus').innerText = "🤝 تعادل!";
-        tGameOver = true;
-        document.getElementById('tResetBtn').style.display = 'block';
-        return;
-      }
-
-      isMyTurn = true;
-      document.getElementById('tTurnStatus').innerText = "دورك الآن! اختر خانة";
-    });
-
-    function checkWin(sym) {
-      const wins = [
-        [0,1,2], [3,4,5], [6,7,8],
-        [0,3,6], [1,4,7], [2,5,8],
-        [0,4,8], [2,4,6]
-      ];
-      return wins.some(w => tBoard[w[0]] === sym && tBoard[w[1]] === sym && tBoard[w[2]] === sym);
-    }
-
-    function resetTicTacToe() {
-      tBoard = ['', '', '', '', '', '', '', '', ''];
-      tGameOver = false;
-      let cells = document.getElementsByClassName('t-cell');
-      for(let c of cells) c.innerText = '';
-      document.getElementById('tResetBtn').style.display = 'none';
-      if(mySymbol === 'X') {
-        isMyTurn = true;
-        document.getElementById('tTurnStatus').innerText = "دورك الآن! اختر خانة";
-      } else {
-        isMyTurn = false;
-        document.getElementById('tTurnStatus').innerText = "انتظار دور الخصم...";
-      }
-    }
-
-    /* --- حجر ورق مقص --- */
-    function playRps(choice) {
-      socket.emit('rpsPlay', { choice });
-      document.getElementById('rpsStatus').innerText = "⏳ تم اختيار حركتك، بانتظار الخصم...";
-      document.getElementById('rpsBtns').style.display = 'none';
-    }
-
-    socket.on('rpsResult', (data) => {
-      let choicesMap = { 'rock': '✊ حجر', 'paper': '📄 ورق', 'scissors': '✂️ مقص' };
-      let p1 = data.players[0], p2 = data.players[1];
-      let c1 = data.choices[p1.id], c2 = data.choices[p2.id];
-
-      let resText = `${p1.name} اختار: ${choicesMap[c1]} <br> ${p2.name} اختار: ${choicesMap[c2]}<br><br>`;
-      if(data.winner === 'تعادل') {
-        resText += "🤝 النتيجة: تعادل!";
-      } else {
-        resText += `🏆 الفائز هو: ${data.winner}!`;
-      }
-      document.getElementById('rpsStatus').innerHTML = resText;
-      document.getElementById('rpsResetBtn').style.display = 'block';
-    });
-
-    function resetRps() {
-      document.getElementById('rpsStatus').innerText = "اختر حركتك:";
-      document.getElementById('rpsBtns').style.display = 'flex';
-      document.getElementById('rpsResetBtn').style.display = 'none';
-    }
-  </script>
-</body>
-</html>
+        document.getElementById('tResetBtn').style.display = 'b

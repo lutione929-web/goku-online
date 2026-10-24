@@ -3,64 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Tic Tac Toe & Private Chat</title>
+  <title>Epic Phone OS - Online Punch Arena</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
       width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.3); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 0 35px rgba(255, 0, 0, 0.4); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
-      flex: 1; background: linear-gradient(135deg, #1a0b2e, #090a15);
+      flex: 1; background: linear-gradient(135deg, #2b0b0b, #090a15);
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
 
-    /* الشاشة الرئيسية تحتوي على التطبيقين فقط */
-    .home-screen {
-      flex: 1; padding: 25px 15px; display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 15px; align-content: start; overflow-y: auto;
-    }
-
-    .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-    .app-icon:active { transform: scale(0.9); }
-    .icon-box {
-      width: 55px; height: 55px; border-radius: 14px; display: flex; align-items: center;
-      justify-content: center; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 5px;
-    }
-    .app-name { font-size: 10px; color: #ddd; text-align: center; }
-
-    /* نوافذ التطبيقات */
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0b141a; display: none; flex-direction: column; z-index: 50; color: #fff;
+      background: #111; display: flex; flex-direction: column; z-index: 50; color: #fff; padding: 15px;
     }
-    .app-window.active { display: flex; }
 
-    .app-header {
-      height: 45px; background: #1f2c34; display: flex; align-items: center;
-      justify-content: space-between; padding: 0 15px; font-size: 13px; font-weight: bold; border-bottom: 1px solid #2a3942;
-    }
-    .back-btn { background: #2a3942; border: none; color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
+    .header { font-size: 14px; font-weight: bold; color: #ff4757; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    
+    /* شاشة إدخال الكود والغرفة */
+    .lobby-box { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; text-align: center; }
+    .input-box { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ff4757; background: #1a0505; color: #fff; font-size: 12px; text-align: center; outline: none; }
+    .action-btn { width: 100%; padding: 10px; background: #ff4757; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(255,71,87,0.4); }
 
-    /* تصميم لعبة أكس أو */
-    .tictactoe-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #111b21; }
-    .board { display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px); gap: 8px; margin: 20px 0; }
-    .cell { background: #202c33; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: bold; cursor: pointer; color: #00a884; }
-    .cell:active { background: #2a3942; }
+    /* حلبة القتال */
+    .arena-box { flex: 1; display: none; flex-direction: column; justify-content: space-between; padding: 10px 0; }
+    .fighter-card { background: #1a0505; border: 1px solid #ff4757; border-radius: 10px; padding: 10px; text-align: center; }
+    .hp-bar-bg { width: 100%; height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 5px; }
+    .hp-bar-fill { width: 100%; height: 100%; background: #00ba7c; transition: width 0.3s; }
 
-    /* تصميم Super Private Chat */
-    .chat-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; background: #0b141a; }
-    .chat-bubble { max-width: 80%; padding: 8px 12px; border-radius: 10px; font-size: 11px; line-height: 1.4; word-break: break-word; }
-    .chat-in { background: #202c33; color: #e9edef; align-self: flex-start; }
-    .chat-out { background: #005c4b; color: #e9edef; align-self: flex-end; }
-    .chat-input-area { background: #1f2c34; padding: 10px; display: flex; gap: 8px; }
+    .ring-arena { text-align: center; font-size: 50px; margin: 10px 0; animation: shakeRing 0.2s infinite alternate; }
+    @keyframes shakeRing { 0% { transform: translateX(-2px); } 100% { transform: translateX(2px); } }
 
-    .home-bar-area {
-      height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); cursor: pointer;
-    }
+    .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .punch-btn { background: #c0392b; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
+    .punch-btn:active { transform: scale(0.95); background: #e74c3c; }
+
+    .home-bar-area { height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
   </style>
 </head>
@@ -69,152 +52,102 @@
   <div class="phone-body">
     <div class="phone-screen">
       
-      <!-- الشاشة الرئيسية -->
-      <div class="home-screen" id="homeScreen">
-        <div class="app-icon" onclick="openApp('ticTacToeApp')">
-          <div class="icon-box" style="background:#00a884;">❌⭕</div>
-          <span class="app-name">Tic Tac Toe</span>
-        </div>
-        <div class="app-icon" onclick="openApp('privateChatApp')">
-          <div class="icon-box" style="background:#8a2be2;">🔒💬</div>
-          <span class="app-name">Private Chat</span>
-        </div>
-      </div>
+      <div class="app-window">
+        <div class="header">🥊 حلبة الضرب الأونلاين (Online Punch)</div>
 
-      <!-- 1. لعبة أكس أو (Tic Tac Toe) -->
-      <div class="app-window" id="ticTacToeApp">
-        <div class="app-header">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>لعبة أكس أو ❌⭕</span><span></span>
+        <!-- 1. غرف اللعب وإدخال الكود -->
+        <div class="lobby-box" id="lobbyScreen">
+          <p style="font-size: 11px; color: #aaa;">أنشئ غرفة أو اكتب كود صديقك لتدخلوا نفس الجيم تماماً!</p>
+          <input type="text" id="roomCodeInput" placeholder="اكتب كود الغرفة (مثال: 777)..." class="input-box">
+          <button class="action-btn" onclick="joinRoom()">دخول الغرفة / بدء القتال 🚀</button>
         </div>
-        <div class="tictactoe-container">
-          <h3 id="tttStatus" style="color: #00a884; font-size: 14px; margin-bottom: 10px;">دور اللاعب: X</h3>
-          <div class="board" id="tttBoard">
-            <div class="cell" onclick="cellClicked(0)"></div>
-            <div class="cell" onclick="cellClicked(1)"></div>
-            <div class="cell" onclick="cellClicked(2)"></div>
-            <div class="cell" onclick="cellClicked(3)"></div>
-            <div class="cell" onclick="cellClicked(4)"></div>
-            <div class="cell" onclick="cellClicked(5)"></div>
-            <div class="cell" onclick="cellClicked(6)"></div>
-            <div class="cell" onclick="cellClicked(7)"></div>
-            <div class="cell" onclick="cellClicked(8)"></div>
+
+        <!-- 2. شاشة القتال الفعلي -->
+        <div class="arena-box" id="arenaScreen" style="display: none;">
+          <div class="fighter-card">
+            <span id="enemyName" style="font-size: 11px; color: #ff6b6b;">الخصم في الغرفة</span>
+            <div class="hp-bar-bg"><div class="hp-bar-fill" id="enemyHp" style="width: 100%;"></div></div>
           </div>
-          <button onclick="resetTTT()" style="margin-top: 15px; background: #202c33; border: 1px solid #00a884; color: #00a884; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">إعادة اللعبة</button>
-        </div>
-      </div>
 
-      <!-- 2. تطبيق Super Private Chat -->
-      <div class="app-window" id="privateChatApp">
-        <div class="app-header" style="background: #202c33;">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>🔒 Super Private Chat</span><span></span>
+          <div class="ring-arena" id="ringAvatar">🥊💥</div>
+
+          <div class="fighter-card" style="border-color: #00ba7c; background: #021a10;">
+            <span style="font-size: 11px; color: #00ba7c;">أنت (البطل)</span>
+            <div class="hp-bar-bg"><div class="hp-bar-fill" id="myHp" style="width: 100%;"></div></div>
+          </div>
+
+          <div class="controls-grid">
+            <button class="punch-btn" onclick="hitOpponent(15)">⚡ لكمة سريعة</button>
+            <button class="punch-btn" style="background: #d35400;" onclick="hitOpponent(30)">🔥 ضربة قاضية</button>
+          </div>
         </div>
-        <div class="chat-box" id="privateChatBox">
-          <div class="chat-bubble chat-in">أهلاً بك في الشات السري الخارق! هنا كل الرسائل مشفرة وسرية تماماً بينك وبين الكيان الخفي. 🕶️</div>
-        </div>
-        <div class="chat-input-area">
-          <input type="text" id="privateInput" placeholder="اكتب رسالة سرية..." style="flex: 1; background: #2a3942; border: none; padding: 8px 12px; border-radius: 20px; color: #fff; font-size: 11px; outline: none;" onkeypress="handlePrivateEnter(event)">
-          <button onclick="sendPrivateMsg()" style="background: #00a884; border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-weight: bold; cursor: pointer;">➤</button>
-        </div>
+
       </div>
 
     </div>
 
-    <div class="home-bar-area" onclick="goHome()">
+    <div class="home-bar-area">
       <div class="home-bar"></div>
     </div>
   </div>
 
   <script>
-    function openApp(id) {
-      document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
-      let target = document.getElementById(id);
-      if(target) target.classList.add('active');
-    }
+    let currentRoom = "";
+    let myHpVal = 100;
+    let enemyHpVal = 100;
 
-    function goHome() {
-      document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
-    }
-
-    /* --- منطق لعبة أكس أو --- */
-    let board = ['', '', '', '', '', '', '', '', ''];
-    let currentPlayer = 'X';
-    let isGameActive = true;
-
-    function cellClicked(index) {
-      if(board[index] !== '' || !isGameActive) return;
-      board[index] = currentPlayer;
-      document.getElementsByClassName('cell')[index].innerText = currentPlayer;
-      document.getElementsByClassName('cell')[index].style.color = currentPlayer === 'X' ? '#00a884' : '#ff4757';
-
-      checkWinner();
-    }
-
-    function checkWinner() {
-      const winConditions = [
-        [0,1,2], [3,4,5], [6,7,8],
-        [0,3,6], [1,4,7], [2,5,8],
-        [0,4,8], [2,4,6]
-      ];
-
-      let roundWon = false;
-      for(let cond of winConditions) {
-        let a = board[cond[0]], b = board[cond[1]], c = board[cond[2]];
-        if(a && a === b && a === c) {
-          roundWon = true;
-          break;
-        }
-      }
-
-      if(roundWon) {
-        document.getElementById('tttStatus').innerText = `الفائز هو اللاعب: ${currentPlayer}! 🎉`;
-        isGameActive = false;
+    function joinRoom() {
+      let code = document.getElementById('roomCodeInput').value.trim();
+      if(!code) {
+        alert("الرجاء إدخال كود الغرفة أولاً!");
         return;
       }
-
-      if(!board.includes('')) {
-        document.getElementById('tttStatus').innerText = `تعادل! 🤝`;
-        isGameActive = false;
-        return;
-      }
-
-      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-      document.getElementById('tttStatus').innerText = `دور اللاعب: ${currentPlayer}`;
+      currentRoom = code;
+      document.getElementById('lobbyScreen').style.display = 'none';
+      document.getElementById('arenaScreen').style.display = 'flex';
+      document.getElementById('enemyName').innerText = `الغرفة رقم: #${code} (متصل)`;
     }
 
-    function resetTTT() {
-      board = ['', '', '', '', '', '', '', '', ''];
-      currentPlayer = 'X';
-      isGameActive = true;
-      document.getElementById('tttStatus').innerText = `دور اللاعب: X`;
-      let cells = document.getElementsByClassName('cell');
-      for(let c of cells) c.innerText = '';
-    }
+    function hitOpponent(damage) {
+      if(enemyHpVal <= 0 || myHpVal <= 0) return;
 
-    /* --- منطق Super Private Chat --- */
-    function handlePrivateEnter(e) { if(e.key === 'Enter') sendPrivateMsg(); }
-
-    function sendPrivateMsg() {
-      let input = document.getElementById('privateInput');
-      let chatBox = document.getElementById('privateChatBox');
-      let txt = input.value.trim();
-      if(!txt) return;
-
-      chatBox.innerHTML += `<div class="chat-bubble chat-out">${txt}</div>`;
-      input.value = "";
-      chatBox.scrollTop = chatBox.scrollHeight;
+      // تقليل طاقة الخصم
+      enemyHpVal -= damage;
+      if(enemyHpVal < 0) enemyHpVal = 0;
+      document.getElementById('enemyHp').style.width = enemyHpVal + "%";
+      document.getElementById('ringAvatar').innerHTML = "💥👊";
 
       setTimeout(() => {
-        let replies = [
-          `تم استلام رسالتك السرية بنجاح: "${txt}" 🔒`,
-          `النظام المشفر يرد: رسالتك وصلت للطرف الآخر في الشات السري! 🕶️`,
-          `هششش.. لا تخلّي أحد يسمعك وأنت تقول "${txt}"! 🤫`
-        ];
-        let chosen = replies[Math.floor(Math.random() * replies.length)];
-        chatBox.innerHTML += `<div class="chat-bubble chat-in">${chosen}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 600);
+        document.getElementById('ringAvatar').innerHTML = "🥊💥";
+      }, 300);
+
+      if(enemyHpVal === 0) {
+        alert("🎉 فزت بالمباراة يا أسطورة وأبرحت الخصم ضرباً!");
+        resetGame();
+        return;
+      }
+
+      // ردة فعل الخصم الهجومية بعد ثانية
+      setTimeout(() => {
+        let counterDamage = Math.floor(Math.random() * 15) + 5;
+        myHpVal -= counterDamage;
+        if(myHpVal < 0) myHpVal = 0;
+        document.getElementById('myHp').style.width = myHpVal + "%";
+
+        if(myHpVal === 0) {
+          alert("💀 للأسف خسرت المعركة! الخصم كان أقوى.");
+          resetGame();
+        }
+      }, 800);
+    }
+
+    function resetGame() {
+      myHpVal = 100;
+      enemyHpVal = 100;
+      document.getElementById('myHp').style.width = "100%";
+      document.getElementById('enemyHp').style.width = "100%";
+      document.getElementById('arenaScreen').style.display = 'none';
+      document.getElementById('lobbyScreen').style.display = 'flex';
     }
   </script>
 </body>

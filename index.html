@@ -21,16 +21,20 @@
     .shop-item{background:#2d3436;padding:10px;margin:8px 0;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:0.85rem}
     .shop-btn{background:#e17055;border:none;padding:5px 10px;color:#fff;border-radius:5px;cursor:pointer;font-weight:bold}
 
+    #leaderboardModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200;padding:15px}
+    .lb-container{background:#1e272e;border:2px solid #0984e3;width:100%;max-width:320px;border-radius:12px;padding:15px;text-align:center}
+    .lb-item{background:#2d3436;padding:8px;margin:6px 0;border-radius:6px;display:flex;justify-content:space-between;align-items:center;font-size:0.8rem}
+
     #gameUI{display:none;flex-direction:column;align-items:center;width:100%}
 
     h1{font-size:1.1rem;margin:2px 0;background:linear-gradient(90deg,#ff7675,#fab1a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     
-    .menu-bar{display:flex;gap:6px;margin-bottom:4px}
-    .menu-btn{background:#e17055;color:#fff;border:none;padding:4px 8px;border-radius:6px;font-size:0.7rem;cursor:pointer}
+    .menu-bar{display:flex;gap:5px;margin-bottom:4px}
+    .menu-btn{background:#e17055;color:#fff;border:none;padding:4px 7px;border-radius:6px;font-size:0.65rem;cursor:pointer}
 
     #gameCanvas{background:#1e272e;border:2px solid #ff7675;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.5)}
     
-    .stats-bar{display:flex;justify-content:space-between;width:320px;font-size:0.75rem;margin-top:4px;color:#f1c40f;font-weight:bold}
+    .stats-bar{display:flex;justify-content:space-between;width:320px;font-size:0.7rem;margin-top:3px;color:#f1c40f;font-weight:bold}
     .ki-container{width:320px;background:#2d3436;border-radius:6px;margin-top:2px;overflow:hidden;border:1px solid #ff7675;height:12px;position:relative}
     .ki-fill{height:100%;background:linear-gradient(90deg,#0984e3,#00cec9);width:0%;transition:width 0.2s}
     .ki-text{position:absolute;width:100%;top:0;text-align:center;font-size:0.6rem;font-weight:bold;color:#fff}
@@ -40,11 +44,11 @@
     .chat-input-area input{flex:1;padding:4px;border-radius:6px;border:none;background:#2d3436;color:#fff;font-size:0.7rem}
     .chat-input-area button{background:#0984e3;color:#fff;border:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.7rem}
 
-    .joystick-area{width:320px;height:95px;background:#1e272e;border:2px dashed #ff7675;border-radius:10px;margin-top:5px;display:flex;align-items:center;justify-content:center;position:relative;user-select:none}
+    .joystick-area{width:320px;height:90px;background:#1e272e;border:2px dashed #ff7675;border-radius:10px;margin-top:4px;display:flex;align-items:center;justify-content:center;position:relative;user-select:none}
     .joystick-knob{width:45px;height:45px;background:#ff7675;border-radius:50%;position:absolute;box-shadow:0 4px 10px rgba(0,0,0,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
     
-    .action-bar{display:flex;gap:6px;margin-top:5px;width:320px;justify-content:center}
-    .btn-action{flex:1;padding:8px;border-radius:6px;border:none;color:#fff;font-weight:bold;cursor:pointer;font-size:0.75rem}
+    .action-bar{display:flex;gap:6px;margin-top:4px;width:320px;justify-content:center}
+    .btn-action{flex:1;padding:7px;border-radius:6px;border:none;color:#fff;font-weight:bold;cursor:pointer;font-size:0.75rem}
   </style>
 </head>
 <body>
@@ -76,7 +80,15 @@
         <button class="shop-btn" onclick="buyForm('ui', 200)">شراء</button>
       </div>
 
-      <button onclick="closeShop()" style="margin-top:10px; background:#d63031; border:none; padding:6px 15px; color:#fff; border-radius:6px; cursor:pointer;">إغلاق المتجر</button>
+      <button onclick="closeShop()" style="margin-top:10px; background:#d63031; border:none; padding:6px 15px; color:#fff; border-radius:6px; cursor:pointer;">إغلاق</button>
+    </div>
+  </div>
+
+  <div id="leaderboardModal">
+    <div class="lb-container">
+      <h3 style="color:#0984e3; margin-bottom:10px;">🏆 لوحة المتصدرين (Top Kills)</h3>
+      <div id="lbList" style="max-height:180px; overflow-y:auto;"></div>
+      <button onclick="closeLeaderboard()" style="margin-top:10px; background:#d63031; border:none; padding:6px 15px; color:#fff; border-radius:6px; cursor:pointer;">إغلاق</button>
     </div>
   </div>
 
@@ -85,6 +97,7 @@
     
     <div class="menu-bar">
       <button class="menu-btn" onclick="openShop()">🛒 المتجر</button>
+      <button class="menu-btn" onclick="openLeaderboard()" style="background:#0984e3;">🏆 المتصدرين</button>
       <button class="menu-btn" onclick="addFriend()">👥 أصدقاء</button>
       <button class="menu-btn" style="background:#6c5ce7" onclick="transformGoku()">🔥 التحول</button>
     </div>
@@ -92,6 +105,7 @@
     <canvas id="gameCanvas" width="320" height="150"></canvas>
 
     <div class="stats-bar">
+      <span id="playerKillsText">⚔️ Kills: 0</span>
       <span id="playerCoinsText">🪙 Coins: 50</span>
       <span id="playerFormText">⚡ Form: Normal</span>
     </div>
@@ -127,6 +141,7 @@
     let myName = "";
     let isDev = false;
     let myCoins = 50;
+    let myKills = 0;
     let ki = 0;
     let currentForm = 'normal';
     let unlockedForms = ['normal', 'ssj'];
@@ -152,26 +167,44 @@
         return;
       }
 
-      isDev = (nameVal.toUpperCase() === 'EPIKDEV' || nameVal.toUpperCase() === 'MOHAMMED');
+      myName = nameVal;
+      isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
 
-      socket = io();
+      // الاتصال مع ميزة إعادة الاتصال التلقائي
+      socket = io({ reconnection: true, reconnectionAttempts: 5 });
 
-      socket.emit('playerJoin', { id: socket.id, name: nameVal, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
-        if (!response.success) {
-          errorSpan.innerText = "⚠️ " + response.message;
-          socket.disconnect();
-        } else {
-          myName = nameVal;
-          myId = socket.id;
-          myCoins = response.coins;
-          localStorage.setItem('goku_player_name', myName);
+      socket.on('connect', () => {
+        myId = socket.id;
+        socket.emit('playerJoin', { id: socket.id, name: myName, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
+          if (!response.success) {
+            errorSpan.innerText = "⚠️ " + response.message;
+            socket.disconnect();
+          } else {
+            myCoins = response.coins;
+            myKills = response.kills;
+            localStorage.setItem('goku_player_name', myName);
 
-          document.getElementById('loginScreen').style.display = 'none';
-          document.getElementById('gameUI').style.display = 'flex';
-          updateStatsUI();
-          initGameListeners();
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('gameUI').style.display = 'flex';
+            updateStatsUI();
+          }
+        });
+      });
+
+      // إذا انقطع الاتصال وعاد السيرفر، يتم تسجيل الدخول وإعادة إرسال اللاعب تلقائياً
+      socket.on('reconnect', () => {
+        if (myName) {
+          socket.emit('playerJoin', { id: socket.id, name: myName, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
+            if (response.success) {
+              myCoins = response.coins;
+              myKills = response.kills;
+              updateStatsUI();
+            }
+          });
         }
       });
+
+      initGameListeners();
     }
 
     function initGameListeners() {
@@ -192,9 +225,20 @@
         }
       });
 
+      socket.on('updateLeaderboard', (list) => {
+        const lbList = document.getElementById('lbList');
+        lbList.innerHTML = '';
+        list.forEach((p, index) => {
+          let badge = p.isDev ? ' <span style="color:#f1c40f">[👑 DEV]</span>' : '';
+          lbList.innerHTML += `<div class="lb-item"><span>#${index+1} ${p.name}${badge}</span> <span>⚔️ ${p.kills} | 🪙 ${p.coins}</span></div>`;
+        });
+      });
+
       socket.on('disconnect', (id) => {
-        delete players[id];
-        draw();
+        if (id) {
+          delete players[id];
+          draw();
+        }
       });
 
       socket.on('chatMessage', (data) => {
@@ -293,7 +337,7 @@
         else if(currentForm === 'blue' && unlockedForms.includes('ui')) currentForm = 'ui';
         else currentForm = 'normal';
 
-        players[myId].form = currentForm;
+        if(players[myId]) players[myId].form = currentForm;
         draw();
         socket.emit('playerAction', { id: myId, form: currentForm });
         updateStatsUI();
@@ -321,10 +365,12 @@
       document.getElementById('shopModal').style.display = 'flex';
       document.getElementById('shopCoins').innerText = myCoins;
     }
+    function closeShop() { document.getElementById('shopModal').style.display = 'none'; }
 
-    function closeShop() {
-      document.getElementById('shopModal').style.display = 'none';
+    function openLeaderboard() {
+      document.getElementById('leaderboardModal').style.display = 'flex';
     }
+    function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
 
     function buyForm(formName, cost) {
       socket.emit('buyTransformation', { form: formName, cost: cost }, (res) => {
@@ -342,6 +388,7 @@
     }
 
     function updateStatsUI() {
+      document.getElementById('playerKillsText').innerText = `⚔️ Kills: ${myKills}`;
       document.getElementById('playerCoinsText').innerText = `🪙 Coins: ${myCoins}`;
       document.getElementById('playerFormText').innerText = `⚡ Form: ${currentForm.toUpperCase()}`;
     }
@@ -357,7 +404,6 @@
 
     function addFriend() { prompt("أدخل اسم صديقك لإضافته:"); }
 
-    // رسم شخصية جوكو بستايل بكسل آرت (Pixel Art) مطابق تماماً للصورة
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let id in players) {
@@ -366,15 +412,13 @@
         let y = p.y;
         let form = p.form || 'normal';
 
-        // ألوان الشعر حسب التحول (مطابق لستايل بكسل آرت)
-        let hairColor = '#1e272e'; // أسود غامق للبكسل
-        let highlightHair = '#485460';
+        let hairColor = '#1e272e';
         let auraColor = 'transparent';
 
-        if(form === 'ssj') { hairColor = '#f1c40f'; highlightHair = '#f39c12'; auraColor = 'rgba(241, 196, 15, 0.4)'; }
-        else if(form === 'ssj2') { hairColor = '#f1c40f'; highlightHair = '#ffeaa7'; auraColor = 'rgba(255, 234, 167, 0.6)'; }
-        else if(form === 'blue') { hairColor = '#0984e3'; highlightHair = '#74b9ff'; auraColor = 'rgba(9, 132, 227, 0.6)'; }
-        else if(form === 'ui') { hairColor = '#b2bec3'; highlightHair = '#dfe6e9'; auraColor = 'rgba(223, 230, 233, 0.8)'; }
+        if(form === 'ssj') { hairColor = '#f1c40f'; auraColor = 'rgba(241, 196, 15, 0.4)'; }
+        else if(form === 'ssj2') { hairColor = '#f1c40f'; auraColor = 'rgba(255, 234, 167, 0.6)'; }
+        else if(form === 'blue') { hairColor = '#0984e3'; auraColor = 'rgba(9, 132, 227, 0.6)'; }
+        else if(form === 'ui') { hairColor = '#b2bec3'; auraColor = 'rgba(223, 230, 233, 0.8)'; }
 
         if(auraColor !== 'transparent') {
           ctx.fillStyle = auraColor;
@@ -383,41 +427,33 @@
           ctx.fill();
         }
 
-        // --- رسم شخصية Pixel Art دقيقة لجوكو ---
-        
-        // الأرجل (بنطال برتقالي + جزمة زرقاء)
-        ctx.fillStyle = '#d35400'; // بنطال برتقالي
+        ctx.fillStyle = '#d35400';
         ctx.fillRect(x + 8, y + 16, 4, 6);
         ctx.fillRect(x + 12, y + 16, 4, 6);
         
-        ctx.fillStyle = '#2980b9'; // جزمة زرقاء
+        ctx.fillStyle = '#2980b9';
         ctx.fillRect(x + 7, y + 21, 5, 3);
         ctx.fillRect(x + 12, y + 21, 5, 3);
 
-        // الجذع (قميص أزرق مع حزام)
         ctx.fillStyle = '#2980b9';
         ctx.fillRect(x + 7, y + 9, 10, 8);
         
-        ctx.fillStyle = '#e67e22'; // حزام الخصر
+        ctx.fillStyle = '#e67e22';
         ctx.fillRect(x + 8, y + 15, 8, 2);
 
-        // اليدين بوضعية القتال (مرفوعة للجانبين)
-        ctx.fillStyle = '#e1b12c'; // لون الجلد بستايل بكسل
+        ctx.fillStyle = '#e1b12c';
         ctx.fillRect(x + 3, y + 11, 4, 4);
         ctx.fillRect(x + 17, y + 11, 4, 4);
 
-        // الرأس والوجه
         ctx.fillStyle = '#e1b12c';
         ctx.fillRect(x + 8, y + 4, 8, 6);
 
-        // شعر جوكو الحاد (Pixel Spiky Hair)
         ctx.fillStyle = hairColor;
         ctx.fillRect(x + 6, y + 1, 12, 4);
-        ctx.fillRect(x + 4, y + 2, 3, 4); // خصلة يسار
-        ctx.fillRect(x + 17, y + 2, 3, 4); // خصلة يمين
-        ctx.fillRect(x + 10, y, 4, 2);   // خصلة أعلى
+        ctx.fillRect(x + 4, y + 2, 3, 4);
+        ctx.fillRect(x + 17, y + 2, 3, 4);
+        ctx.fillRect(x + 10, y, 4, 2);
 
-        // اسم اللاعب والتاج الذهبي
         ctx.fillStyle = p.isDev ? '#f1c40f' : '#fff';
         ctx.font = p.isDev ? 'bold 10px sans-serif' : '9px sans-serif';
         ctx.textAlign = 'center';

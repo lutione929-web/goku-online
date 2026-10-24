@@ -4,80 +4,79 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Goku Fighter Online</title>
+  <script src="/socket.io/socket.io.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:10px}
     h1{font-size:1.5rem;margin:8px 0;background:linear-gradient(90deg,#ff7675,#e17055);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .panel{background:#1e272e;border:2px solid #ff7675;border-radius:12px;padding:16px;width:100%;max-width:360px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
-    input,button{font-family:inherit;font-size:1rem;border:none;border-radius:8px;padding:10px;margin:4px 0;width:100%}
-    input{width:100%;margin:6px 0;text-align:center;background:#2d3436;color:#fff}
-    button{cursor:pointer;color:#fff;margin-top:6px;font-weight:bold}
-    .btn-main{background:linear-gradient(90deg,#e17055,#d63031)}
-    #status{opacity:.8;font-size:.9rem;margin-bottom:8px;text-align:center;color:#00b894}
-    #gameWrap{display:none;position:relative;margin-top:10px;text-align:center}
-    canvas{display:block;max-width:100%;background:#111;border:2px solid #ff7675;border-radius:8px;margin:0 auto}
-    .controls{display:flex;justify-content:center;gap:8px;margin-top:12px}
-    .controls button{width:70px;height:50px;background:#2d3436;border:1px solid #ff7675;border-radius:8px;font-size:1.4rem}
-    .hidden{display:none!important}
+    p{font-size:0.9rem;color:#aaa;margin-bottom:10px}
+    #gameCanvas{background:#1e272e;border:2px solid #ff7675;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+    .controls{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-top:15px;width:100%;max-width:300px}
+    .btn{background:#2d3436;color:#fff;border:1px solid #ff7675;padding:12px;font-size:1.2rem;border-radius:8px;cursor:pointer;user-select:none;text-align:center}
+    .btn:active{background:#ff7675}
+    .empty{}
   </style>
 </head>
 <body>
 
-  <h1>Goku Fighter Online ⚡</h1>
-  <div id="status">جاهز للعب!</div>
+  <h1>⚡ Goku Fighter Online</h1>
+  <p>استخدم أزرار التحريك بالأسفل!</p>
 
-  <div id="menu" class="panel">
-    <label>اسمك</label>
-    <input type="text" id="nameInput" value="EPIKDEV">
-    <button class="btn-main" onclick="startGame()">دخول اللعبة 🚀</button>
-  </div>
+  <canvas id="gameCanvas" width="320" height="320"></canvas>
 
-  <div id="gameWrap">
-    <canvas id="canvas" width="360" height="320"></canvas>
-    <div class="controls">
-      <button onclick="move(-15, 0)">⬅️</button>
-      <button onclick="move(0, -15)">⬆️</button>
-      <button onclick="move(0, 15)">⬇️</button>
-      <button onclick="move(15, 0)">➡️</button>
-    </div>
+  <div class="controls">
+    <div class="empty"></div>
+    <div class="btn" onclick="move('up')">⬆️</div>
+    <div class="empty"></div>
+    <div class="btn" onclick="move('left')">⬅️</div>
+    <div class="btn" onclick="move('down')">⬇️</div>
+    <div class="btn" onclick="move('right')">➡️</div>
   </div>
 
   <script>
-    let p = { x: 180, y: 160, r: 25, color: '#e17055' };
-    
-    function startGame() {
-      document.getElementById('menu').classList.add('hidden');
-      document.getElementById('gameWrap').style.display = 'block';
-      document.getElementById('status').innerText = 'استخدم أزرار التحريك بالأسفل!';
-      initGame();
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const socket = io();
+
+    let players = {};
+    let myId = null;
+
+    socket.on('connect', () => {
+      myId = socket.id;
+      players[myId] = { x: 140, y: 140, color: '#ff7675' };
+      draw();
+    });
+
+    socket.on('playerMove', (data) => {
+      players[data.id] = data;
+      draw();
+    });
+
+    function move(dir) {
+      if (!myId || !players[myId]) return;
+      const step = 15;
+      if (dir === 'up' && players[myId].y > 0) players[myId].y -= step;
+      if (dir === 'down' && players[myId].y < canvas.height - 40) players[myId].y += step;
+      if (dir === 'left' && players[myId].x > 0) players[myId].x -= step;
+      if (dir === 'right' && players[myId].x < canvas.width - 40) players[myId].x += step;
+
+      draw();
+      socket.emit('playerMove', { id: myId, x: players[myId].x, y: players[myId].y, color: '#ff7675' });
     }
 
-    function move(dx, dy) {
-      p.x += dx;
-      p.y += dy;
-      if(p.x < 25) p.x = 25;
-      if(p.x > 335) p.x = 335;
-      if(p.y < 25) p.y = 25;
-      if(p.y > 295) p.y = 295;
-    }
-
-    function initGame() {
-      const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
-
-      function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let id in players) {
+        const p = players[id];
+        ctx.fillStyle = p.color || '#ff7675';
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
+        ctx.arc(p.x + 20, p.y + 20, 20, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = '#fff';
-        ctx.font = '14px Tahoma';
+        ctx.font = '10px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(document.getElementById('nameInput').value, p.x, p.y + 40);
-        requestAnimationFrame(draw);
+        ctx.fillText(id === myId ? 'أنت' : 'لاعب', p.x + 20, p.y + 48);
       }
-      draw();
     }
   </script>
 </body>

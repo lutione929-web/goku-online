@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Shrek & Donkey WhatsApp</title>
+  <title>Epic Phone OS - Donkey & Fart Madness</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
       width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.3); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 0 35px rgba(255, 0, 0, 0.4); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
@@ -18,233 +18,152 @@
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
 
-    .home-screen {
-      flex: 1; padding: 25px 15px; display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 15px; align-content: start; overflow-y: auto;
-    }
-
-    .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-    .app-icon:active { transform: scale(0.9); }
-    .icon-box {
-      width: 55px; height: 55px; border-radius: 14px; display: flex; align-items: center;
-      justify-content: center; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 5px;
-    }
-    .app-name { font-size: 10px; color: #ddd; text-align: center; }
-
-    .app-window {
+    /* 1. شاشة تسجيل الدخول بالاسم */
+    #loginScreen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #111b21; display: none; flex-direction: column; z-index: 50; color: #e9edef;
+      background: #090a15; z-index: 100; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 20px; text-align: center;
     }
-    .app-window.active { display: flex; }
+    .login-input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 10px; border: 1px solid #ff4757; background: #111; color: #fff; font-size: 13px; text-align: center; outline: none; }
+    .login-btn { width: 100%; padding: 12px; background: #ff4757; color: #fff; border: none; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,71,87,0.4); }
+
+    /* الشاشة الرئيسية بعد تسجيل الدخول */
+    .home-screen {
+      flex: 1; padding: 25px 15px; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    }
+
+    /* الزر الأحمر العملاق والمرعب والمضحك */
+    .giant-red-btn {
+      width: 180px; height: 180px; background: radial-gradient(circle, #ff4757, #c0392b);
+      border: 6px solid #fff; border-radius: 50%; color: #fff; font-size: 18px; font-weight: bold;
+      cursor: pointer; box-shadow: 0 0 30px rgba(255,0,0,0.8); animation: pulseBtn 1.5s infinite;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+    }
+    .giant-red-btn:active { transform: scale(0.92); }
+
+    @keyframes pulseBtn {
+      0% { transform: scale(1); box-shadow: 0 0 20px rgba(255,0,0,0.6); }
+      50% { transform: scale(1.06); box-shadow: 0 0 40px rgba(255,0,0,1); }
+      100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,0,0,0.6); }
+    }
 
     .home-bar-area {
       height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); cursor: pointer;
     }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
-
-    /* تصميم الواتساب */
-    .wa-header { background: #1f2c34; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
-    .wa-title { font-size: 16px; font-weight: bold; color: #e9edef; }
-    .wa-icons { display: flex; gap: 12px; font-size: 14px; color: #aebac1; align-items: center; }
-    
-    /* زر يا فرشخسوسو خايس المميز في الهيدر */
-    .special-btn { background: #880000; color: #fff; border: 1px solid #ff4757; padding: 3px 6px; border-radius: 5px; font-size: 8px; font-weight: bold; cursor: pointer; }
-    
-    .wa-search-bar { background: #111b21; padding: 8px 12px; }
-    .wa-search-input { width: 100%; background: #202c33; border: none; border-radius: 8px; padding: 7px 12px; color: #fff; font-size: 11px; outline: none; }
-    
-    .wa-body { flex: 1; overflow-y: auto; background: #111b21; }
-    .wa-chat-item { display: flex; align-items: center; padding: 10px 12px; gap: 10px; cursor: pointer; border-bottom: 1px solid #222d34; }
-    .wa-chat-item:active { background: #202c33; }
-    .wa-avatar { width: 42px; height: 42px; background: #2a3942; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .wa-chat-info { flex: 1; overflow: hidden; }
-    .wa-chat-name { font-size: 12px; font-weight: bold; color: #e9edef; display: flex; justify-content: space-between; }
-    .wa-chat-time { font-size: 9px; color: #8696a0; font-weight: normal; }
-    .wa-chat-msg { font-size: 11px; color: #8696a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
-
-    .wa-footer-nav { height: 50px; background: #1f2c34; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222d34; }
-    .wa-nav-item { display: flex; flex-direction: column; align-items: center; color: #8696a0; font-size: 9px; cursor: pointer; gap: 2px; }
-    .wa-nav-item.active { color: #00a884; font-weight: bold; }
-    .wa-nav-icon { font-size: 16px; }
-
-    /* محادثة الواتساب الداخلية */
-    .wa-chat-room { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0b141a; display: none; flex-direction: column; z-index: 60; }
-    .wa-room-header { background: #1f2c34; padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
-    .wa-room-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
-    .wa-bubble { max-width: 80%; padding: 6px 10px; border-radius: 8px; font-size: 11px; line-height: 1.4; word-break: break-word; }
-    .wa-bubble-in { background: #202c33; color: #e9edef; align-self: flex-start; }
-    .wa-bubble-out { background: #005c4b; color: #e9edef; align-self: flex-end; }
-    .wa-room-input-area { background: #1f2c34; padding: 8px; display: flex; align-items: center; gap: 8px; }
   </style>
 </head>
 <body>
 
+  <!-- شاشة تسجيل الدخول بالاسم -->
+  <div id="loginScreen">
+    <div style="font-size: 50px; margin-bottom: 10px;">🐴💨</div>
+    <h2 style="color: #ff4757; font-size: 18px; margin-bottom: 5px;">مرحباً بك في النظام الخارق</h2>
+    <p style="color: #aaa; font-size: 11px; margin-bottom: 15px;">الرجاء إدخال اسمك للبدء:</p>
+    <input type="text" id="userNameInput" placeholder="اكتب اسمك هنا يا أسطورة..." class="login-input">
+    <button class="login-btn" onclick="completeLogin()">دخول إلى النظام 🚀</button>
+  </div>
+
   <div class="phone-body">
     <div class="phone-screen">
       
-      <!-- الشاشة الرئيسية -->
+      <!-- الشاشة الرئيسية وتحتوي على الزر الأحمر العملاق -->
       <div class="home-screen" id="homeScreen">
-        <div class="app-icon" onclick="openWhatsApp()">
-          <div class="icon-box" style="background:#25D366;">💬</div>
-          <span class="app-name">WhatsApp</span>
-        </div>
-      </div>
+        <h3 id="welcomeUserTitle" style="color: #f1c40f; margin-bottom: 25px; font-size: 15px;">أهلاً بك!</h3>
+        
+        <!-- الزر الأحمر العملاق -->
+        <button class="giant-red-btn" onclick="triggerMadness()">
+          <span>🚨</span>
+          <span>اضغط هنا</span>
+          <span style="font-size: 10px; font-weight: normal;">(حمير + Farts)</span>
+        </button>
 
-      <!-- تطبيق الواتساب -->
-      <div class="app-window active" id="whatsappApp" style="display:flex;">
-        <div class="wa-header">
-          <span class="wa-title">واتساب</span>
-          <div class="wa-icons">
-            <!-- زر يا فرشخسوسو خايس المطلوب -->
-            <button class="special-btn" onclick="alert('تم تفعيل وضع: يا فرشخسوسو خايس بنجاح! 🤣🔥')">يا فرشخسوسو خايس</button>
-            <span>📷</span>
-            <span>🔍</span>
-          </div>
-        </div>
-
-        <div class="wa-search-bar">
-          <input type="text" id="waSearchInput" class="wa-search-input" placeholder="ابحث برقم الجوال أو الاسم..." oninput="filterWhatsAppChats(this.value)">
-        </div>
-
-        <div class="wa-body" id="waBodyContent">
-          <div id="waChatsList">
-            <!-- محادثة شريك الحب والحمار الجديدة -->
-            <div class="wa-chat-item" onclick="openWaChat('شريك الحب. والحمار.', '🟢🐴')">
-              <div class="wa-avatar" style="background:linear-gradient(135deg, #27ae60, #d35400);">🟢</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">شريك الحب. والحمار. <span class="wa-chat-time">الآن</span></div>
-                <div class="wa-chat-msg">الحمار: يا شريك وين الفطور الملعون؟ 🐴😂</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="wa-footer-nav">
-          <div class="wa-nav-item" onclick="switchWaTab(this, 'calls')">
-            <span class="wa-nav-icon">📞</span>
-            <span>المكالمات</span>
-          </div>
-          <div class="wa-nav-item" onclick="switchWaTab(this, 'communities')">
-            <span class="wa-nav-icon">👥</span>
-            <span>المجتمعات</span>
-          </div>
-          <div class="wa-nav-item" onclick="switchWaTab(this, 'updates')">
-            <span class="wa-nav-icon">⭕</span>
-            <span>التحديثات</span>
-          </div>
-          <div class="wa-nav-item active" onclick="switchWaTab(this, 'chats')">
-            <span class="wa-nav-icon">💬</span>
-            <span>الدردشات</span>
-          </div>
-        </div>
-
-        <!-- غرفة الشات -->
-        <div class="wa-chat-room" id="waChatRoom">
-          <div class="wa-room-header">
-            <button onclick="closeWaChat()" style="background:none; border:none; color:#fff; font-size:14px; cursor:pointer;">◀</button>
-            <div class="wa-avatar" id="roomAvatar" style="width:32px; height:32px; font-size:14px;">🟢</div>
-            <div style="flex:1;"><b id="roomTitle" style="font-size:12px; color:#e9edef;">شريك الحب. والحمار.</b><br><span style="font-size:9px; color:#8696a0;">متصل الآن</span></div>
-          </div>
-          <div class="wa-room-messages" id="waRoomMessagesBox">
-            <div class="wa-bubble wa-bubble-in">أهلاً بك في محادثة شريك الحب والحمار! اطلب اللي تبيه يا أسطورة[span_1](start_span)[span_1](end_span).</div>
-          </div>
-          <div class="wa-room-input-area">
-            <input type="text" id="waMsgInput" placeholder="اكتب رسالة..." style="flex:1; background:#2a3942; border:none; padding:7px 10px; border-radius:20px; color:#fff; font-size:11px; outline:none;" onkeypress="handleWaEnter(event)">
-            <button onclick="sendWaMsg()" style="background:#00a884; border:none; color:#fff; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer;">➤</button>
-          </div>
-        </div>
+        <p id="funStatusText" style="color: #aaa; font-size: 11px; margin-top: 25px; line-height: 1.4;">اضغط الزر الأحمر لتفجير أصوات الحمير والضحك العشوائي! 😂</p>
       </div>
 
     </div>
 
-    <div class="home-bar-area" onclick="openWhatsApp()">
+    <div class="home-bar-area">
       <div class="home-bar"></div>
     </div>
   </div>
 
   <script>
-    function openWhatsApp() {
-      document.getElementById('whatsappApp').style.display = 'flex';
-    }
+    let playerName = "أسطورة";
 
-    function switchWaTab(elem, tabName) {
-      document.querySelectorAll('.wa-nav-item').forEach(i => i.classList.remove('active'));
-      elem.classList.add('active');
-      let bodyBox = document.getElementById('waBodyContent');
-      
-      if(tabName === 'chats') {
-        bodyBox.innerHTML = `
-          <div id="waChatsList">
-            <div class="wa-chat-item" onclick="openWaChat('شريك الحب. والحمار.', '🟢🐴')">
-              <div class="wa-avatar" style="background:linear-gradient(135deg, #27ae60, #d35400);">🟢</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">شريك الحب. والحمار. <span class="wa-chat-time">الآن</span></div>
-                <div class="wa-chat-msg">الحمار: يا شريك وين الفطور الملعون؟ 🐴😂</div>
-              </div>
-            </div>
-          </div>`;
-      } else if(tabName === 'updates') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>الحالات</b><br><br>• حالة شريك: قاعد في المستنقع ومقفل جوالي.</div>`;
-      } else if(tabName === 'communities') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>المجتمعات</b><br><br>مستنقع شريك وحماره المفضل.</div>`;
-      } else if(tabName === 'calls') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>سجل المكالمات</b><br><br>📞 مكالمة فائتة من الحمار.</div>`;
+    function completeLogin() {
+      let inputVal = document.getElementById('userNameInput').value.trim();
+      if(inputVal) {
+        playerName = inputVal;
       }
+      document.getElementById('welcomeUserTitleinnerText = `أهلاً بك يا ${playerName} في عالم الفوضى! 🐴`;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('homeScreen').style.display = 'flex';
     }
 
-    function filterWhatsAppChats(query) {
-      let q = query.trim();
-      let bodyBox = document.getElementById('waBodyContent');
-      if(!q) {
-        switchWaTab(document.querySelector('.wa-nav-item.active'), 'chats');
-        return;
-      }
+    // محرك توليد أصوات الحمير والـ Farts بالذكاء الصوتي (Web Audio API) بدون روابط خارجية
+    let audioCtx = null;
 
-      bodyBox.innerHTML = `
-        <div style="padding:10px;">
-          <div style="font-size:10px; color:#8696a0; margin-bottom:5px;">نتائج البحث: "${q}"</div>
-          <div class="wa-chat-item" onclick="openWaChat('${q}', '📱')">
-            <div class="wa-avatar" style="background:#00a884;">📞</div>
-            <div class="wa-chat-info">
-              <div class="wa-chat-name">${q} <span class="wa-chat-time">رقم حقيقي</span></div>
-              <div class="wa-chat-msg">اضغط لبدء محادثة فورية</div>
-            </div>
-          </div>
-        </div>`;
+    function triggerMadness() {
+      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+
+      let effects = [playDonkeySound, playFartSound, playCrazySqueak];
+      let randomEffect = effects[Math.floor(Math.random() * effects.length)];
+      randomEffect();
+
+      let messages = [
+        `😂 يا ${playerName}، الحمار أطلق صوتاً مرعباً!`,
+        `💨 أوووف! تم إطلاق Fart خرافي وعشوائي بنجاح!`,
+        `🐴 حمار هائج يركض في الشاشة الآن!`,
+        `💀 وااااو! ريحته وصلت لعندي يا ${playerName}!`
+      ];
+      document.getElementById('funStatusText').innerText = messages[Math.floor(Math.random() * messages.length)];
     }
 
-    let activeWaContact = "شريك الحب. والحمار.";
-    function openWaChat(name, avatarSymbol) {
-      activeWaContact = name;
-      document.getElementById('roomTitle').innerText = name;
-      document.getElementById('roomAvatar').innerText = avatarSymbol;
-      document.getElementById('waChatRoom').style.display = 'flex';
+    // صوت حمار كوميدي (ترددات متعرجة)
+    function playDonkeySound() {
+      let now = audioCtx.currentTime;
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.linearRampToValueAtTime(300, now + 0.2);
+      osc.frequency.linearRampToValueAtTime(120, now + 0.5);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now); osc.stop(now + 0.6);
     }
 
-    function closeWaChat() {
-      document.getElementById('waChatRoom').style.display = 'none';
+    // صوت Fart كوميدي ومضحك
+    function playFartSound() {
+      let now = audioCtx.currentTime;
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(60, now);
+      osc.frequency.linearRampToValueAtTime(40, now + 0.1);
+      osc.frequency.linearRampToValueAtTime(90, now + 0.2);
+      osc.frequency.linearRampToValueAtTime(50, now + 0.35);
+      gain.gain.setValueAtTime(0.5, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now); osc.stop(now + 0.35);
     }
 
-    function handleWaEnter(e) { if(e.key === 'Enter') sendWaMsg(); }
-
-    function sendWaMsg() {
-      let txtInput = document.getElementById('waMsgInput');
-      let msgBox = document.getElementById('waRoomMessagesBox');
-      let text = txtInput.value.trim();
-      if(!text) return;
-
-      msgBox.innerHTML += `<div class="wa-bubble wa-bubble-out">${text}</div>`;
-      txtInput.value = "";
-      msgBox.scrollTop = msgBox.scrollHeight;
-
-      setTimeout(() => {
-        let reply = `شريك والحمار يردان عليك بخصوص "${text}": هههههه كفو يا محمد يا أسطورة[span_2](start_span)[span_2](end_span)!`;
-        if(activeWaContact !== "شريك الحب. والحمار.") {
-          reply = `تم استقبال رسالتك للرقم (${activeWaContact}): "${text}" بنجاح! 🚀`;
-        }
-        msgBox.innerHTML += `<div class="wa-bubble wa-bubble-in">${reply}</div>`;
-        msgBox.scrollTop = msgBox.scrollHeight;
-      }, 600);
+    // صوت صرير مجنون وعشوائي
+    function playCrazySqueak() {
+      let now = audioCtx.currentTime;
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(400, now);
+      osc.frequency.exponentialRampToValueAtTime(800, now + 0.2);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now); osc.stop(now + 0.25);
     }
   </script>
 </body>

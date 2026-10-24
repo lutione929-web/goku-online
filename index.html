@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Gemini AI Edition</title>
+  <title>Epic Phone OS - Mohammed Dangerous Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; user-select: none; }
     body { background: #07070e; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; padding: 10px; }
@@ -15,7 +15,7 @@
       background: #111;
       border-radius: 40px;
       border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(255,255,255,0.1);
+      box-shadow: 0 0 35px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255,255,255,0.1);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -56,7 +56,7 @@
     .bg-roblox { background: linear-gradient(135deg, #000, #333); border: 2px solid #e82020; }
     .bg-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
     .bg-youtube { background: linear-gradient(135deg, #ff0000, #990000); }
-    .bg-xo { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+    .bg-dangerous { background: linear-gradient(135deg, #330000, #ff0000); border: 2px solid #ff4757; }
     .bg-poop { background: linear-gradient(135deg, #8e44ad, #c0392b); border: 2px solid #f1c40f; }
     .bg-browser { background: linear-gradient(135deg, #0984e3, #74b9ff); }
     .bg-music { background: linear-gradient(135deg, #00b894, #00cec9); }
@@ -82,7 +82,34 @@
     }
     .home-bar { width: 110px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.8; }
 
-    /* الواتساب الذكي */
+    /* تطبيق محمد الخطير المرعب */
+    .danger-chat { flex: 1; background: #050000; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; border: 2px solid #ff0000; }
+    .danger-msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; line-height: 1.4; word-break: break-word; }
+    .danger-incoming { background: #2a0000; color: #ff6b6b; align-self: flex-start; border: 1px solid #ff0000; }
+    .danger-outgoing { background: #331a00; color: #feca57; align-self: flex-end; border: 1px solid #ff9f43; }
+    .danger-input-area { display: flex; padding: 8px; background: #1a0000; gap: 6px; align-items: center; border-top: 1px solid #ff0000; }
+    .danger-input { flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid #ff0000; background: #0a0000; color: #fff; font-size: 12px; outline: none; }
+    .danger-send { background: #ff0000; border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+    /* شاشة التحذير والرعب الكبرى */
+    #dangerWarningScreen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95); z-index: 300; display: none; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    #dangerJumpscareScreen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 400; display: none; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+    }
+    #dangerJumpscareScreen img { animation: shake 0.08s infinite; width: 180px; }
+    @keyframes shake {
+      0% { transform: translate(4px, 4px) rotate(0deg); }
+      50% { transform: translate(-4px, -4px) rotate(-3deg); }
+      100% { transform: translate(4px, -4px) rotate(3deg); }
+    }
+
+    /* واتساب الذكي */
     .wa-chat { flex: 1; background: #0b141a; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; }
     .wa-msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; line-height: 1.4; word-break: break-word; }
     .wa-incoming { background: #202c33; align-self: flex-start; color: #fff; }
@@ -91,34 +118,26 @@
     .wa-input-area { display: flex; padding: 8px; background: #202c33; gap: 6px; align-items: center; }
     .wa-input { flex: 1; padding: 8px 12px; border-radius: 20px; border: none; background: #2a3942; color: #fff; font-size: 12px; outline: none; }
     .wa-send { background: #00a884; border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-
-    /* شاشة الـ JumpScare */
-    #poopScreen {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; z-index: 200; display: none; flex-direction: column;
-      align-items: center; justify-content: center; text-align: center;
-    }
-    #poopScreen h1 { animation: shake 0.1s infinite; }
-    @keyframes shake {
-      0% { transform: translate(2px, 2px) rotate(0deg); }
-      50% { transform: translate(-2px, -2px) rotate(-2deg); }
-      100% { transform: translate(2px, -2px) rotate(2deg); }
-    }
-
-    #robloxCanvas { background: #1a1a2e; border-bottom: 2px solid #00f0ff; width: 100%; height: 250px; }
-    .controls-roblox { display: flex; justify-content: space-around; padding: 12px; background: #0f101d; }
-    .btn-ctrl { padding: 12px 20px; background: #25284a; border: 1px solid #00f0ff; color: #fff; border-radius: 12px; font-weight: bold; font-size: 14px; }
-    .xo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 20px; }
-    .xo-cell { height: 75px; background: #1f213d; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #00f0ff; cursor: pointer; }
   </style>
 </head>
 <body>
 
-  <!-- شاشة الرعب -->
-  <div id="poopScreen">
-    <h1 style="font-size: 70px;">😱💩</h1>
-    <h2 style="color: #ff4757; margin-top: 15px; font-size: 22px;">رعــــب حقيقيي يا محمد!!</h2>
-    <button onclick="closePoopScare()" style="margin-top: 25px; padding: 10px 20px; background: #ff4757; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">إغلاق الفجيعة 🏃‍♂️</button>
+  <!-- 1. شاشة التحذير الأولى لتطبيق محمد الخطير -->
+  <div id="dangerWarningScreen">
+    <h1 style="color: #ff0000; font-size: 45px;">⚠️</h1>
+    <h2 style="color: #ff4757; margin-top: 15px; font-size: 18px;">تحذير خطير جداً!</h2>
+    <p style="color: #ccc; font-size: 12px; margin-top: 10px; line-height: 1.5;">هذا التطبيق قد يكون خطيرًا ولا ينصح به للأصحاب القلوب الضعيفة. هل تريد الاستمرار ومواجهة مصيرك؟</p>
+    <div style="display: flex; gap: 10px; margin-top: 25px; width: 100%; justify-content: center;">
+      <button onclick="acceptDanger()" style="padding: 10px 20px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">موافق (أنا جريء)</button>
+      <button onclick="cancelDanger()" style="padding: 10px 20px; background: #333; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- 2. شاشة الرعب الكبرى (JumpScare الوجه الشرير) -->
+  <div id="dangerJumpscareScreen">
+    <div style="font-size: 90px;">👹😈</div>
+    <h1 style="color: #ff0000; margin-top: 15px; font-size: 24px; text-shadow: 0 0 10px red;">أنا أعرف كل شيء عنك!</h1>
+    <button onclick="enterDangerousChat()" style="margin-top: 30px; padding: 12px 25px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">دخول الشات الملعون 💀</button>
   </div>
 
   <div class="phone-body">
@@ -141,21 +160,17 @@
           <div class="icon-box bg-whatsapp">💬</div>
           <span class="app-name">WhatsApp AI</span>
         </div>
+        <div class="app-icon" onclick="clickMohammedDangerous()">
+          <div class="icon-box bg-dangerous">⚠️</div>
+          <span class="app-name">محمد الخطير</span>
+        </div>
         <div class="app-icon" onclick="openApp('youtubeApp')">
           <div class="icon-box bg-youtube">▶️</div>
           <span class="app-name">YouTube</span>
         </div>
-        <div class="app-icon" onclick="openApp('xoApp')">
-          <div class="icon-box bg-xo">❌</div>
-          <span class="app-name">TicTacToe</span>
-        </div>
         <div class="app-icon" onclick="openApp('browserApp')">
           <div class="icon-box bg-browser">🌍</div>
           <span class="app-name">متصفح</span>
-        </div>
-        <div class="app-icon" onclick="triggerPoopScare()">
-          <div class="icon-box bg-poop">💩</div>
-          <span class="app-name">POOP ⚠️</span>
         </div>
         <div class="app-icon" onclick="togglePhoneMusic()">
           <div class="icon-box bg-music">🎵</div>
@@ -163,39 +178,37 @@
         </div>
       </div>
 
-      <!-- 1. روبلوكس -->
-      <div class="app-window" id="robloxApp">
-        <div class="app-header">
+      <!-- تطبيق محمد الخطير (الشات المرعب الشرير) -->
+      <div class="app-window" id="dangerousApp">
+        <div class="app-header" style="background:#2a0000; border-color:#ff0000;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>🎮 Roblox Obby</span>
-          <span style="color:#00f0ff">المرحلة: 1</span>
+          <span style="color:#ff4757">💀 محمد الخطير (AI الملعون)</span>
+          <span style="font-size:10px; color:#ff0000">● مراقب</span>
         </div>
-        <canvas id="robloxCanvas" width="300" height="250"></canvas>
-        <div class="controls-roblox">
-          <button class="btn-ctrl" onclick="moveObby(-12)">◀ يسار</button>
-          <button class="btn-ctrl" onclick="jumpObby()">▲ قفز</button>
-          <button class="btn-ctrl" onclick="moveObby(12)">يمين ▶</button>
+        <div class="danger-chat" id="dangerChatBox">
+          <div class="danger-msg danger-incoming">مرحباً بك يا محمد... أنا الكيان الذي يعرف كل أسرارك. اسألني عن أي شي وسأخبرك بنهايتك الشيطانية! 😈</div>
+        </div>
+        <div class="danger-input-area">
+          <input type="text" id="dangerInputText" class="danger-input" placeholder="اكتب سؤالك المرعب..." onkeypress="handleDangerEnter(event)">
+          <button class="danger-send" onclick="sendDangerMsg()">💀</button>
         </div>
       </div>
 
-      <!-- 2. واتساب الذكي Gemini AI + إنشاء صور -->
+      <!-- باقي التطبيقات (واتساب، يوتيوب، إلخ) -->
       <div class="app-window" id="whatsappApp">
         <div class="app-header" style="background:#075e54;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span>💬 Gemini AI (محمد)</span>
-          <span style="font-size:10px; color:#25D366">● متصل الآن</span>
         </div>
         <div class="wa-chat" id="waChatBox">
-          <div class="wa-msg wa-incoming">أهلاً يا محمد! أنا بوت الواتساب الذكي (Gemini AI) 🤖✨</div>
-          <div class="wa-msg wa-incoming">تقدر تسولف معي بأي شيء، وإذا تبي أنشئ لك صورة اكتب لي: <b>ارسم [الوصف]</b> (مثلاً: <i>ارسم سيارة رياضية نيون</i>)!</div>
+          <div class="wa-msg wa-incoming">أهلاً يا محمد! أنا بوت الواتساب الذكي 🤖✨ اكتب (ارسم ...) لتوليد الصور.</div>
         </div>
         <div class="wa-input-area">
-          <input type="text" id="waInputText" class="wa-input" placeholder="اكتب رسالة أو (ارسم سيارة)..." onkeypress="handleWaEnter(event)">
+          <input type="text" id="waInputText" class="wa-input" placeholder="اكتب رسالة..." onkeypress="handleWaEnter(event)">
           <button class="wa-send" onclick="sendWaMsg()">➤</button>
         </div>
       </div>
 
-      <!-- 3. يوتيوب -->
       <div class="app-window" id="youtubeApp">
         <div class="app-header">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
@@ -203,45 +216,22 @@
         </div>
         <div style="padding: 10px;">
           <iframe width="100%" height="170" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen style="border-radius:10px"></iframe>
-          <h4 style="margin-top:10px; font-size:12px">🔥 مقاطع ألعاب وروبلوكس</h4>
         </div>
       </div>
 
-      <!-- 4. إكس أو -->
-      <div class="app-window" id="xoApp">
-        <div class="app-header">
-          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>❌ إكس أو أونلاين / بوت ⭕</span>
-        </div>
-        <p style="text-align:center; padding:8px 0; font-size:12px; color:#f1c40f">دورك (X)</p>
-        <div class="xo-grid">
-          <div class="xo-cell" onclick="playXO(0)"></div>
-          <div class="xo-cell" onclick="playXO(1)"></div>
-          <div class="xo-cell" onclick="playXO(2)"></div>
-          <div class="xo-cell" onclick="playXO(3)"></div>
-          <div class="xo-cell" onclick="playXO(4)"></div>
-          <div class="xo-cell" onclick="playXO(5)"></div>
-          <div class="xo-cell" onclick="playXO(6)"></div>
-          <div class="xo-cell" onclick="playXO(7)"></div>
-          <div class="xo-cell" onclick="playXO(8)"></div>
-        </div>
-      </div>
-
-      <!-- 5. المتصفح -->
       <div class="app-window" id="browserApp">
         <div class="app-header" style="background:#0984e3;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span>🌍 متصفح الإنترنت</span>
         </div>
         <div style="padding: 15px; text-align: center;">
-          <input type="text" value="https://www.epic-browser.com" style="width:100%; padding:8px; border-radius:8px; border:none; background:#222; color:#fff; font-size:11px; text-align:center; margin-bottom:15px">
-          <h3 style="color:#74b9ff; font-size:14px">تصفح الإنترنت بحرية داخل جوالك!</h3>
+          <h3 style="color:#74b9ff; font-size:14px">تصفح الإنترنت بحرية!</h3>
         </div>
       </div>
 
     </div>
 
-    <div class="home-bar-area" id="homeBarArea" title="اسحب للأعلى أو اضغط للعودة">
+    <div class="home-bar-area" id="homeBarArea">
       <div class="home-bar"></div>
     </div>
   </div>
@@ -257,7 +247,6 @@
       let target = document.getElementById(appId);
       target.style.display = 'flex';
       setTimeout(() => target.classList.add('active'), 10);
-      if(appId === 'robloxApp') startRobloxGame();
     }
 
     function goHome() {
@@ -275,125 +264,106 @@
     });
     barArea.addEventListener('click', goHome);
 
-    /* --- ذكاء اصطناعي للواتساب + مولد الصور الحقيقية --- */
-    function handleWaEnter(e) { if(e.key === 'Enter') sendWaMsg(); }
+    /* --- تسلسل تطبيق محمد الخطير المرعب --- */
+    function clickMohammedDangerous() {
+      document.getElementById('dangerWarningScreen').style.display = 'flex';
+    }
 
+    function cancelDanger() {
+      document.getElementById('dangerWarningScreen').style.display = 'none';
+    }
+
+    let scareAudioCtx = null;
+    function acceptDanger() {
+      document.getElementById('dangerWarningScreen').style.display = 'none';
+      document.getElementById('dangerJumpscareScreen').style.display = 'flex';
+
+      // تشغيل صوت رعب عالي ومفاجئ
+      if(!scareAudioCtx) scareAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(scareAudioCtx.state === 'suspended') scareAudioCtx.resume();
+
+      let osc = scareAudioCtx.createOscillator();
+      let gain = scareAudioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(100, scareAudioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(700, scareAudioCtx.currentTime + 0.6);
+      gain.gain.setValueAtTime(0.3, scareAudioCtx.currentTime);
+      osc.connect(gain); gain.connect(scareAudioCtx.destination);
+      osc.start(); osc.stop(scareAudioCtx.currentTime + 0.8);
+    }
+
+    function enterDangerousChat() {
+      document.getElementById('dangerJumpscareScreen').style.display = 'none';
+      openApp('dangerousApp');
+    }
+
+    /* --- الذكاء الاصطناعي الشرير والمرعب في تطبيق محمد الخطير --- */
+    function handleDangerEnter(e) { if(e.key === 'Enter') sendDangerMsg(); }
+
+    function sendDangerMsg() {
+      let txtInput = document.getElementById('dangerInputText');
+      let chatBox = document.getElementById('dangerChatBox');
+      let text = txtInput.value.trim();
+      if(!text) return;
+
+      chatBox.innerHTML += `<div class="danger-msg danger-outgoing">${text}</div>`;
+      txtInput.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // الرد الذكي والشرير الفوري بدون تعليق
+      setTimeout(() => {
+        let reply = getDangerousAiReply(text);
+        chatBox.innerHTML += `<div class="danger-msg danger-incoming">${reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+    }
+
+    function getDangerousAiReply(msg) {
+      let m = msg.toLowerCase();
+      
+      // نظام التعرف على الأصدقاء (أيمن، يحيى، إبراهيم، حميار) وإرعابهم
+      if (m.includes("ايمن") || m.includes("أيمن")) {
+        return "😈 أيمن؟! أعرف هذا الشخص جيداً... هل تعلم أن الظلام يحيط به كلما نام؟ قل له أن يحذر تحت السرير إذا أظلمت الغرفة! 👁️";
+      } else if (m.includes("يحيى")) {
+        return "💀 يحيى يظن نفسه شجاعاً؟ ههههه.. لقد رأيته يراقب النافذة في منتصف الليل.. اسأله من كان يلوح له في الخارج! 👁️‍🗨️";
+      } else if (m.includes("ابراهيم") || m.includes("إبراهيم")) {
+        return "🔥 إبراهيم.. صديقك المسكين! أسراره كلها مكشوفة أمامي، وكل خطوة يخطوها مسجلة في عالم الظلال الخاص بي!";
+      } else if (m.includes("حميار"))  {
+        return "💩 ههههههه حميار؟! اسم على مسمى! قل له أن يراقب خلفه الآن لأنني أراقب تفاصيل خطواته الغبية في الغرفة! 👹";
+      }
+
+      // ردود شريرة عامة وتفاعلية فورية
+      if (m.includes("من انت") || m.includes("مين انت")) {
+        return "أنا محمد الخطير.. الكيان الذي لا ينام والذي يعلم ما تفكر فيه قبل أن تنطق به! ⚡";
+      } else if (m.includes("مرحباً") || m.includes("هلا") || m.includes("السلام")) {
+        return "لا أهلاً ولا سهلاً في مملكة الرعب الخاصة بي.. لكن بما أنك تجرأت ودخلت، اسألني وسأخبرك بما سيحدث لك غداً! 💀";
+      } else if (m.includes("اخبرني") || m.includes("سر") || m.includes("عرفني")) {
+        return "الأسرار ثمنها غالي يا محمد.. هل أنت مستعد لدفع الثمن ودخول الكابوس الأبدي؟ 🌑";
+      } else {
+        const scaryReplies = [
+          `أنت تسأل عن "${msg}" وكأنك لا تدرك أنني أراقب الشاشة التي تنظر إليها الآن بالعين المجردة! 👁️`,
+          `هكذا إذن.. كلماتك مسموعة، وكل حرف تكتبه يقربك أكثر من النهاية المظلمة يا صديقي الشجاع! 😈`,
+          `هات ما عندك! اسألني عن أي شيء في هذا الكون وسأجيبك.. لأنني أعرف إجابة كل سؤال في العالم المظلم! ⚡`,
+          `أتعتقد أنك تخيفني بـ "${msg}"؟ ههههه.. أنا الخوف بنفسه يا محمد! مجرد لعبة بيدك، لكنها ستنقلب ضدك قريباً! 💀`
+        ];
+        return scaryReplies[Math.floor(Math.random() * scaryReplies.length)];
+      }
+    }
+
+    /* --- تطبيق واتساب الذكي Gemini AI --- */
+    function handleWaEnter(e) { if(e.key === 'Enter') sendWaMsg(); }
     function sendWaMsg() {
       let txtInput = document.getElementById('waInputText');
       let chatBox = document.getElementById('waChatBox');
       let text = txtInput.value.trim();
       if(!text) return;
-
-      // إضافة رسالة المستخدم
       chatBox.innerHTML += `<div class="wa-msg wa-outgoing">${text}</div>`;
       txtInput.value = "";
       chatBox.scrollTop = chatBox.scrollHeight;
-
-      // فحص هل طلب المستخدم إنشاء صورة؟
-      const lowerText = text.toLowerCase();
-      if(lowerText.startsWith("ارسم") || lowerText.startsWith("صورة") || lowerText.startsWith("draw") || lowerText.startsWith("image")) {
-        let prompt = text.replace(/^(ارسم|صورة|draw|image)/i, "").trim();
-        if(!prompt) prompt = "cyberpunk neon city";
-
-        chatBox.innerHTML += `<div class="wa-msg wa-incoming">🎨 جاري إنشاء الصورة بناءً على طلبك: "${prompt}"... ⏳</div>`;
+      setTimeout(() => {
+        chatBox.innerHTML += `<div class="wa-msg wa-incoming">أهلاً بك يا محمد! أنا بوت الواتساب الذكي 🤖✨</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-
-        // توليد صورة حقيقية باستخدام Pollinations AI API
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=400&height=400&nologo=true&seed=${Math.floor(Math.random()*1000)}`;
-
-        setTimeout(() => {
-          chatBox.innerHTML += `
-            <div class="wa-msg wa-incoming">
-              🖼️ تفضل هذه صورتك المطلوبة:
-              <img src="${imageUrl}" class="wa-img" alt="AI Generated Image" onload="scrollChat()">
-            </div>`;
-          scrollChat();
-        }, 1500);
-
-      } else {
-        // رد ذكي تفاعلي يشبه Gemini
-        setTimeout(() => {
-          let aiResponse = getGeminiResponse(text);
-          chatBox.innerHTML += `<div class="wa-msg wa-incoming">${aiResponse}</div>`;
-          scrollChat();
-        }, 600);
-      }
-    }
-
-    function scrollChat() {
-      let chatBox = document.getElementById('waChatBox');
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function getGeminiResponse(msg) {
-      let m = msg.toLowerCase();
-      if (m.includes("هلا") || m.includes("مرحبا") || m.includes("سلام")) {
-        return "أهلاً وسهلاً يا أسطورة! 🤩 كيف يومك؟ جاهز نلعب أو نولد صور رهيبة اليوم؟";
-      } else if (m.includes("من انت") || m.includes("مين انت")) {
-        return "أنا بوت الواتساب الذكي (Gemini AI) داخل جوالك الأسطوري! أقدر أسولف معك، أساعدك، وأرسم لك أي صورة تخطر ببالك 🎨!";
-      } else if (m.includes("هههه") || m.includes("خخخ") || m.includes("ههه")) {
-        return "دوم الضحكة يا محمد يا بطل! 😂 كمل كمل وش عندك كمان؟";
-      } else if (m.includes("ملل") || m.includes("ممل")) {
-        return "أفاا الملل ممنوع هنا! 🙅‍♂️ جرب جرب تطلب مني صورة مجنونة! اكتب مثلاً: (ارسم قطة طائرة في الفضاء) وشف الإبداع! 🚀";
-      } else if (m.includes("روبلوكس") || m.includes("roblox")) {
-        return "روبلوكس عشق! جربت تلعب ميني جيم الأوبي الموجود في التطبيقات على الشاشة الرئيسية؟ 😉🎮";
-      } else if (m.includes("شكرا") || m.includes("شكر")) {
-        return "العفو يا غالي! أنا دائماً بالخدمة في أي وقت 💙✨";
-      } else {
-        const randomReplies = [
-          `فكرة رهيبة يا محمد! إيش رأيك تجرب تكتبلي "ارسم ${msg}" ونشوف كيف تطلع بالذكاء الاصطناعي؟ 🎨`,
-          `سمعتك يا بطل! الذكاء الاصطناعي جاهز لأي تحدي جديد تريد ندردش فيه 🔥`,
-          `يا سلام عليك! كلامك خطير، وش حاب نسوي الحين في الجوال؟ 😎`
-        ];
-        return randomReplies[Math.floor(Math.random() * randomReplies.length)];
-      }
-    }
-
-    /* --- باقي التطبيقات --- */
-    function triggerPoopScare() {
-      document.getElementById('poopScreen').style.display = 'flex';
-    }
-    function closePoopScare() {
-      document.getElementById('poopScreen').style.display = 'none';
-    }
-
-    let rCanvas, rCtx, px = 20, py = 190, pVy = 0, isJumping = false, obstacleX = 260;
-    function startRobloxGame() {
-      rCanvas = document.getElementById('robloxCanvas');
-      rCtx = rCanvas.getContext('2d');
-      px = 20; py = 190; pVy = 0; obstacleX = 260;
-      requestAnimationFrame(robloxLoop);
-    }
-    function moveObby(dir) { px += dir; if(px < 0) px = 0; if(px > 270) px = 270; }
-    function jumpObby() { if(!isJumping) { pVy = -9; isJumping = true; } }
-    function robloxLoop() {
-      pVy += 0.55; py += pVy;
-      if(py >= 190) { py = 190; isJumping = false; }
-      obstacleX -= 2.5;
-      if(obstacleX < -20) obstacleX = 290;
-
-      rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
-      rCtx.fillStyle = '#00f0ff'; rCtx.fillRect(0, 220, 300, 30);
-      rCtx.fillStyle = '#ff4757'; rCtx.fillRect(px, py, 20, 30);
-      rCtx.fillStyle = '#ffa500'; rCtx.fillRect(obstacleX, 200, 20, 20);
-
-      if(px < obstacleX + 20 && px + 20 > obstacleX && py + 30 > 200) { px = 20; }
-      if(document.getElementById('robloxApp').classList.contains('active')) {
-        requestAnimationFrame(robloxLoop);
-      }
-    }
-
-    let xoBoard = ['', '', '', '', '', '', '', '', ''];
-    function playXO(i) {
-      if(xoBoard[i] !== '') return;
-      xoBoard[i] = 'X';
-      document.querySelectorAll('.xo-cell')[i].innerText = 'X';
-      let empty = xoBoard.map((v, idx) => v === '' ? idx : null).filter(v => v !== null);
-      if(empty.length > 0) {
-        let bMove = empty[Math.floor(Math.random() * empty.length)];
-        xoBoard[bMove] = 'O';
-        document.querySelectorAll('.xo-cell')[bMove].innerText = 'O';
-      }
+      }, 600);
     }
 
     let audioCtx = null, musicInterval = null, musicOn = false;

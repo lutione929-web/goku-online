@@ -16,7 +16,6 @@ io.on('connection', (socket) => {
   socket.on('playerJoin', (data, callback) => {
     let nameExists = Object.values(players).some(p => p.name.toLowerCase() === data.name.toLowerCase() && socket.id !== data.id);
     
-    // السماح لنفس اللاعب بإعادة الاتصال لو كان مسجل مسبقاً
     let initialKills = (data.name.toUpperCase() === 'EPIKDEV' || data.name.toUpperCase() === 'MOHAMMED') ? 999999 : 0;
 
     players[socket.id] = { 

@@ -15,6 +15,16 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('playerMove', data);
   });
 
+  // استقبال رسائل الشات وإرسالها للجميع
+  socket.on('chatMessage', (data) => {
+    io.emit('chatMessage', data);
+  });
+
+  // استقبال حركة الضرب
+  socket.on('playerAttack', (data) => {
+    socket.broadcast.emit('playerAttack', data);
+  });
+
   socket.on('disconnect', () => {
     console.log('لاعب خرج:', socket.id);
   });

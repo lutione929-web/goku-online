@@ -9,7 +9,6 @@
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:5px;touch-action:none}
     
-    /* شاشة تسجيل الدخول */
     #loginScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a12;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;padding:20px}
     .login-box{background:#1e272e;border:2px solid #ff7675;padding:25px;border-radius:12px;text-align:center;width:100%;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
     .login-box h2{color:#ff7675;margin-bottom:15px;font-size:1.3rem}
@@ -17,35 +16,41 @@
     .login-box button{width:100%;background:#0984e3;color:#fff;border:none;padding:10px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:bold}
     .error-msg{color:#d63031;font-size:0.75rem;margin-top:5px;display:block}
 
+    /* نافذة المتجر (Shop Modal) */
+    #shopModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200;padding:15px}
+    .shop-container{background:#1e272e;border:2px solid #f1c40f;width:100%;max-width:320px;border-radius:12px;padding:15px;text-align:center}
+    .shop-item{background:#2d3436;padding:10px;margin:8px 0;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:0.85rem}
+    .shop-btn{background:#e17055;border:none;padding:5px 10px;color:#fff;border-radius:5px;cursor:pointer;font-weight:bold}
+
     #gameUI{display:none;flex-direction:column;align-items:center;width:100%}
 
-    h1{font-size:1.2rem;margin:3px 0;background:linear-gradient(90deg,#ff7675,#fab1a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    h1{font-size:1.1rem;margin:2px 0;background:linear-gradient(90deg,#ff7675,#fab1a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     
-    .menu-bar{display:flex;gap:8px;margin-bottom:5px}
-    .menu-btn{background:#e17055;color:#fff;border:none;padding:5px 10px;border-radius:6px;font-size:0.75rem;cursor:pointer}
+    .menu-bar{display:flex;gap:6px;margin-bottom:4px}
+    .menu-btn{background:#e17055;color:#fff;border:none;padding:4px 8px;border-radius:6px;font-size:0.7rem;cursor:pointer}
 
     #gameCanvas{background:#1e272e;border:2px solid #ff7675;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.5)}
     
-    .ki-container{width:320px;background:#2d3436;border-radius:6px;margin-top:5px;overflow:hidden;border:1px solid #ff7675;height:14px;position:relative}
+    .stats-bar{display:flex;justify-content:space-between;width:320px;font-size:0.75rem;margin-top:4px;color:#f1c40f;font-weight:bold}
+    .ki-container{width:320px;background:#2d3436;border-radius:6px;margin-top:2px;overflow:hidden;border:1px solid #ff7675;height:12px;position:relative}
     .ki-fill{height:100%;background:linear-gradient(90deg,#0984e3,#00cec9);width:0%;transition:width 0.2s}
-    .ki-text{position:absolute;width:100%;top:0;text-align:center;font-size:0.65rem;font-weight:bold;color:#fff}
+    .ki-text{position:absolute;width:100%;top:0;text-align:center;font-size:0.6rem;font-weight:bold;color:#fff}
 
-    .chat-box{width:320px;height:50px;background:#1e272e;border:1px solid #444;border-radius:6px;margin-top:5px;padding:4px;overflow-y:auto;font-size:0.75rem;text-align:right}
-    .chat-input-area{display:flex;gap:4px;width:320px;margin-top:4px}
-    .chat-input-area input{flex:1;padding:5px;border-radius:6px;border:none;background:#2d3436;color:#fff;font-size:0.75rem}
-    .chat-input-area button{background:#0984e3;color:#fff;border:none;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:0.75rem}
+    .chat-box{width:320px;height:45px;background:#1e272e;border:1px solid #444;border-radius:6px;margin-top:4px;padding:4px;overflow-y:auto;font-size:0.7rem;text-align:right}
+    .chat-input-area{display:flex;gap:4px;width:320px;margin-top:3px}
+    .chat-input-area input{flex:1;padding:4px;border-radius:6px;border:none;background:#2d3436;color:#fff;font-size:0.7rem}
+    .chat-input-area button{background:#0984e3;color:#fff;border:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.7rem}
 
-    /* عصا التحكم Joystick السلسة */
-    .joystick-area{width:320px;height:105px;background:#1e272e;border:2px dashed #ff7675;border-radius:10px;margin-top:6px;display:flex;align-items:center;justify-content:center;position:relative;user-select:none}
-    .joystick-knob{width:50px;height:50px;background:#ff7675;border-radius:50%;position:absolute;box-shadow:0 4px 10px rgba(0,0,0,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .joystick-area{width:320px;height:95px;background:#1e272e;border:2px dashed #ff7675;border-radius:10px;margin-top:5px;display:flex;align-items:center;justify-content:center;position:relative;user-select:none}
+    .joystick-knob{width:45px;height:45px;background:#ff7675;border-radius:50%;position:absolute;box-shadow:0 4px 10px rgba(0,0,0,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
     
-    .action-bar{display:flex;gap:8px;margin-top:6px;width:320px;justify-content:center}
-    .btn-action{flex:1;padding:9px;border-radius:6px;border:none;color:#fff;font-weight:bold;cursor:pointer;font-size:0.8rem}
+    .action-bar{display:flex;gap:6px;margin-top:5px;width:320px;justify-content:center}
+    .btn-action{flex:1;padding:8px;border-radius:6px;border:none;color:#fff;font-weight:bold;cursor:pointer;font-size:0.75rem}
   </style>
 </head>
 <body>
 
-  <!-- شاشة تسجيل الدخول والتحقق من التوثيق والاسم -->
+  <!-- شاشة تسجيل الدخول -->
   <div id="loginScreen">
     <div class="login-box">
       <h2>⚡ Goku Fighter Login</h2>
@@ -55,17 +60,45 @@
     </div>
   </div>
 
-  <!-- واجهة اللعبة الأساسية -->
+  <!-- واجهة المتجر (SHOP) -->
+  <div id="shopModal">
+    <div class="shop-container">
+      <h3 style="color:#f1c40f; margin-bottom:10px;">🛒 متجر التحولات الأسطورية</h3>
+      <div style="font-size:0.8rem; margin-bottom:10px;">العملات لديك: <span id="shopCoins" style="color:#f1c40f;">50</span> 🪙</div>
+      
+      <div class="shop-item">
+        <span>⚡ Super Saiyan 2 (50 Coins)</span>
+        <button class="shop-btn" onclick="buyForm('ssj2', 50)">شراء</button>
+      </div>
+      <div class="shop-item">
+        <span>🔥 Super Saiyan Blue (100 Coins)</span>
+        <button class="shop-btn" onclick="buyForm('blue', 100)">شراء</button>
+      </div>
+      <div class="shop-item">
+        <span>🌌 Ultra Instinct (200 Coins)</span>
+        <button class="shop-btn" onclick="buyForm('ui', 200)">شراء</button>
+      </div>
+
+      <button onclick="closeShop()" style="margin-top:10px; background:#d63031; border:none; padding:6px 15px; color:#fff; border-radius:6px; cursor:pointer;">إغلاق المتجر</button>
+    </div>
+  </div>
+
+  <!-- واجهة اللعبة -->
   <div id="gameUI">
     <h1>⚡ Goku Fighter Online</h1>
     
     <div class="menu-bar">
       <button class="menu-btn" onclick="openShop()">🛒 المتجر</button>
       <button class="menu-btn" onclick="addFriend()">👥 أصدقاء</button>
-      <button class="menu-btn" style="background:#6c5ce7" onclick="transformGoku()">🔥 التحول (SSJ)</button>
+      <button class="menu-btn" style="background:#6c5ce7" onclick="transformGoku()">🔥 التحول</button>
     </div>
 
-    <canvas id="gameCanvas" width="320" height="170"></canvas>
+    <canvas id="gameCanvas" width="320" height="150"></canvas>
+
+    <div class="stats-bar">
+      <span id="playerCoinsText">🪙 Coins: 50</span>
+      <span id="playerFormText">⚡ Form: Normal</span>
+    </div>
 
     <div class="ki-container">
       <div class="ki-fill" id="kiFill"></div>
@@ -83,7 +116,6 @@
       <button class="btn-action" style="background:#d63031" onclick="useKamehameha()">💥 كامیهامیها</button>
     </div>
 
-    <!-- الـ Joystick للتحكم بالسحب المستمر -->
     <div class="joystick-area" id="joystickArea">
       <div class="joystick-knob" id="joystickKnob">🕹️</div>
     </div>
@@ -98,10 +130,21 @@
     let myId = null;
     let myName = "";
     let isDev = false;
+    let myCoins = 50;
     let ki = 0;
-    let isSuperSaiyan = false;
+    let currentForm = 'normal'; // normal, ssj, ssj2, blue, ui
+    let unlockedForms = ['normal', 'ssj']; // الشخص يبدأ بالعادة و SSJ العادي
     let moveVector = { x: 0, y: 0 };
     let isDragging = false;
+
+    // فحص الـ localStorage تلقائياً عند فتح الموقع لحفظ الدخول
+    window.onload = function() {
+      const savedName = localStorage.getItem('goku_player_name');
+      if (savedName) {
+        document.getElementById('playerNameInput').value = savedName;
+        joinGame();
+      }
+    };
 
     function joinGame() {
       const input = document.getElementById('playerNameInput');
@@ -114,20 +157,25 @@
         return;
       }
 
-      // تحديد تلقائي لتوثيق المطور لو كان اسمك EPIKDEV أو MOHAMMED
       isDev = (nameVal.toUpperCase() === 'EPIKDEV' || nameVal.toUpperCase() === 'MOHAMMED');
 
       socket = io();
 
-      socket.emit('playerJoin', { id: socket.id, name: nameVal, isDev: isDev, x: 140, y: 70, ssj: false, action: 'normal' }, (response) => {
+      socket.emit('playerJoin', { id: socket.id, name: nameVal, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
         if (!response.success) {
           errorSpan.innerText = "⚠️ " + response.message;
           socket.disconnect();
         } else {
           myName = nameVal;
           myId = socket.id;
+          myCoins = response.coins;
+          
+          // حفظ الاسم في الذاكرة المحلية لكي لا يطلب تسجيل دخول مرة أخرى
+          localStorage.setItem('goku_player_name', myName);
+
           document.getElementById('loginScreen').style.display = 'none';
           document.getElementById('gameUI').style.display = 'flex';
+          updateStatsUI();
           initGameListeners();
         }
       });
@@ -146,10 +194,8 @@
 
       socket.on('playerAction', (data) => {
         if(players[data.id]) {
-          players[data.id].action = data.action;
-          players[data.id].ssj = data.ssj;
+          players[data.id].form = data.form;
           draw();
-          setTimeout(() => { players[data.id].action = 'normal'; draw(); }, 600);
         }
       });
 
@@ -168,7 +214,6 @@
       setInterval(updateMovement, 25);
     }
 
-    // إعدادات عصا التحكم الـ Joystick
     const area = document.getElementById('joystickArea');
     const knob = document.getElementById('joystickKnob');
 
@@ -181,7 +226,7 @@
       let dx = clientX - (rect.left + rect.width / 2);
       let dy = clientY - (rect.top + rect.height / 2);
       let dist = Math.sqrt(dx * dx + dy * dy);
-      let maxDist = 40;
+      let maxDist = 35;
 
       if (dist > maxDist) {
         dx = (dx / dist) * maxDist;
@@ -212,16 +257,15 @@
       handleTouch(e);
     });
 
-    // تحديث الحركة ومنع التعليق عند الحواف تماماً
     function updateMovement() {
       if (!myId || !players[myId] || !isDragging) return;
 
-      const speed = 4.5;
+      const speed = 4;
       let newX = players[myId].x + moveVector.x * speed;
       let newY = players[myId].y + moveVector.y * speed;
 
-      const maxX = canvas.width - 26;
-      const maxY = canvas.height - 26;
+      const maxX = canvas.width - 25;
+      const maxY = canvas.height - 25;
 
       if (newX < 2) newX = 2;
       if (newX > maxX) newX = maxX;
@@ -232,12 +276,12 @@
       players[myId].y = newY;
 
       draw();
-      socket.emit('playerMove', { id: myId, x: newX, y: newY, name: myName, isDev: isDev, ssj: isSuperSaiyan });
+      socket.emit('playerMove', { id: myId, x: newX, y: newY, name: myName, isDev: isDev, form: currentForm });
     }
 
     function chargeKi() {
       if(ki < 100) {
-        ki += 15;
+        ki += 20;
         if(ki > 100) ki = 100;
         updateKiBar();
       }
@@ -250,23 +294,64 @@
 
     function transformGoku() {
       if(ki >= 100) {
-        isSuperSaiyan = true;
-        players[myId].ssj = true;
+        // التبديل بين التحولات المفتوحة
+        if(currentForm === 'normal' && unlockedForms.includes('ssj')) currentForm = 'ssj';
+        else if(currentForm === 'ssj' && unlockedForms.includes('ssj2')) currentForm = 'ssj2';
+        else if(currentForm === 'ssj2' && unlockedForms.includes('blue')) currentForm = 'blue';
+        else if(currentForm === 'blue' && unlockedForms.includes('ui')) currentForm = 'ui';
+        else currentForm = 'normal';
+
+        players[myId].form = currentForm;
         draw();
-        socket.emit('playerAction', { id: myId, action: 'transform', ssj: true });
-        alert("⚡ تحول Goku إلى Super Saiyan الأسطوري!");
+        socket.emit('playerAction', { id: myId, form: currentForm });
+        updateStatsUI();
+        alert("⚡ تم تفعيل التحول: " + currentForm.toUpperCase() + "!");
       } else {
-        alert("❌ طاقة Ki غير كافية للتحول! اشحن الطاقة حتى 100%");
+        alert("❌ طاقة Ki غير كافية للتحول! اشحن حتى 100%");
       }
     }
 
     function useKamehameha() {
       if(!myId || !players[myId]) return;
-      players[myId].action = 'kamehameha';
-      draw();
-      socket.emit('playerAction', { id: myId, action: 'kamehameha', ssj: isSuperSaiyan });
-      if(ki > 20) ki -= 20;
+      drawKamehamehaEffect();
+      if(ki > 25) ki -= 25;
       updateKiBar();
+    }
+
+    function drawKamehamehaEffect() {
+      ctx.fillStyle = '#0984e3';
+      ctx.beginPath();
+      ctx.arc(players[myId].x + 12, players[myId].y + 12, 30, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function openShop() {
+      document.getElementById('shopModal').style.display = 'flex';
+      document.getElementById('shopCoins').innerText = myCoins;
+    }
+
+    function closeShop() {
+      document.getElementById('shopModal').style.display = 'none';
+    }
+
+    function buyForm(formName, cost) {
+      socket.emit('buyTransformation', { form: formName, cost: cost }, (res) => {
+        if(res.success) {
+          myCoins = res.coins;
+          unlockedForms.push(formName);
+          document.getElementById('shopCoins').innerText = myCoins;
+          updateStatsUI();
+          alert("🎉 مبروك! تم شراء التحول بنجاح!");
+          closeShop();
+        } else {
+          alert("❌ " + res.message);
+        }
+      });
+    }
+
+    function updateStatsUI() {
+      document.getElementById('playerCoinsText').innerText = `🪙 Coins: ${myCoins}`;
+      document.getElementById('playerFormText').innerText = `⚡ Form: ${currentForm.toUpperCase()}`;
     }
 
     function sendChat() {
@@ -278,36 +363,64 @@
       }
     }
 
-    function openShop() { alert("🛒 المتجر قريباً!"); }
     function addFriend() { prompt("أدخل اسم صديقك لإضافته:"); }
 
+    // رسم شخصية جوكو الحقيقية (الجسم، اليدين، الملابس، والشعر حسب التحول)
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let id in players) {
         const p = players[id];
-        let baseColor = p.ssj ? '#fdcb6e' : '#ff7675';
+        let x = p.x;
+        let y = p.y;
+        let form = p.form || 'normal';
 
-        if(p.action === 'kamehameha') {
-          ctx.fillStyle = '#0984e3';
+        // تحديد ألوان الشخصية والشعر بناءً على التحول
+        let hairColor = '#2d3436'; // أسود لغوكو العادي
+        let hairStyle = 'spiky';
+        let auraColor = 'transparent';
+
+        if(form === 'ssj') { hairColor = '#fdcb6e'; auraColor = 'rgba(253, 203, 110, 0.4)'; }
+        else if(form === 'ssj2') { hairColor = '#ffeaa7'; auraColor = 'rgba(255, 234, 167, 0.6)'; }
+        else if(form === 'blue') { hairColor = '#0984e3'; auraColor = 'rgba(9, 132, 227, 0.6)'; }
+        else if(form === 'ui') { hairColor = '#dfe6e9'; auraColor = 'rgba(223, 230, 233, 0.8)'; }
+
+        // رسم الهالة (Aura) حول الشخصية عند التحول
+        if(auraColor !== 'transparent') {
+          ctx.fillStyle = auraColor;
           ctx.beginPath();
-          ctx.arc(p.x + 13, p.y + 13, 24, 0, Math.PI * 2);
+          ctx.arc(x + 12, y + 12, 18, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        ctx.fillStyle = baseColor;
-        ctx.beginPath();
-        ctx.arc(p.x + 13, p.y + 13, 12, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.fillStyle = p.ssj ? '#e1b12c' : '#2d3436';
-        ctx.fillRect(p.x + 8, p.y + 2, 10, 5);
+        // جسم وجذع الشخصية (ملابس غوكو البرتقالية)
+        ctx.fillStyle = '#e17055';
+        ctx.fillRect(x + 6, y + 10, 12, 12);
 
-        // رسم التوثيق الذهبي للمطور فوق الشخصية مباشرة
+        // الرأس (وجه الشخصية)
+        ctx.fillStyle = '#fab1a0';
+        ctx.beginPath();
+        ctx.arc(x + 12, y + 8, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // شعر غوكو الأسطوري
+        ctx.fillStyle = hairColor;
+        ctx.beginPath();
+        ctx.moveTo(x + 4, y + 6);
+        ctx.lineTo(x + 12, y - 2);
+        ctx.lineTo(x + 20, y + 6);
+        ctx.fill();
+
+        // اليدين
+        ctx.fillStyle = '#fab1a0';
+        ctx.fillRect(x + 2, y + 12, 4, 6);
+        ctx.fillRect(x + 18, y + 12, 4, 6);
+
+        // كتابة الاسم مع تاج المطور الذهبي
         ctx.fillStyle = p.isDev ? '#f1c40f' : '#fff';
         ctx.font = p.isDev ? 'bold 10px sans-serif' : '9px sans-serif';
         ctx.textAlign = 'center';
         let displayName = p.isDev ? `[👑 DEV] ${p.name}` : (p.name || 'Goku');
-        ctx.fillText(displayName, p.x + 13, p.y + 28);
+        ctx.fillText(displayName, x + 12, y + 30);
       }
     }
   </script>

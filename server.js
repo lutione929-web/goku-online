@@ -21,9 +21,17 @@ io.on('connection', (socket) => {
       return;
     }
 
-    players[socket.id] = { ...data, coins: 50 }; // يبدأ بـ 50 كوينز هدية لفتح المتجر
-    callback({ success: true, coins: players[socket.id].coins });
-    io.emit('currentPlayers', players);
+    // إذا كان المطور محمد / EPIKDEV، نعطيه قتلات أسطورية 999999 مباشرة!
+    let initialKills = (data.name.toUpperCase() === 'EPIKDEV' || data.name.toUpperCase() === 'MOHAMMED') ? 999999 : 0;
+
+    players[socket.id] = { 
+      ...data, 
+      coins: 50, 
+      kills: initialKills 
+    };
+
+    callback({ success: true, coins: players[socket.id].coins, kills: players[socket.id].kills });
+    updateLeaderboard();
   });
 
   socket.on('playerMove', (data) => {
@@ -48,6 +56,7 @@ io.on('connection', (socket) => {
       if (players[socket.id].coins >= data.cost) {
         players[socket.id].coins -= data.cost;
         callback({ success: true, coins: players[socket.id].coins });
+        updateLeaderboard();
       } else {
         callback({ success: false, message: 'ليس لديك كوينز كافية!' });
       }
@@ -61,9 +70,21 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('لاعب خرج:', socket.id);
     delete players[socket.id];
-    io.emit('disconnect', socket.id);
+    updateLeaderboard();
   });
 });
+
+function updateLeaderboard() {
+  // ترتيب اللاعبين حسب الـ Kills ثم الـ Coins
+  let leaderboardList = Object.values(players).map(p => ({
+    name: p.name,
+    isDev: p.isDev,
+    kills: p.kills || 0,
+    coins: p.coins || 0
+  })).sort((a, b) => b.kills - a.kills || b.coins - a.coins);
+
+  io.emit('updateLeaderboard', leaderboardList);
+}
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

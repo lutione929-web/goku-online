@@ -14,23 +14,22 @@ io.on('connection', (socket) => {
   console.log('لاعب متصل:', socket.id);
 
   socket.on('playerJoin', (data, callback) => {
-    let nameExists = Object.values(players).some(p => p.name.toLowerCase() === data.name.toLowerCase());
+    let nameExists = Object.values(players).some(p => p.name.toLowerCase() === data.name.toLowerCase() && socket.id !== data.id);
     
-    if (nameExists) {
-      callback({ success: false, message: 'هذا الاسم مستخدم من قبل، اختر اسم آخر!' });
-      return;
-    }
-
-    // إذا كان المطور محمد / EPIKDEV، نعطيه قتلات أسطورية 999999 مباشرة!
+    // السماح لنفس اللاعب بإعادة الاتصال لو كان مسجل مسبقاً
     let initialKills = (data.name.toUpperCase() === 'EPIKDEV' || data.name.toUpperCase() === 'MOHAMMED') ? 999999 : 0;
 
     players[socket.id] = { 
       ...data, 
-      coins: 50, 
-      kills: initialKills 
+      coins: players[socket.id]?.coins || 50, 
+      kills: players[socket.id]?.kills || initialKills 
     };
 
-    callback({ success: true, coins: players[socket.id].coins, kills: players[socket.id].kills });
+    if (typeof callback === 'function') {
+      callback({ success: true, coins: players[socket.id].coins, kills: players[socket.id].kills });
+    }
+    
+    io.emit('currentPlayers', players);
     updateLeaderboard();
   });
 
@@ -70,12 +69,12 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('لاعب خرج:', socket.id);
     delete players[socket.id];
+    io.emit('disconnect', socket.id);
     updateLeaderboard();
   });
 });
 
 function updateLeaderboard() {
-  // ترتيب اللاعبين حسب الـ Kills ثم الـ Coins
   let leaderboardList = Object.values(players).map(p => ({
     name: p.name,
     isDev: p.isDev,

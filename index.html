@@ -15,13 +15,11 @@
     button{width:100%;background:#0984e3;color:#fff;border:none;padding:10px;border-radius:8px;font-size:0.9rem;cursor:pointer;font-weight:bold;margin-top:5px}
     .error-msg{color:#d63031;font-size:0.75rem;margin-top:5px}
 
-    /* تنسيق لعبة غوكو */
     #gokuGameUI{display:none;flex-direction:column;align-items:center;width:100%}
     #gameCanvas{background:#1e272e;border:2px solid #ff7675;border-radius:10px}
     .joystick-area{width:320px;height:80px;background:#1e272e;border:2px dashed #ff7675;border-radius:10px;margin-top:5px;display:flex;align-items:center;justify-content:center;position:relative}
     .joystick-knob{width:40px;height:40px;background:#ff7675;border-radius:50%;position:absolute;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-    /* تنسيق لعبة إكس أو وحجر ورق مقص */
     .arcade-game-container{display:none;flex-direction:column;align-items:center;background:#1e272e;padding:15px;border-radius:10px;border:2px solid #f1c40f;width:320px}
     .tictactoe-grid{display:grid;grid-template-columns:repeat(3, 70px);grid-template-rows:repeat(3, 70px);gap:5px;margin:15px 0}
     .t-cell{background:#2d3436;font-size:2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:6px;color:#f1c40f;font-weight:bold}
@@ -29,7 +27,6 @@
 </head>
 <body>
 
-  <!-- شاشة تسجيل الدخول -->
   <div id="loginScreen" class="screen" style="display:flex;">
     <h2>⚡ تسجيل الدخول للمنصة</h2>
     <input type="text" id="playerNameInput" placeholder="أدخل اسمك (إنجليزي)">
@@ -37,7 +34,6 @@
     <span class="error-msg" id="loginError"></span>
   </div>
 
-  <!-- شاشة اختيار اللعبة وغرفة الأكواد -->
   <div id="lobbyScreen" class="screen">
     <h2>🎮 اختر اللعبة وغرفتك</h2>
     <select id="gameSelect">
@@ -52,14 +48,12 @@
     <span class="error-msg" id="lobbyError"></span>
   </div>
 
-  <!-- شاشة انتظار اللاعب الثاني -->
   <div id="waitingScreen" class="screen">
     <h2>⏳ بانتظار انضمام صديقك...</h2>
     <p style="font-size:0.9rem; margin-bottom:15px;">أعطِ هذا الكود لصديقك:</p>
     <h1 id="displayRoomCode" style="color:#f1c40f; letter-spacing:3px; background:#2d3436; padding:10px; border-radius:6px">-----</h1>
   </div>
 
-  <!-- واجهة لعبة غوكو -->
   <div id="gokuGameUI">
     <h1 style="font-size:1rem; color:#ff7675;">⚡ Goku Fighter Online</h1>
     <canvas id="gameCanvas" width="320" height="140"></canvas>
@@ -71,10 +65,9 @@
     </div>
   </div>
 
-  <!-- واجهة إكس أو (Tic Tac Toe) -->
   <div id="tictactoeUI" class="arcade-game-container">
     <h3 style="color:#f1c40f">❌ إكس أو أونلاين ⭕</h3>
-    <p id="tTurnStatus" style="font-size:0.8rem; margin:5px 0">دور اللاعب: X</p>
+    <p id="tTurnStatus" style="font-size:0.8rem; margin:5px 0">اللعبة بدأت!</p>
     <div class="tictactoe-grid" id="tGrid">
       <div class="t-cell" onclick="makeTMove(0)"></div>
       <div class="t-cell" onclick="makeTMove(1)"></div>
@@ -88,7 +81,6 @@
     </div>
   </div>
 
-  <!-- واجهة حجر ورق مقص -->
   <div id="rpsUI" class="arcade-game-container">
     <h3 style="color:#0984e3">✊ حجر 📄 ورق ✂️ مقص</h3>
     <p id="rpsStatus" style="font-size:0.8rem; margin:10px 0">اختر حركتك:</p>
@@ -142,7 +134,6 @@
       document.getElementById('lobbyError').innerText = "⚠️ " + msg;
     });
 
-    // بدء اللعبة لما يكتمل اللاعبين
     socket.on('startGame', (data) => {
       currentGame = data.gameType;
       document.getElementById('lobbyScreen').style.display = 'none';
@@ -150,7 +141,7 @@
 
       if(currentGame === 'goku') {
         document.getElementById('gokuGameUI').style.display = 'flex';
-        initGokuGame();
+        initGokuGame(data.players);
       } else if(currentGame === 'tictactoe') {
         document.getElementById('tictactoeUI').style.display = 'flex';
       } else if(currentGame === 'rps') {
@@ -158,22 +149,38 @@
       }
     });
 
-    /* --- برمجة لعبة غوكو --- */
+    /* --- لعبة غوكو --- */
     let canvas, ctx, players = {}, myX = 140, myY = 60;
-    function initGokuGame() {
+    function initGokuGame(roomPlayers) {
       canvas = document.getElementById('gameCanvas');
       ctx = canvas.getContext('2d');
       
-      socket.emit('playerJoin', { id: socket.id, name: myName, isDev, x: myX, y: myY });
+      roomPlayers.forEach((p, index) => {
+        players[p.id] = { ...p, x: 100 + (index * 60), y: 60 };
+      });
 
-      socket.on('currentPlayers', (serverPlayers) => { players = serverPlayers; drawGoku(); });
-      socket.on('playerMove', (data) => { players[data.id] = data; drawGoku(); });
+      socket.on('playerMove', (data) => {
+        if(players[data.id]) {
+          players[data.id].x = data.x;
+          players[data.id].y = data.y;
+        } else {
+          players[data.id] = data;
+        }
+        drawGoku();
+      });
+
       socket.on('spawnBeam', () => { drawGoku(); });
-      
+
+      drawGoku();
+
       setInterval(() => {
         if(isDragging) {
           myX += moveVector.x * 4;
           myY += moveVector.y * 4;
+          if(players[socket.id]) {
+            players[socket.id].x = myX;
+            players[socket.id].y = myY;
+          }
           socket.emit('playerMove', { id: socket.id, x: myX, y: myY, name: myName, isDev });
           drawGoku();
         }
@@ -183,13 +190,18 @@
     let moveVector = {x:0, y:0}, isDragging = false;
     const area = document.getElementById('joystickArea');
     const knob = document.getElementById('joystickKnob');
+    
+    area.addEventListener('touchstart', handleJoystick);
     area.addEventListener('touchmove', handleJoystick);
     area.addEventListener('touchend', () => { knob.style.transform='translate(0,0)'; isDragging=false; });
+
     function handleJoystick(e) {
       e.preventDefault();
       let rect = area.getBoundingClientRect();
-      let dx = (e.touches[0].clientX - (rect.left + rect.width/2));
-      let dy = (e.touches[0].clientY - (rect.top + rect.height/2));
+      let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      let dx = clientX - (rect.left + rect.width/2);
+      let dy = clientY - (rect.top + rect.height/2);
       let dist = Math.sqrt(dx*dx + dy*dy);
       if(dist > 30) { dx = (dx/dist)*30; dy = (dy/dist)*30; }
       knob.style.transform = `translate(${dx}px, ${dy}px)`;
@@ -200,39 +212,39 @@
     function useKamehameha() { socket.emit('kamehamehaAttack', { x: myX, y: myY }); }
 
     function drawGoku() {
+      if(!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#00b894'; ctx.fillRect(0, 100, canvas.width, 40);
       for(let id in players) {
         let p = players[id];
         ctx.fillStyle = p.isDev ? '#f1c40f' : '#ff7675';
-        ctx.fillRect(p.x, p.y, 20, 25);
+        ctx.fillRect(p.x || 140, p.y || 60, 20, 25);
         ctx.fillStyle = '#fff'; ctx.font = '8px sans-serif'; ctx.textAlign='center';
-        ctx.fillText(p.name, p.x + 10, p.y - 4);
+        ctx.fillText(p.name || 'Goku', (p.x || 140) + 10, (p.y || 60) - 4);
       }
     }
 
-    /* --- برمجة لعبة إكس أو --- */
+    /* --- إكس أو --- */
     let tBoard = ['', '', '', '', '', '', '', '', ''];
-    let mySymbol = 'X'; // سيتم تحديد الدور برمجياً
     function makeTMove(index) {
       if(tBoard[index] === '') {
-        tBoard[index] = mySymbol;
-        document.getElementsByClassName('t-cell')[index].innerText = mySymbol;
-        socket.emit('makeMove', { index, symbol: mySymbol });
+        tBoard[index] = 'X';
+        document.getElementsByClassName('t-cell')[index].innerText = 'X';
+        socket.emit('makeMove', { index, symbol: 'X' });
       }
     }
     socket.on('opponentMove', (data) => {
-      tBoard[data.index] = data.symbol;
-      document.getElementsByClassName('t-cell')[data.index].innerText = data.symbol;
+      tBoard[data.index] = data.symbol === 'X' ? 'O' : 'X';
+      document.getElementsByClassName('t-cell')[data.index].innerText = tBoard[data.index];
     });
 
-    /* --- برمجة حجر ورق مقص --- */
+    /* --- حجر ورق مقص --- */
     function playRps(choice) {
       socket.emit('rpsPlay', { name: myName, choice });
       document.getElementById('rpsStatus').innerText = "⏳ تم إرسال اختيارك، بانتظار الخصم...";
     }
     socket.on('rpsResult', (data) => {
-      document.getElementById('rpsStatus').innerText = `🎉 الخصم اختار: ${data.choice}`;
+      document.getElementById('rpsStatus').innerText = `🎉 النتيجة وصلتك!`;
     });
   </script>
 </body>

@@ -13,7 +13,6 @@ let players = {};
 io.on('connection', (socket) => {
   console.log('لاعب متصل:', socket.id);
 
-  // نظام التحقق من الاسم وعدم تكراره
   socket.on('playerJoin', (data, callback) => {
     let nameExists = Object.values(players).some(p => p.name.toLowerCase() === data.name.toLowerCase());
     
@@ -22,8 +21,8 @@ io.on('connection', (socket) => {
       return;
     }
 
-    players[socket.id] = data;
-    callback({ success: true });
+    players[socket.id] = { ...data, coins: 50 }; // يبدأ بـ 50 كوينز هدية لفتح المتجر
+    callback({ success: true, coins: players[socket.id].coins });
     io.emit('currentPlayers', players);
   });
 
@@ -32,13 +31,27 @@ io.on('connection', (socket) => {
       players[data.id].x = data.x;
       players[data.id].y = data.y;
       players[data.id].isDev = data.isDev;
-      players[data.id].ssj = data.ssj;
+      players[data.id].form = data.form;
       socket.broadcast.emit('playerMove', data);
     }
   });
 
   socket.on('playerAction', (data) => {
-    socket.broadcast.emit('playerAction', data);
+    if (players[data.id]) {
+      players[data.id].form = data.form;
+      socket.broadcast.emit('playerAction', data);
+    }
+  });
+
+  socket.on('buyTransformation', (data, callback) => {
+    if (players[socket.id]) {
+      if (players[socket.id].coins >= data.cost) {
+        players[socket.id].coins -= data.cost;
+        callback({ success: true, coins: players[socket.id].coins });
+      } else {
+        callback({ success: false, message: 'ليس لديك كوينز كافية!' });
+      }
+    }
   });
 
   socket.on('chatMessage', (data) => {

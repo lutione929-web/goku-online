@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Ultimate WhatsApp Edition</title>
+  <title>Epic Phone OS - Pure WhatsApp Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
       width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(255, 0, 0, 0.4); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.3); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
@@ -18,6 +18,7 @@
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
 
+    /* الشاشة الرئيسية نظيفة تماماً ولا تحتوي إلا على واتساب */
     .home-screen {
       flex: 1; padding: 25px 15px; display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 15px; align-content: start; overflow-y: auto;
@@ -31,6 +32,7 @@
     }
     .app-name { font-size: 10px; color: #ddd; text-align: center; }
 
+    /* نافذة تطبيق الواتساب */
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #111b21; display: none; flex-direction: column; z-index: 50; color: #e9edef;
@@ -42,19 +44,7 @@
     }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
 
-    #ultimateHackedScreen {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; z-index: 200; display: none; flex-direction: column;
-      align-items: center; justify-content: center; text-align: center; padding: 20px;
-    }
-    .scary-img-box { font-size: 70px; animation: superShake 0.05s infinite; }
-    @keyframes superShake {
-      0% { transform: translate(4px, 4px) rotate(0deg); }
-      50% { transform: translate(-4px, -4px) rotate(-3deg); }
-      100% { transform: translate(4px, -4px) rotate(3deg); }
-    }
-
-    /* --- WhatsApp Styles (مطابق للأصلي 100%) --- */
+    /* --- تصميم الواتساب الأصلي 100% ---[span_5](start_span)[span_5](end_span) */
     .wa-header { background: #1f2c34; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
     .wa-title { font-size: 16px; font-weight: bold; color: #e9edef; }
     .wa-icons { display: flex; gap: 15px; font-size: 16px; color: #aebac1; cursor: pointer; }
@@ -76,7 +66,7 @@
     .wa-nav-item.active { color: #00a884; font-weight: bold; }
     .wa-nav-icon { font-size: 16px; }
 
-    /* نافذة المحادثة الفردية للواتساب */
+    /* نافذة المحادثة الداخلية للواتساب */
     .wa-chat-room { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0b141a; display: none; flex-direction: column; z-index: 60; }
     .wa-room-header { background: #1f2c34; padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
     .wa-room-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
@@ -88,80 +78,47 @@
 </head>
 <body>
 
-  <div id="ultimateHackedScreen">
-    <div class="scary-img-box" id="scaryFaceIcon">😈🔒</div>
-    <h2 id="hackedTextMain" style="color: #ff0000; margin-top: 15px; font-size: 18px; line-height: 1.5; padding: 0 10px;">جاري إعداد النظام...</h2>
-  </div>
-
   <div class="phone-body">
-    <div class="phone-screen">
+    <div class="phone screen">
       
-      <!-- الشاشة الرئيسية -->
+      <!-- الشاشة الرئيسية النظيفة -->
       <div class="home-screen" id="homeScreen">
-        <div class="app-icon" onclick="openApp('robloxApp')">
-          <div class="icon-box" style="background:#222; border:2px solid #ff4757;">⬛</div>
-          <span class="app-name">Roblox</span>
-        </div>
-        <div class="app-icon" onclick="openApp('whatsappApp')">
+        <div class="app-icon" onclick="openWhatsApp()">
           <div class="icon-box" style="background:#25D366;">💬</div>
           <span class="app-name">WhatsApp</span>
         </div>
-        <div class="app-icon" onclick="openApp('dangerApp')">
-          <div class="icon-box" style="background:#8b0000; border:2px solid #ff0000;">⚠️</div>
-          <span class="app-name">محمد الخطير</span>
-        </div>
-        <div class="app-icon" onclick="openApp('grokApp')">
-          <div class="icon-box" style="background:#000; border:2px solid #1d9bf0;">𝕏</div>
-          <span class="app-name">Grok AI</span>
-        </div>
-        <div class="app-icon" onclick="openApp('hamyarApp')">
-          <div class="icon-box" style="background:#4a2c00; border:2px solid #f1c40f;">🐴</div>
-          <span class="app-name">صورة حميار</span>
-        </div>
-        <div class="app-icon" onclick="openApp('darkwebApp')">
-          <div class="icon-box" style="background:#000; border:2px solid #ff0000;">🕸️</div>
-          <span class="app-name">الدارك ويب</span>
-        </div>
       </div>
 
-      <!-- 1. روبلوكس -->
-      <div class="app-window" id="robloxApp">
-        <div class="app-header" style="background:#222; padding:10px; display:flex; justify-content:space-between;">
-          <button class="back-btn" onclick="goHome()" style="background:#444; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">◀ رجوع</button>
-          <span style="color:#00f0ff; font-weight:bold;">Roblox Obby</span><span></span>
-        </div>
-        <div style="padding:20px; text-align:center; color:#00f0ff;"><h3>لعبة روبلوكس تعمل بنجاح!</h3></div>
-      </div>
-
-      <!-- 2. تطبيق الواتساب الأصلي بالكامل (WhatsApp) -->
-      <div class="app-window" id="whatsappApp">
+      <!-- تطبيق الواتساب الجديد بالكامل -->
+      <div class="app-window active" id="whatsappApp" style="display:flex;">
         <!-- رأس الواتساب -->
         <div class="wa-header">
           <span class="wa-title">واتساب</span>
           <div class="wa-icons">
             <span>📷</span>
             <span>🔍</span>
-            <span onclick="alert('الإعدادات والمجموعات')">⋮</span>
+            <span onclick="alert('الإعدادات والمساعدة')">⋮</span>
           </div>
         </div>
 
-        <!-- شريط البحث (يدعم البحث بالأ اسماء وأرقام الجوال الحقيقية!) -->
+        <!-- شريط البحث (يدعم الأسماء والأرقام الحقيقية)[span_6](start_span)[span_6](end_span) -->
         <div class="wa-search-bar">
           <input type="text" id="waSearchInput" class="wa-search-input" placeholder="اسأل Meta AI أو ابحث برقم الجوال/الاسم..." oninput="filterWhatsAppChats(this.value)">
         </div>
 
-        <!-- جسم القائمة حسب التبويب السفلي النشط -->
+        <!-- جسم القائمة -->
         <div class="wa-body" id="waBodyContent">
-          <!-- قائمة الدردشات الافتراضية -->
           <div id="waChatsList">
+            <!-- Meta AI -->
             <div class="wa-chat-item" onclick="openWaChat('Meta AI', '🤖')">
               <div class="wa-avatar" style="background:linear-gradient(135deg, #8a2be2, #ff1493);">✨</div>
               <div class="wa-chat-info">
                 <div class="wa-chat-name">Meta AI <span class="wa-chat-time">الآن</span></div>
-                <div class="wa-chat-msg">هاي 10 TURBO بشكلها الكوميدي الأسطوري...</div>
+                <div class="wa-chat-msg">مرحباً! أنا مساعدك الذكي في واتساب...</div>
               </div>
             </div>
 
+            <!-- Lordini Fatini -->
             <div class="wa-chat-item" onclick="openWaChat('LORDINI FATINI', '🦁')">
               <div class="wa-avatar">🦁</div>
               <div class="wa-chat-info">
@@ -170,6 +127,7 @@
               </div>
             </div>
 
+            <!-- بطولة الألعاب العالمية -->
             <div class="wa-chat-item" onclick="openWaChat('بطولة الألعاب العالمية', '🎮')">
               <div class="wa-avatar">🎮</div>
               <div class="wa-chat-info">
@@ -178,6 +136,7 @@
               </div>
             </div>
 
+            <!-- إبراهيم -->
             <div class="wa-chat-item" onclick="openWaChat('إبراهيم', '👤')">
               <div class="wa-avatar">👤</div>
               <div class="wa-chat-info">
@@ -186,6 +145,7 @@
               </div>
             </div>
 
+            <!-- محمد -->
             <div class="wa-chat-item" onclick="openWaChat('محمد', '1️⃣')">
               <div class="wa-avatar" style="background:#00a884; color:#000; font-weight:bold;">1</div>
               <div class="wa-chat-info">
@@ -196,7 +156,7 @@
           </div>
         </div>
 
-        <!-- شريط التنقل السفلي الأصلي 100% -->
+        <!-- شريط التنقل السفلي الأصلي 100%[span_7](start_span)[span_7](end_span) -->
         <div class="wa-footer-nav">
           <div class="wa-nav-item" onclick="switchWaTab(this, 'calls')">
             <span class="wa-nav-icon">📞</span>
@@ -224,7 +184,7 @@
             <div style="flex:1;"><b id="roomTitle" style="font-size:12px; color:#e9edef;">Meta AI</b><br><span style="font-size:9px; color:#8696a0;">متصل الآن</span></div>
           </div>
           <div class="wa-room-messages" id="waRoomMessagesBox">
-            <div class="wa-bubble wa-bubble-in">أهلاً بك! أنا مساعد Meta AI الذكي في واتساب. كيف أساعدك اليوم؟</div>
+            <div class="wa-bubble wa-bubble-in">أهلاً بك! أنا مساعد Meta AI الذكي في واتساب[span_8](start_span)[span_8](end_span). كيف أساعدك اليوم؟</div>
           </div>
           <div class="wa-room-input-area">
             <input type="text" id="waMsgInput" placeholder="اكتب رسالة..." style="flex:1; background:#2a3942; border:none; padding:7px 10px; border-radius:20px; color:#fff; font-size:11px; outline:none;" onkeypress="handleWaEnter(event)">
@@ -233,72 +193,18 @@
         </div>
       </div>
 
-      <!-- 3. محمد الخطير -->
-      <div class="app-window" id="dangerApp">
-        <div class="app-header" style="background:#300; border-bottom:2px solid #f00; padding:8px 12px; display:flex; justify-content:space-between;">
-          <button class="fake-exit-btn" onclick="triggerFakeExitTrap()" style="background:#500; color:#ff6b6b; border:1px solid #f00; padding:3px 8px; border-radius:4px; font-size:10px; font-weight:bold;">خروج</button>
-          <span style="color:#ff4757; font-weight:bold;">محمد الخطير 💀</span><span></span>
-        </div>
-        <div style="flex:1; background:#050000; padding:15px; display:flex; flex-direction:column; justify-content:space-between;">
-          <div>
-            <h2 style="color:#ff0000; margin-bottom:10px; font-size:16px;">⚠️ تحذير مرعب!</h2>
-            <p style="color:#ff6b6b; font-size:12px; line-height:1.5;">أنت داخل التطبيق المراقب...</p>
-          </div>
-          <div style="display:flex; gap:5px;">
-            <input type="text" id="dangerInput" placeholder="تحدث مع الكيان..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f00; background:#100; color:#fff; font-size:11px; outline:none;">
-            <button onclick="sendDangerMsg()" style="background:#f00; border:none; color:#fff; padding:0 12px; border-radius:15px; font-weight:bold;">💀</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- باقي التطبيقات (Grok, صورة حميار, الدارك ويب) -->
-      <div class="app-window" id="grokApp">
-        <div class="app-header" style="background:#000; border-bottom:1px solid #222; padding:10px; display:flex; justify-content:space-between;">
-          <button class="back-btn" onclick="goHome()" style="background:#222; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">◀ رجوع</button>
-          <span style="color:#fff; font-weight:bold;">𝕏 Grok Store</span><span></span>
-        </div>
-        <div style="flex:1; background:#000; padding:15px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-          <h3 style="color:#1d9bf0; margin-bottom:10px;">تطبيق Grok AI الخارق</h3>
-          <p style="color:#aaa; font-size:11px;">مفعل مع نظام الاشتراكات والبطاقات الوهمية.</p>
-        </div>
-      </div>
-
-      <div class="app-window" id="hamyarApp">
-        <div class="app-header" style="background:#3a2000; border-bottom:2px solid #f1c40f; padding:10px; display:flex; justify-content:space-between;">
-          <button class="back-btn" onclick="goHome()" style="background:#5a3000; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">◀ رجوع</button>
-          <span style="color:#f1c40f; font-weight:bold;">🐴 صور حميار وشريك وترامب</span><span></span>
-        </div>
-        <div style="flex:1; background:#0c0202; padding:15px; color:#f1c40f; font-size:12px;">تطبيق توليد صور حميار وشريك والبراز العشوائي.</div>
-      </div>
-
-      <div class="app-window" id="darkwebApp">
-        <div class="app-header" style="background:#100; border-bottom:2px solid #ff0000; padding:10px; display:flex; justify-content:space-between;">
-          <button class="back-btn" onclick="goHome()" style="background:#300; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">◀ رجوع</button>
-          <span style="color:#ff0000; font-weight:bold;">🕸️ Tor / Dark Web</span><span></span>
-        </div>
-        <div style="flex:1; background:#080202; padding:15px; color:#ff6b6b; font-size:12px;">بوابة الدارك ويب المظلمة والأسرار الملعونة.</div>
-      </div>
-
     </div>
 
-    <div class="home-bar-area" onclick="goHome()">
+    <div class="home-bar-area" onclick="openWhatsApp()">
       <div class="home-bar"></div>
     </div>
   </div>
 
   <script>
-    function openApp(id) {
-      document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
-      let target = document.getElementById(id);
-      if(target) target.classList.add('active');
-      if(id === 'dangerApp') { startHorrorMusic(); }
+    function openWhatsApp() {
+      document.getElementById('whatsappApp').style.display = 'flex';
     }
 
-    function goHome() {
-      document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
-    }
-
-    /* --- وظائف واتساب الذكية والأصلية --- */
     function switchWaTab(elem, tabName) {
       document.querySelectorAll('.wa-nav-item').forEach(i => i.classList.remove('active'));
       elem.classList.add('active');
@@ -311,7 +217,7 @@
               <div class="wa-avatar" style="background:linear-gradient(135deg, #8a2be2, #ff1493);">✨</div>
               <div class="wa-chat-info">
                 <div class="wa-chat-name">Meta AI <span class="wa-chat-time">الآن</span></div>
-                <div class="wa-chat-msg">هاي 10 TURBO بشكلها الكوميدي الأسطوري...</div>
+                <div class="wa-chat-msg">مرحباً! أنا مساعدك الذكي في واتساب...</div>
               </div>
             </div>
             <div class="wa-chat-item" onclick="openWaChat('LORDINI FATINI', '🦁')">
@@ -337,15 +243,15 @@
             </div>
           </div>`;
       } else if(tabName === 'updates') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>الحالات</b><br><br>• حالتي (إضافة حالة جديدة)<br><br><b>القنوات المتابعة</b><br>• شاشة الجيمزرية 🎮<br>• أخبار الدارك ويب 🕸️</div>`;
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>الحالات</b><br><br>• حالتي (إضافة حالة جديدة)<br><br><b>القنوات</b><br>• قناة تحديثات الواتساب الرسمية</div>`;
       } else if(tabName === 'communities') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>المجتمعات</b><br><br>مجموعة شلة الجيمزرية الرسمية<br>جميع الأعضاء متصلون ومراقبون.</div>`;
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>المجتمعات</b><br><br>إدارة مجتمعاتك ومجموعاتك المرتبطة بسهولة.</div>`;
       } else if(tabName === 'calls') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>سجل المكالمات</b><br><br>📞 محمد الخطير (مكالمة فائته)<br>📞 Meta AI (مكالمة صوتية نشطة)</div>`;
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>سجل المكالمات</b><br><br>📞 مكالمة صوتية فائته من Meta AI</div>`;
       }
     }
 
-    /* بحث واتساب الذكي (يدعم الأسماء وأرقام الجوال الحقيقية) */
+    /* بحث واتساب الذكي الذي يدعم الأرقام الحقيقية[span_9](start_span)[span_9](end_span) */
     function filterWhatsAppChats(query) {
       let q = query.trim();
       let bodyBox = document.getElementById('waBodyContent');
@@ -354,7 +260,52 @@
         return;
       }
 
-      // إذا كتب المستخدم رقم جوال حقيقي أو اسم بحث
       bodyBox.innerHTML = `
         <div style="padding:10px;">
-          <div style="font-size:10
+          <div style="font-size:10px; color:#8696a0; margin-bottom:5px;">نتائج البحث عن الرقم/الاسم: "${q}"</div>
+          <div class="wa-chat-item" onclick="openWaChat('${q}', '📱')">
+            <div class="wa-avatar" style="background:#00a884;">📞</div>
+            <div class="wa-chat-info">
+              <div class="wa-chat-name">${q} <span class="wa-chat-time">رقم حقيقي</span></div>
+              <div class="wa-chat-msg">اضغط لبدء محادثة فورية مع هذا الرقم</div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    let activeWaContact = "Meta AI";
+    function openWaChat(name, avatarSymbol) {
+      activeWaContact = name;
+      document.getElementById('roomTitle').innerText = name;
+      document.getElementById('roomAvatar').innerText = avatarSymbol;
+      document.getElementById('waChatRoom').style.display = 'flex';
+    }
+
+    function closeWaChat() {
+      document.getElementById('waChatRoom').style.display = 'none';
+    }
+
+    function handleWaEnter(e) { if(e.key === 'Enter') sendWaMsg(); }
+
+    function sendWaMsg() {
+      let txtInput = document.getElementById('waMsgInput');
+      let msgBox = document.getElementById('waRoomMessagesBox');
+      let text = txtInput.value.trim();
+      if(!text) return;
+
+      msgBox.innerHTML += `<div class="wa-bubble wa-bubble-out">${text}</div>`;
+      txtInput.value = "";
+      msgBox.scrollTop = msgBox.scrollHeight;
+
+      setTimeout(() => {
+        let reply = `أهلاً بك! لقد استلمت رسالتك في شات (${activeWaContact}): "${text}". الواتساب يعمل بكامل طاقته وبدون أي تعليق! 🚀`;
+        if(activeWaContact === 'Meta AI') {
+          reply = `🤖 Meta AI: تحليل رسالتك "${text}" تم بنجاح. أنا جاهز لأي استفسار تريده!`;
+        }
+        msgBox.innerHTML += `<div class="wa-bubble wa-bubble-in">${reply}</div>`;
+        msgBox.scrollTop = msgBox.scrollHeight;
+      }, 600);
+    }
+  </script>
+</body>
+</html>

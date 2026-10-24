@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Ultimate Horror Edition</title>
+  <title>Epic Phone OS - Dark Web Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -33,18 +33,16 @@
 
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #121324; display: none; flex-direction: column; z-index: 50;
+      background: #080202; display: none; flex-direction: column; z-index: 50;
     }
     .app-window.active { display: flex; }
 
     .app-header {
-      height: 40px; background: #1c1d36; display: flex; align-items: center;
+      height: 40px; background: #200; display: flex; align-items: center;
       justify-content: space-between; padding: 0 12px; font-size: 13px; font-weight: bold;
-      border-bottom: 1px solid #2a2b4a;
+      border-bottom: 1px solid #500; color: #ff4757;
     }
-    .back-btn { background: #2f3640; border: none; color: #fff; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
-
-    /* زر خروج مزيف لكنه يبدو حقيقي تماماً */
+    .back-btn { background: #400; border: none; color: #fff; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     .fake-exit-btn { background: #500; border: 1px solid #f00; color: #ff6b6b; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
 
     .home-bar-area {
@@ -64,6 +62,13 @@
       50% { transform: translate(-4px, -4px) rotate(-3deg); }
       100% { transform: translate(4px, -4px) rotate(3deg); }
     }
+
+    /* أسلوب الدارك ويب */
+    .dw-menu { display: flex; flex-direction: column; gap: 8px; padding: 12px; flex: 1; overflow-y: auto; }
+    .dw-card { background: #150202; border: 1px solid #500; padding: 10px; border-radius: 8px; cursor: pointer; }
+    .dw-card:active { background: #300; }
+    .dw-title { font-size: 13px; font-weight: bold; color: #ff4757; margin-bottom: 3px; }
+    .dw-desc { font-size: 10px; color: #aaa; }
   </style>
 </head>
 <body>
@@ -91,6 +96,11 @@
           <div class="icon-box" style="background:#8b0000; border:2px solid #ff0000;">⚠️</div>
           <span class="app-name">محمد الخطير</span>
         </div>
+        <!-- أيقونة تطبيق الدارك ويب الجديدة -->
+        <div class="app-icon" onclick="openApp('darkwebApp')">
+          <div class="icon-box" style="background:#000; border:2px solid #ff0000;">🕸️</div>
+          <span class="app-name">الدارك ويب</span>
+        </div>
         <div class="app-icon" onclick="openApp('youtubeApp')">
           <div class="icon-box" style="background:#ff0000;">▶️</div>
           <span class="app-name">YouTube</span>
@@ -101,38 +111,30 @@
       <div class="app-window" id="robloxApp">
         <div class="app-header">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>Roblox Obby</span>
-          <span></span>
+          <span>Roblox Obby</span><span></span>
         </div>
-        <div style="padding:20px; text-align:center; color:#00f0ff;">
-          <h3>لعبة روبلوكس تعمل بنجاح!</h3>
-        </div>
+        <div style="padding:20px; text-align:center; color:#00f0ff;"><h3>لعبة روبلوكس تعمل بنجاح!</h3></div>
       </div>
 
       <!-- 2. واتساب -->
       <div class="app-window" id="whatsappApp">
         <div class="app-header" style="background:#075e54;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>WhatsApp AI</span>
-          <span></span>
+          <span>WhatsApp AI</span><span></span>
         </div>
-        <div style="flex:1; background:#0b141a; padding:10px; color:#fff; font-size:12px;">
-          أهلاً بك في الواتساب الذكي!
-        </div>
+        <div style="flex:1; background:#0b141a; padding:10px; color:#fff; font-size:12px;">أهلاً بك في الواتساب الذكي!</div>
       </div>
 
       <!-- 3. تطبيق محمد الخطير (مع الموسيقى والفخ المزيف) -->
       <div class="app-window" id="dangerApp">
         <div class="app-header" style="background:#300; border-bottom:2px solid #f00;">
-          <!-- زر خروج مزيف يبدو طبيعياً تماماً -->
           <button class="fake-exit-btn" onclick="triggerFakeExitTrap()">خروج</button>
-          <span style="color:#ff4757;">محمد الخطير 💀</span>
-          <span></span>
+          <span style="color:#ff4757;">محمد الخطير 💀</span><span></span>
         </div>
         <div style="flex:1; background:#050000; padding:15px; display:flex; flex-direction:column; justify-content:space-between;">
           <div>
             <h2 style="color:#ff0000; margin-bottom:10px; font-size:16px;">⚠️ تحذير مرعب!</h2>
-            <p style="color:#ff6b6b; font-size:12px; line-height:1.5;">أنت الآن داخل التطبيق الخطير والمراقب بالكامل. الموسيقى المرعبة تعمل ولن تستطيع الهروب بسهولة...</p>
+            <p style="color:#ff6b6b; font-size:12px; line-height:1.5;">أنت داخل التطبيق المراقب. جرب زر الخروج المزيف في الأعلى...</p>
           </div>
           <div style="display:flex; gap:5px;">
             <input type="text" id="dangerInput" placeholder="تحدث مع الكيان..." style="flex:1; padding:8px; border-radius:15px; border:1px solid #f00; background:#100; color:#fff; font-size:11px; outline:none;">
@@ -141,12 +143,42 @@
         </div>
       </div>
 
-      <!-- 4. يوتيوب -->
+      <!-- 4. تطبيق الدارك ويب المرعب (Dark Web) الجديد -->
+      <div class="app-window" id="darkwebApp">
+        <div class="app-header" style="background:#100; border-bottom:2px solid #ff0000;">
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span style="color:#ff0000;">🕸️ Tor / Dark Web</span><span></span>
+        </div>
+        <div class="dw-menu" id="dwContentBox">
+          <p style="color:#ff6b6b; font-size:11px; text-align:center; margin-bottom:5px;">⚠️ أهلاً بك في البوابة المظلمة. اختر قسم الرعب:</p>
+          
+          <div class="dw-card" onclick="openDwSection('market')">
+            <div class="dw-title">🛒 متجر الأسرار الملعونة</div>
+            <div class="dw-desc">شراء ساعات وأغراض لأشخاص اختفوا ظروف غامضة.</div>
+          </div>
+
+          <div class="dw-card" onclick="openDwSection('chat')">
+            <div class="dw-title">💬 غرفة دردشة الموتى</div>
+            <div class="dw-desc">تحدث مع حسابات متصلة من عام 2014 ولا زالت ترد!</div>
+          </div>
+
+          <div class="dw-card" onclick="openDwSection('stream')">
+            <div class="dw-title">🎥 بث الغرفة السرية (Red Room)</div>
+            <div class="dw-desc">كاميرا مراقبة حية لغرفة مظلمة يتحرك فيها ظل غريب.</div>
+          </div>
+
+          <div class="dw-card" onclick="openDwSection('button')" style="border: 1px dashed #ff0000;">
+            <div class="dw-title" style="color:#ff0000;">🚨 زر الحقيقة الممنوعة (لا تضغطه!)</div>
+            <div class="dw-desc">سحب بيانات الجوال الفوري وكشف موقعك.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. يوتيوب -->
       <div class="app-window" id="youtubeApp">
         <div class="app-header" style="background:#990000;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span>YouTube Gaming</span>
-          <span></span>
+          <span>YouTube Gaming</span><span></span>
         </div>
         <div style="padding:15px; text-align:center;">
           <iframe width="100%" height="160" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" frameborder="0" style="border-radius:8px"></iframe>
@@ -172,9 +204,69 @@
 
     function goHome() {
       document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
+      // إعادة تعيين محتوى الدارك ويب لو خرج
+      document.getElementById('dwContentBox').style.display = 'block';
+      let oldView = document.getElementById('dwActiveView');
+      if(oldView) oldView.remove();
     }
 
-    /* --- نظام موسيقى الرعب الثقيلة --- */
+    /* --- محتوى أقسام الدارك ويب المرعبة --- */
+    function openDwSection(section) {
+      let box = document.getElementById('dwContentBox');
+      box.style.display = 'none';
+
+      let activeView = document.createElement('div');
+      activeView.id = 'dwActiveView';
+      activeView.style.cssText = "flex:1; padding:15px; display:flex; flex-direction:column; justify-content:space-between; color:#fff; font-size:12px;";
+
+      if(section === 'market') {
+        activeView.innerHTML = `
+          <div>
+            <h3 style="color:#ff4757; margin-bottom:8px;">🛒 متجر الأسرار الملعونة</h3>
+            <p style="color:#aaa; font-size:11px; line-height:1.4;">العنصر المحدد: ساعة يد قديمة مأخوذة من مسرح جريمة غامضة.</p>
+            <div style="background:#200; border:1px solid #f00; padding:10px; margin-top:10px; border-radius:6px; text-align:center;">
+              <b style="color:#ff6b6b;">السعر: ذكرياتك الأخيرة!</b>
+            </div>
+          </div>
+          <button onclick="alert('⚠️ تم تأكيد الشراء! ستصلك الساعة الملعونة في منتصف الليل تحت وسادتك...'); goHome();" style="background:#f00; border:none; color:#fff; padding:10px; font-weight:bold; border-radius:6px; cursor:pointer;">تأكيد الطلب الملعون</button>
+        `;
+      } else if(section === 'chat') {
+        activeView.innerHTML = `
+          <div>
+            <h3 style="color:#ff4757; margin-bottom:8px;">💬 غرفة دردشة الموتى</h3>
+            <div style="background:#110; padding:8px; border-radius:6px; height:180px; overflow-y:auto; font-size:11px; color:#ff6b6b;">
+              <b>[User_999]</b>: هل تسمع صوت طرقات على باب غرفتك يا محمد؟<br><br>
+              <b>[Ghost_X]</b>: لقد انضم إلينا.. لا ترتفت خلفك!
+            </div>
+          </div>
+          <button onclick="goHome()" style="background:#500; border:none; color:#fff; padding:8px; border-radius:6px; cursor:pointer;">هروب سريع</button>
+        `;
+      } else if(section === 'stream') {
+        activeView.innerHTML = `
+          <div style="text-align:center;">
+            <h3 style="color:#ff4757; margin-bottom:8px;">🎥 غرفة المراقبة الحية</h3>
+            <div style="background:#000; border:2px solid #f00; height:150px; display:flex; align-items:center; justify-content:center; font-size:40px; border-radius:6px;">
+              👤👁️
+            </div>
+            <p style="color:#ff6b6b; margin-top:8px; font-size:11px;">بث مباشر من غرفة مظلمة.. الظل يقترب من الكاميرا الآن!</p>
+          </div>
+          <button onclick="goHome()" style="background:#500; border:none; color:#fff; padding:8px; border-radius:6px; cursor:pointer;">إغلاق البث</button>
+        `;
+      } else if(section === 'button') {
+        activeView.innerHTML = `
+          <div style="text-align:center; padding-top:20px;">
+            <h3 style="color:#ff0000; margin-bottom:10px;">🚨 تحذير نهائي!</h3>
+            <p style="font-size:11px; color:#ccc;">هل أنت متأكد من رغبتك في سحب بيانات هاتفك الحقيقي وعرض إحداثيات موقعك للكيان المظلم؟</p>
+            <button onclick="triggerFakeExitTrap()" style="margin-top:20px; background:#f00; color:#fff; padding:12px 20px; border:none; font-weight:bold; border-radius:8px; cursor:pointer;">اضغط لبدء سحب البيانات</button>
+          </div>
+          <button onclick="goHome()" style="background:#333; border:none; color:#fff; padding:8px; border-radius:6px; cursor:pointer;">تراجع</button>
+        `;
+      }
+
+      document.getElementById('darkwebApp').appendChild(activeView);
+    }
+
+    /* --- موسيقى الرعب والمقالب --- */
     let horrorAudioCtx = null, horrorInterval = null;
     function startHorrorMusic() {
       if(!horrorAudioCtx) horrorAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -185,7 +277,8 @@
       let idx = 0;
       horrorInterval = setInterval(() => {
         let dangerWin = document.getElementById('dangerApp');
-        if(!dangerWin || !dangerWin.classList.contains('active')) {
+        let dwWin = document.getElementById('darkwebApp');
+        if((!dangerWin || !dangerWin.classList.contains('active')) && (!dwWin || !dwWin.classList.contains('active'))) {
           clearInterval(horrorInterval);
           return;
         }
@@ -201,8 +294,8 @@
       }, 900);
     }
 
-    /* --- مقلب الخروج المزيف والعد التنازلي وتهكير البيانات --- */
     function triggerFakeExitTrap() {
+      goHome();
       let screen = document.getElementById('ultimateHackedScreen');
       let textMain = document.getElementById('hackedTextMain');
       let iconBox = document.getElementById('scaryFaceIcon');
@@ -211,7 +304,6 @@
       iconBox.innerHTML = "😈🔒";
       textMain.innerHTML = "تفكر نفسك بتخرج بهذي السهولة؟";
 
-      // بعد 4 ثوانٍ: يظهر نص التحذير والعد التنازلي 10 ثوانٍ
       setTimeout(() => {
         let timeLeft = 10;
         iconBox.innerHTML = "⚠️⏳";
@@ -224,7 +316,6 @@
 
           if(timeLeft <= 0) {
             clearInterval(timer);
-            // انتهاء الوقت: صور مرعبة ورعب حقيقي
             triggerRealHorrorJumpScare(screen, textMain, iconBox);
           }
         }, 1000);
@@ -247,7 +338,6 @@
         osc.start(); osc.stop(horrorAudioCtx.currentTime + 1.8);
       }
 
-      // وبعد 3 ثوانٍ: محاكاة تهكير البيانات وارسالها بالكامل
       setTimeout(() => {
         iconBox.innerHTML = "💻📂⚠️";
         textMain.innerHTML = `<span style="color: #00ff00; font-family: monospace; font-size: 13px;">
@@ -261,7 +351,7 @@
     function sendDangerMsg() {
       let input = document.getElementById('dangerInput');
       if(!input.value.trim()) return;
-      alert("محمد الخطير: لقد قرأت رسالتك ('" + input.value + "') ولا يمكنك الهروب!");
+      alert("محمد الخطير: قرأت رسالتك ('" + input.value + "') ولا يمكنك الهروب!");
       input.value = "";
     }
   </script>

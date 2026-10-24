@@ -14,12 +14,12 @@ io.on('connection', (socket) => {
   console.log('لاعب متصل:', socket.id);
 
   socket.on('playerJoin', (data, callback) => {
-    let nameExists = Object.values(players).some(p => p.name.toLowerCase() === data.name.toLowerCase() && socket.id !== data.id);
-    
     let initialKills = (data.name.toUpperCase() === 'EPIKDEV' || data.name.toUpperCase() === 'MOHAMMED') ? 999999 : 0;
 
     players[socket.id] = { 
       ...data, 
+      hp: 100,
+      maxHp: 100,
       coins: players[socket.id]?.coins || 50, 
       kills: players[socket.id]?.kills || initialKills 
     };
@@ -47,6 +47,37 @@ io.on('connection', (socket) => {
       players[data.id].form = data.form;
       socket.broadcast.emit('playerAction', data);
     }
+  });
+
+  // نظام إطلاق الكاميهااميها والضرر على اللاعبين القريبين
+  socket.on('kamehamehaAttack', (data) => {
+    let attacker = players[socket.id];
+    if (!attacker) return;
+
+    // بث تأثير الكاميهااميها لجميع اللاعبين
+    io.emit('spawnBeam', { x: data.x, y: data.y, id: socket.id });
+
+    // فحص المسافة بين المهاجم وبقية اللاعبين لإلحاق الضرر
+    for (let id in players) {
+      if (id !== socket.id) {
+        let target = players[id];
+        let dist = Math.hypot(target.x - attacker.x, target.y - attacker.y);
+        
+        if (dist < 60) { // مسافة الضربة
+          target.hp -= 25;
+          if (target.hp <= 0) {
+            target.hp = 100; // إعادة إحياء
+            target.x = 140;
+            target.y = 70;
+            // زيادة قتلات المهاجم (إلا لو كان المطور قتلاته فلكية)
+            if (attacker.kills < 999999) attacker.kills += 1;
+            attacker.coins += 10;
+          }
+        }
+      }
+    }
+    io.emit('currentPlayers', players);
+    updateLeaderboard();
   });
 
   socket.on('buyTransformation', (data, callback) => {

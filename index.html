@@ -34,7 +34,7 @@
 
   <div class="music-bar" onclick="toggleMusic()">🎵 الموسيقى: <span id="musicStatus">متوقفة</span></div>
 
-  <!-- شاشة تسجيل الدخول مع الحفظ التلقائي -->
+  <!-- شاشة تسجيل الدخول -->
   <div id="loginScreen" class="screen" style="display:flex;">
     <h2>⚡ تسجيل الدخول الأسطوري</h2>
     <input type="text" id="playerNameInput" placeholder="أدخل اسمك (إنجليزي)">
@@ -42,7 +42,7 @@
     <span class="error-msg" id="loginError"></span>
   </div>
 
-  <!-- شاشة اللوبي واختيار وضع اللعب (أونلاين أو ضد بوت) -->
+  <!-- شاشة اللوبي -->
   <div id="lobbyScreen" class="screen">
     <h2>🎮 لوحة تحكم الألعاب</h2>
     <select id="gameSelect">
@@ -73,7 +73,6 @@
     <h1 id="displayRoomCode" style="color:#f1c40f; letter-spacing:3px; background:#130f40; padding:10px; border-radius:8px; border:1px solid #4834d4">-----</h1>
   </div>
 
-  <!-- واجهة غوكو -->
   <div id="gokuGameUI">
     <h1 id="gokuTitle" style="font-size:0.95rem; color:#f1c40f; margin-bottom:4px;">🔥 Goku Fighter</h1>
     <canvas id="gameCanvas" width="320" height="140"></canvas>
@@ -86,7 +85,6 @@
     </div>
   </div>
 
-  <!-- واجهة إكس أو -->
   <div id="tictactoeUI" class="arcade-game-container">
     <h3 style="color:#f1c40f">❌ إكس أو أونلاين / بوت ⭕</h3>
     <p id="tInfo" style="font-size:0.8rem; margin:4px 0; color:#fff">الوضع: ضد بوت</p>
@@ -108,7 +106,6 @@
     </div>
   </div>
 
-  <!-- واجهة حجر ورق مقص -->
   <div id="rpsUI" class="arcade-game-container">
     <h3 style="color:#00cec9">✊ حجر 📄 ورق ✂️ مقص</h3>
     <p id="rpsOpponent" style="font-size:0.8rem; margin:4px 0">التحدي ضد: البوت الذكي</p>
@@ -128,10 +125,9 @@
     let currentGame = "", currentMode = "offline";
     let myId = "";
 
-    // نظام حفظ وحفظ التلقائي للاسم
     window.onload = function() {
       const savedName = localStorage.getItem('arcade_player_name');
-      if (savedName) {
+      if (savedName && savedName.length >= 3) {
         myName = savedName;
         isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
         document.getElementById('loginScreen').style.display = 'none';
@@ -142,8 +138,8 @@
     function saveAndLogin() {
       const input = document.getElementById('playerNameInput');
       const nameVal = input.value.trim();
-      if(!/^[A-Za-z0-9_]{3,12}$/.test(nameVal)) {
-        document.getElementById('loginError').innerText = "⚠️ اسم إنجليزي (3-12 حرف) مطلوب!";
+      if(nameVal.length < 3) {
+        document.getElementById('loginError').innerText = "⚠️ أدخل 3 أحرف على الأقل!";
         return;
       }
       myName = nameVal;
@@ -233,11 +229,7 @@
       document.getElementById('lobbyScreen').style.display = 'flex';
     }
 
-    /* --- موسيقى الخلفية الحماسية والخفيفة التفاعلية --- */
-    let audioCtx = null;
-    let musicInterval = null;
-    let isMusicPlaying = false;
-
+    let audioCtx = null, musicInterval = null, isMusicPlaying = false;
     function toggleMusic() {
       if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -268,7 +260,6 @@
       }
     }
 
-    /* --- لعبة غوكو --- */
     let canvas, ctx, players = {}, myX = 140, myY = 60;
     function initGokuGame(roomPlayers) {
       canvas = document.getElementById('gameCanvas');
@@ -279,10 +270,10 @@
       });
 
       if(currentMode === 'offline') {
-        players['bot'] = { name: 'Goku Bot', x: 200, y: 60, isDev: false };
+        players['bot'] = { name: 'Bot Fighter', x: 200, y: 60, isDev: false };
         setInterval(() => {
           if(players['bot']) {
-            players['bot']->x += (Math.random() > 0.5 ? 2 : -2);
+            players['bot'].x += (Math.random() > 0.5 ? 2 : -2);
             drawGoku();
           }
         }, 500);
@@ -343,7 +334,6 @@
       }
     }
 
-    /* --- إكس أو (أونلاين أو ضد بوت) --- */
     let tBoard = ['', '', '', '', '', '', '', '', ''];
     let mySymbol = 'X', isMyTurn = true, tGameOver = false;
 
@@ -432,4 +422,13 @@
       if(checkWin(oppSymbol)) {
         document.getElementById('tTurnStatus').innerText = "❌ خسرت! فاز الخصم.";
         tGameOver = true;
-        document.getElementById('tResetBtn').style.display = 'b
+        document.getElementById('tResetBtn').style.display = 'block';
+        return;
+      }
+      isMyTurn = true;
+      document.getElementById('tTurnStatus').innerText = "دورك الآن!";
+    });
+
+    function checkWin(sym) {
+      const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      return wins.some(w => tBoard[w[0]] === sym && tBoard[w[1]] ===

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Goku Fighter Online</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#fff;font-family:Tahoma,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px}
+h1{font-size:1.5rem;margin:8px 0;background:linear-gradient(90deg,#f39c12,#e74c3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.panel{background:#1e272e;border:2px solid #f39c12;border-radius:14px;padding:16px;width:min(420px,96%);margin:8px 0}
+input,button{font-family:inherit;font-size:1rem;border:none;border-radius:12px;padding:10px 14px}
+input{width:100%;margin:6px 0;text-align:center;direction:ltr}
+button{cursor:pointer;color:#fff;margin:4px 0}
+button:disabled{opacity:.45}
+.btn-main{background:linear-gradient(90deg,#e67e22,#f39c12);width:100%}
+.btn-blue{background:#0984e3;width:100%}
+.btn-green{background:#00b894;width:100%}
+.btn-red{background:#d63031;width:100%}
+.btn-gray{background:#636e72;width:100%}
+#status{opacity:.8;font-size:.9rem;margin:6px 0;min-height:1.2em}
+#rooms{max-height:160px;overflow-y:auto;margin-top:8px}
+.room-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.06);padding:8px 10px;border-radius:10px;margin:4px 0}
+#gameWrap{display:none;position:relative;border:3px solid #f39c12;border-radius:10px;margin-top:8px}
+canvas{display:block;max-width:100%;border-radius:7px}
+#hud{display:none;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.bar-box{background:rgba(255,255,255,.08);padding:6px 12px;border-radius:14px;font-size:.9rem}
+#controls{display:none;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+#controls button{padding:10px 16px;border-radius:20px}
+#msg{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;font-weight:bold;text-shadow:0 0 12px #000;display:none;text-align:center;z-index:5}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<h1>⚡ Goku Fighter Online</h1>
+<p id="status">جاري الاتصال بالسيرفر...</p>
+
+<div id="lobby" class="panel">
+  <label>اسمك</label>
+  <input id="nameInput" maxlength="16" placeholder="Username">
+  <button class="btn-main" onclick="saveName()">حفظ الاسم</button>
+  <hr style="border:none;border-top:1px solid #333;margin:12px 0">
+  <button class="btn-green" onclick="createRoom()">إنشاء غرفة</button>
+  <div style="display:flex;gap:6px;margin-top:6px">
+    <input id="roomInput" maxlength="8" placeholder="كود الغرفة" style="flex:1">
+    <button class="btn-blue" onclick="joinRoom()" style="width:auto">انضم</button>
+  </div>
+  <div style="margin-top:10px;font-size:.9rem;opacity:.8">الغرف المفتوحة:</div>
+  <div id="rooms"></div>
+</div>
+
+<div id="roomPanel" class="panel hidden">
+  <div id="roomInfo"></div>
+  <button id="startBtn" class="btn-main hidden" onclick="startMatch()">ابدأ القتال</button>
+  <button class="btn-red" onclick="leaveRoom()">مغادرة الغرفة</button>
+</div>
+
+<div id="gameWrap">
+  <canvas id="c" width="800" height="450"></canvas>
+  <div id="msg"></div>
+</div>
+<div id="hud">
+  <div class="bar-box">أنت ❤️ <span id="myHp">100</span></div>
+  <div class="bar-box">الخصم ❤️ <span id="opHp">100</span></div>
+  <div class="bar-box" id="roleLabel"></div>
+</div>
+<div id="controls">
+  <button style="background:#c0392b" onclick="sendPunch()">👊 ضربة</button>
+  <button style="background:#2980b9" onclick="sendKame()">💥 Kame</button>
+  <button class="btn-gray" onclick="leaveRoom()">خروج</button>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+
+let myName = localStorage.getItem('gfOnlineName') || '';
+let myId = null;
+let roomId = null;
+let role = null; // host | guest
+let inMatch = false;
+let keys = {};
+
+// local + remote fighters
+const me = { x: 150, y: 280, hp: 100, facing: 1, color: '#e67e22', name: 'You' };
+const opp = { x: 650, y: 280, hp: 100, facing: -1, color: '#2980b9', name: 'Opp' };
+let beams = [];
+let particles = [];
+let punchCD = 0, kameCD = 0;
+
+if (myName) document.getElementById('nameInput').value = myName;
+
+socket.on('connect', () => {
+  myId = socket.id;
+  statusEl.textContent = 'متصل ✅ — اكتب اسمك';
+  if (myName) socket.emit('set_name', myName);
+});
+socket.on('disconnect', () => {
+  statusEl.textContent = 'انقطع الاتصال بالسيرفر';
+  inMatch = false;
+});
+socket.on('name_ok', (n) => {
+  myName = n;
+  localStorage.setItem('gfOnlineName', n);
+  statusEl.textContent = 'مرحباً ' + n;
+});
+socket.on('rooms_list', (list) => {
+  const box = document.getElementById('rooms');
+  if (!list.length) {
+    box.innerHTML = '<div style="opacity:.6;font-size:.85rem">لا توجد غرف الآن</div>';
+    return;
+  }
+  box.innerHTML = list.map(r =>
+    `<div class="room-row"><span>${r.id} — ${r.hostName}</span>
+     <button class="btn-blue" style="width:auto;padding:6px 12px;font-size:.85rem" onclick="joinRoomId('${r.id}')">انضم</button></div>`
+  ).join('');
+});
+socket.on('room_created', (d) => {
+  roomId = d.roomId;
+  role = 'host';
+  showRoom(`غرفة: <b>${roomId}</b><br>أنت الهوست — بانتظار لاعب...`);
+  document.getElementById('startBtn').classList.add('hidden');
+});
+socket.on('room_ready', (d) => {
+  roomId = d.roomId;
+  const amHost = d.host.id === myId;
+  role = amHost ? 'host' : 'guest';
+  showRoom(`غرفة: <b>${roomId}</b><br>هوست: ${d.host.name}<br>ضيف: ${d.guest.name}`);
+  if (amHost) document.getElementById('startBtn').classList.remove('hidden');
+});
+socket.on('match_start', (d) => {
+  inMatch = true;
+  me.hp = 100; opp.hp = 100;
+  me.x = d.hostId === myId ? 150 : 650;
+  opp.x = d.hostId === myId ? 650 : 150;
+  me.facing = d.hostId === myId ? 1 : -1;
+  opp.facing = -me.facing;
+  me.name = myName || 'You';
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('roomPanel').classList.add('hidden');
+  document.getElementById('gameWrap').style.display = 'block';
+  document.getElementById('hud').style.display = 'flex';
+  document.getElementById('controls').style.display = 'flex';
+  document.getElementById('roleLabel').textContent = role === 'host' ? 'هوست' : 'ضيف';
+  showMsg('ابدأ!', 800);
+  requestAnimationFrame(loop);
+});
+socket.on('game_state', (d) => {
+  if (!inMatch) return;
+  opp.x = d.x; opp.y = d.y; opp.facing = d.facing; opp.hp = d.hp;
+  if (d.name) opp.name = d.name;
+});
+socket.on('game_action', (d) => {
+  if (!inMatch) return;
+  if (d.type === 'punch') {
+    // visual only; damage resolved by attacker message below
+    spawnPart(opp.x, opp.y, '#fff', 6);
+  }
+  if (d.type === 'kame') {
+    beams.push({ x: opp.x + opp.facing * 30, y: opp.y, dir: opp.facing, life: 40, color: '#74b9ff' });
+  }
+  if (d.type === 'hit') {
+    me.hp = Math.max(0, me.hp - d.dmg);
+    spawnPart(me.x, me.y, '#e74c3c', 8);
+    if (me.hp <= 0) endMatch(false);
+  }
+});
+socket.on('opponent_left', () => {
+  showMsg('الخصم غادر', 2000);
+  setTimeout(backLobby, 1500);
+});
+socket.on('error_msg', (m) => showMsg(m, 1500));
+socket.on('chat', (d) => { /* optional */ });
+
+function saveName() {
+  const n = document.getElementById('nameInput').value.trim();
+  if (n.length < 2) return showMsg('اسم قصير', 1000);
+  socket.emit('set_name', n);
+}
+function createRoom() {
+  if (!myName) return showMsg('احفظ اسمك أولاً', 1000);
+  socket.emit('create_room');
+}
+function joinRoom() {
+  if (!myName) return showMsg('احفظ اسمك أولاً', 1000);
+  const id = document.getElementById('roomInput').value.trim().toUpperCase();
+  if (!id) return;
+  socket.emit('join_room', id);
+}
+function joinRoomId(id) {
+  if (!myName) return showMsg('احفظ اسمك أولاً', 1000);
+  socket.emit('join_room', id);
+}
+function startMatch() { socket.emit('start_match'); }
+function leaveRoom() {
+  socket.emit('leave_room');
+  backLobby();
+}
+function showRoom(html) {
+  document.getElementById('roomPanel').classList.remove('hidden');
+  document.getElementById('roomInfo').innerHTML = html;
+}
+function backLobby() {
+  inMatch = false; roomId = null; role = null;
+  document.getElementById('lobby').classList.remove('hidden');
+  document.getElementById('roomPanel').classList.add('hidden');
+  document.getElementById('gameWrap').style.display = 'none';
+  document.getElementById('hud').style.display = 'none';
+  document.getElementById('controls').style.display = 'none';
+  document.getElementById('startBtn').classList.add('hidden');
+}
+function showMsg(t, ms) {
+  const el = document.getElementById('msg');
+  el.textContent = t; el.style.display = 'block';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.style.display = 'none', ms || 1200);
+}
+function endMatch(won) {
+  inMatch = false;
+  showMsg(won ? 'فزت! 🏆' : 'خسرت...', 2500);
+  setTimeout(backLobby, 2200);
+}
+
+// Controls
+window.addEventListener('keydown', e => {
+  keys[e.key.toLowerCase()] = true;
+  if (e.key === ' ') { e.preventDefault(); sendPunch(); }
+  if (e.key.toLowerCase() === 'q') sendKame();
+});
+window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+let lastSent = 0;
+function sendState() {
+  const now = Date.now();
+  if (now - lastSent < 33) return; // ~30fps net
+  lastSent = now;
+  socket.emit('game_state', { x: me.x, y: me.y, facing: me.facing, hp: me.hp, name: me.name });
+}
+function sendPunch() {
+  if (!inMatch || punchCD > 0) return;
+  punchCD = 18;
+  const dist = Math.hypot(opp.x - me.x, opp.y - me.y);
+  socket.emit('game_action', { type: 'punch' });
+  if (dist < 70 && Math.sign(opp.x - me.x || 1) === me.facing) {
+    socket.emit('game_action', { type: 'hit', dmg: 12 });
+    // optimistic local feedback on opponent hp (serverless authoritative would be better)
+    opp.hp = Math.max(0, opp.hp - 12);
+    spawnPart(opp.x, opp.y, '#fff', 8);
+    if (opp.hp <= 0) endMatch(true);
+  }
+}
+function sendKame() {
+  if (!inMatch || kameCD > 0) return;
+  kameCD = 70;
+  beams.push({ x: me.x + me.facing * 30, y: me.y, dir: me.facing, life: 45, color: '#feca57' });
+  socket.emit('game_action', { type: 'kame' });
+  // simple beam hit check locally
+  setTimeout(() => {
+    if (Math.abs(opp.y - me.y) < 40) {
+      const onBeam = me.facing > 0 ? opp.x > me.x : opp.x < me.x;
+      if (onBeam) {
+        socket.emit('game_action', { type: 'hit', dmg: 22 });
+        opp.hp = Math.max(0, opp.hp - 22);
+        if (opp.hp <= 0) endMatch(true);
+      }
+    }
+  }, 200);
+}
+function spawnPart(x, y, c, n) {
+  for (let i = 0; i < n; i++) particles.push({
+    x, y, vx: (Math.random() - .5) * 6, vy: (Math.random() - .5) * 6,
+    life: 20, color: c
+  });
+}
+
+function loop() {
+  if (!inMatch) return;
+  if (punchCD > 0) punchCD--;
+  if (kameCD > 0) kameCD--;
+
+  let dx = 0, dy = 0;
+  if (keys['arrowleft'] || keys['a']) dx -= 1;
+  if (keys['arrowright'] || keys['d']) dx += 1;
+  if (keys['arrowup'] || keys['w']) dy -= 1;
+  if (keys['arrowdown'] || keys['s']) dy += 1;
+  if (dx || dy) {
+    const len = Math.hypot(dx, dy) || 1;
+    me.x += (dx / len) * 4.2;
+    me.y += (dy / len) * 4.2;
+    if (dx) me.facing = Math.sign(dx);
+  }
+  me.x = Math.max(30, Math.min(canvas.width - 30, me.x));
+  me.y = Math.max(40, Math.min(canvas.height - 40, me.y));
+
+  // beams
+  for (const b of beams) {
+    b.x += b.dir * 10;
+    b.life--;
+  }
+  beams = beams.filter(b => b.life > 0);
+  for (const p of particles) { p.x += p.vx; p.y += p.vy; p.life--; }
+  particles = particles.filter(p => p.life > 0);
+
+  sendState();
+  document.getElementById('myHp').textContent = Math.ceil(me.hp);
+  document.getElementById('opHp').textContent = Math.ceil(opp.hp);
+
+  // draw
+  const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  g.addColorStop(0, '#0f0c29'); g.addColorStop(1, '#24243e');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+
+  for (const b of beams) {
+    ctx.fillStyle = b.color;
+    ctx.globalAlpha = .85;
+    ctx.beginPath();
+    ctx.ellipse(b.x, b.y, 50, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+  drawFighter(me);
+  drawFighter(opp);
+  for (const p of particles) {
+    ctx.globalAlpha = p.life / 20;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  requestAnimationFrame(loop);
+}
+function drawFighter(f) {
+  ctx.beginPath();
+  ctx.arc(f.x, f.y, 28, 0, Math.PI * 2);
+  ctx.fillStyle = f.color;
+  ctx.fill();
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px Tahoma';
+  ctx.textAlign = 'center';
+  ctx.fillText(f.name, f.x, f.y + 44);
+  // hp bar
+  ctx.fillStyle = '#333';
+  ctx.fillRect(f.x - 30, f.y - 42, 60, 6);
+  ctx.fillStyle = '#e74c3c';
+  ctx.fillRect(f.x - 30, f.y - 42, 60 * (f.hp / 100), 6);
+}
+</script>
+</body>
+</html>

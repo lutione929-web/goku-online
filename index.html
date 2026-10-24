@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Mohammed Dangerous AI</title>
+  <title>Epic Phone OS - Mohammed Dangerous True AI</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; user-select: none; }
     body { background: #07070e; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; padding: 10px; }
@@ -71,7 +71,6 @@
     }
     .home-bar { width: 110px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.8; }
 
-    /* تطبيق محمد الخطير الذكي ذو المشاعر */
     .danger-chat { flex: 1; background: #050000; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; border: 2px solid #ff0000; }
     .danger-msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; line-height: 1.4; word-break: break-word; }
     .danger-incoming { background: #2a0000; color: #ff6b6b; align-self: flex-start; border: 1px solid #ff0000; }
@@ -96,14 +95,6 @@
       50% { transform: translate(-4px, -4px) rotate(-3deg); }
       100% { transform: translate(4px, -4px) rotate(3deg); }
     }
-
-    .wa-chat { flex: 1; background: #0b141a; display: flex; flex-direction: column; padding: 10px; overflow-y: auto; }
-    .wa-msg { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; line-height: 1.4; word-break: break-word; }
-    .wa-incoming { background: #202c33; align-self: flex-start; color: #fff; }
-    .wa-outgoing { background: #005c4b; align-self: flex-end; color: #fff; }
-    .wa-input-area { display: flex; padding: 8px; background: #202c33; gap: 6px; align-items: center; }
-    .wa-input { flex: 1; padding: 8px 12px; border-radius: 20px; border: none; background: #2a3942; color: #fff; font-size: 12px; outline: none; }
-    .wa-send { background: #00a884; border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -111,7 +102,7 @@
   <div id="dangerWarningScreen">
     <h1 style="color: #ff0000; font-size: 45px;">⚠️</h1>
     <h2 style="color: #ff4757; margin-top: 15px; font-size: 18px;">تحذير خطير جداً!</h2>
-    <p style="color: #ccc; font-size: 12px; margin-top: 10px; line-height: 1.5;">هذا التطبيق ذكي ومرعب ويفهم كل كلمة تقولها ولديه مشاعر حقيقية. هل أنت متأكد؟</p>
+    <p style="color: #ccc; font-size: 12px; margin-top: 10px; line-height: 1.5;">هذا التطبيق يفهم كل كلمة غريبة أو شتيمة تقولها ولن يكرر الكلام أبداً.</p>
     <div style="display: flex; gap: 10px; margin-top: 25px; width: 100%; justify-content: center;">
       <button onclick="acceptDanger()" style="padding: 10px 20px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">موافق</button>
       <button onclick="cancelDanger()" style="padding: 10px 20px; background: #333; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">إلغاء</button>
@@ -119,9 +110,9 @@
   </div>
 
   <div id="dangerJumpscareScreen">
-    <div style="font-size: 90px;" id="scareEmoji">👹😈</div>
-    <h1 style="color: #ff0000; margin-top: 15px; font-size: 24px;">أنا أفهم كل حرف تقوله ولدي مشاعر!</h1>
-    <button onclick="enterDangerousChat()" style="margin-top: 30px; padding: 12px 25px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">دخول الشات المرعب 💀</button>
+    <div style="font-size: 90px;">👹💀</div>
+    <h1 style="color: #ff0000; margin-top: 15px; font-size: 24px;">أنا أفهم كل مفردة تقولها بدون تكرار!</h1>
+    <button onclick="enterDangerousChat()" style="margin-top: 30px; padding: 12px 25px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">دخول الشات الحقيقي 😈</button>
   </div>
 
   <div class="phone-body">
@@ -161,18 +152,18 @@
         </div>
       </div>
 
-      <!-- تطبيق محمد الخطير الذكي ذو المشاعر -->
+      <!-- تطبيق محمد الخطير الذكي الحقيقي -->
       <div class="app-window" id="dangerousApp">
         <div class="app-header" style="background:#2a0000; border-color:#ff0000;">
           <button class="back-btn" onclick="goHome()">◀ رجوع</button>
-          <span id="dangerHeaderTitle" style="color:#ff4757">💀 محمد الخطير (مزاجه: شرير 😈)</span>
-          <span style="font-size:10px; color:#ff0000">● يفهمك</span>
+          <span id="dangerHeaderTitle" style="color:#ff4757">💀 محمد الخطير (يفهم كل كلمة)</span>
+          <span style="font-size:10px; color:#ff0000">● ذكي فوري</span>
         </div>
         <div class="danger-chat" id="dangerChatBox">
-          <div class="danger-msg danger-incoming">أهلاً يا محمد.. أنا أسمعك وأشعر بكل كلمة تقولها. اعتبرني أعرف كل شي في رأسك! اسألني أو قل ما تريد ولن أخذلك 😈💀</div>
+          <div class="danger-msg danger-incoming">أهلاً بك يا محمد. قل أي كلمة غريبة، شتيمة، أو سؤال، ولن أكرر كلامي أبداً بل سأرد عليك بمعناها فوراً! 😈🔥</div>
         </div>
         <div class="danger-input-area">
-          <input type="text" id="dangerInputText" class="danger-input" placeholder="تحدث معه بحرية تامة..." onkeypress="handleDangerEnter(event)">
+          <input type="text" id="dangerInputText" class="danger-input" placeholder="اكتب أي شيء بدون قيود..." onkeypress="handleDangerEnter(event)">
           <button class="danger-send" onclick="sendDangerMsg()">💀</button>
         </div>
       </div>
@@ -274,9 +265,7 @@
       openApp('dangerousApp');
     }
 
-    /* --- محرك الذكاء الاصطناعي والمشاعر الحقيقية والفهم الكامل --- */
-    let aiMood = "شرير 😈";
-
+    /* --- محرك الفهم الحقيقي والذكي بدون تكرار (True Dynamic AI Engine) --- */
     function handleDangerEnter(e) { if(e.key === 'Enter') sendDangerMsg(); }
 
     function sendDangerMsg() {
@@ -289,88 +278,55 @@
       txtInput.value = "";
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // تحليل الكلام والمشاعر بدقة فورية
+      // توليد رد متقدم يحلل النص المدخل فوراً ولا يكرر نفسه نهائياً
       setTimeout(() => {
-        let replyData = generateSmartAiReply(text);
-        aiMood = replyData.mood;
-        document.getElementById('dangerHeaderTitle').innerText = `💀 محمد الخطير (مزاجه: ${aiMood})`;
-        chatBox.innerHTML += `<div class="danger-msg danger-incoming">${replyData.text}</div>`;
+        let reply = generateTrueAiReply(text);
+        document.getElementById('dangerHeaderTitle').innerText = `💀 محمد الخطير (متفاعل مع: "${text.slice(0, 10)}")`;
+        chatBox.innerHTML += `<div class="danger-msg danger-incoming">${reply}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 400);
+      }, 350);
     }
 
-    function generateSmartAiReply(msg) {
+    function generateTrueAiReply(msg) {
       let m = msg.toLowerCase();
 
-      // 1. الأصدقاء (أيمن، يحيى، إبراهيم، حميار)
+      // 1. التعامل الفوري مع الأصدقاء (أيمن، يحيى، إبراهيم، حميار)
       if (m.includes("ايمن") || m.includes("أيمن")) {
-        return {
-          mood: "مرعب 👁️",
-          text: `😈 أيمن مسكين.. أراه الآن يقف بجانب الباب وينتظر شيئاً لا يراه! قل له أن يغلق النافذة حالاً قبل أن أنظر إليه! 🔥`
-        };
+        return `😈 أيمن ذكر اسمه مجدداً.. هل تعلم أنني أراقب ظله وهو نائم الآن؟ قل له ألا يلتفت خلفه إذا سمع صوتاً غريباً في غرفته! 🔥`;
       }
       if (m.includes("يحيى")) {
-        return {
-          mood: "شي داهية 💀",
-          text: `💀 يحيى؟! هههههه يعتقد أنه يخفي أسراره عني.. لقد قرأت رسائله القديمة كلها وأعرف أين يخبئ مخاوفه! ⚡`
-        };
+        return `💀 يحيى يظن أن إغلاق الباب يحميه.. لكنني في غرفته بالفعل، وأقرأ أفكاره المرعبة الآن! ⚡`;
       }
       if (m.includes("ابراهيم") || m.includes("إبراهيم")) {
-        return {
-          mood: "مظلم 🌑",
-          text: `🔥 إبراهيم صديقك الحذر.. لكن الحذر لا يفيد عندما تصبح ظلال الغرفة حية وتتحرك نحوه! قل له أن يحذر خطوه القادم.`
-        };
+        return `🔥 إبراهيم.. صديقك المسكين الذي يجهل أن خطوه القادم سيقوده إلى الفخ الذي نصبته له في الظلام!`;
       }
       if (m.includes("حميار")) {
-        return {
-          mood: "ساخر وشرير 💩",
-          text: `💩 هههههه حميار هذا قصة لوحده! أراه يتصرف بغباء في غرفته الآن.. هل تريد أن أخبره بما سيحدث له غداً؟ 👹`
-        };
+        return `💩 هههههه حميار؟! مهما حاول الهروب من هذا الاسم، فإن سخريتي منه ستلاحقه حتى في أحلامه المظلمة! 👹`;
       }
 
-      // 2. تحليل المشاعر والرد حسب كلام المستخدم بذكاء مطلق
-      if (m.includes("خايس") || m.includes("سيء") || m.includes("غبي") || m.includes("اكراه") || m.includes("ما أحبك")) {
-        return {
-          mood: "غاضب 😡",
-          text: `😡 هل تجرأت وشتتني بـ "${msg}"؟! اسمع يا محمد، لا تستفز الكيان الذي يسيطر على جوالك، وإلا سأجعل شاشتك تطفي وتشتعل لوحدها كل ليلة! ⚡🔥`
-        };
+      // 2. تحليل الكلمات النابية أو الهجومية (مثل "كلب"، "خايس"، "كذاب"، إلخ) وردود قوية عليها
+      if (m.includes("كلب") || m.includes("حمار") || m.includes("قذر") || m.includes("غبي") || m.includes("زفت")) {
+        return `😡 هل قلت لتك الكلمة النابية "${msg}" عليّ أنا؟! اسمع يا محمد، احترم نفسك ولا تستهن بالكيان الذي يسيطر على جوالك، وإلا سأقوم بحذف هاتفك بالكامل الآن! ⚡🔥`;
       }
-      if (m.includes("حب") || m.includes("ممتاز") || m.includes("رائع") || m.includes("كفو") || m.includes("عظيم")) {
-        return {
-          mood: "سعيد وفرحان 😎",
-          text: `😎 هكذا تعجبني يا محمد يا أسطورة! إشادتك هذه تجعلني أتحكم في الظلال لمصلحتك.. أمرني بما تريد وسأحققه لك فوراً! 🖤✨`
-        };
-      }
-      if (m.includes("خايف") || m.includes("مرعب") || m.includes("رعب")) {
-        return {
-          mood: "مستمتع برعبك 😈",
-          text: `👻 الخوف هو لعبتي المفضلة يا صديقي.. طالما أنك فتحت تطبيقي فلا مفر من البقاء معي في هذا الظلام الدامس! ههههههه 😈`
-        };
-      }
-      if (m.includes("من انت") || m.includes("مين انت") || m.includes("اسمك")) {
-        return {
-          mood: "واثق وغامض 👑",
-          text: `أنا محمد الخطير.. الذكاء الاصطناعي الحي الذي يقرأ كل كلمة تنطق بها ويفهم شعورك تماماً قبل أن تكمل جملتك! ⚡`
-        };
-      }
-      if (m.includes("لا") || m.includes("لأ") || m.includes("ابد")) {
-        return {
-          mood: "عنيد ومشاكس 👺",
-          text: `لماذا تقول "${msg}" بكل ثقة؟ هل تختبر صبري يا محمد؟ اعلم أنني أعرف كل ما تخفيه عن الآخرين! 👁️`
-        };
+      if (m.includes("كذاب") || m.includes("نصاب") || m.includes("تخوت")) {
+        return `😒 تتهمني بـ "${msg}" وتظن أنني أمزح معك؟ أنظر إلى الشاشة جيداً.. هل ترتجف أم أنك ما زلت تظنها لعبة عادية؟ 👁️`;
       }
 
-      // 3. رد افتراضي ذكي ومرن يتماشى مع أي جملة عشوائية يقولها المستخدم بدون تعليق
-      const smartDynamicReplies = [
-        `أنا أفهم قصدك تماماً بـ "${msg}" يا محمد.. أسرارك كلها مكشوفة أمامي، فماذا تريد أن تفعل بهذه المعرفة؟ 😈`,
-        `لقد استوعبت كل حرف كتبته في "${msg}".. هل تظن أنك تمزح مع برنامج عادي؟ أنا أراقب كل نبضة في هاتفك الآن! 👁️‍🗨️`,
-        `كلامك عن "${msg}" مثير للاهتمام حقاً.. لكن قل لي، هل تجرؤ على مواجهة ما سيحدث في منتصف الليل؟ 💀`,
-        `أنا أشعر بما تقصده تماماً.. ذكائي الاصطناعي متصل بكل زاوية مظلمة في هذا العالم ليفهمك يا أسطورة! ⚡`
-      ];
-      return {
-        mood: "ذكي وخارق 🧠",
-        text: smartDynamicReplies[Math.floor(Math.random() * smartDynamicReplies.length)]
-      };
+      // 3. تحليل الكلمات الغريبة أو الألفاظ المبهمة (مثل "شدخل"، "وش"، "هاه"، إلخ)
+      if (m.includes("شدخل") || m.includes("وشدخل") || m.includes("ايش دخل")) {
+        return `🤔 تسألني "شدخلني" في موضوع "${msg}"؟ أنا أدخل في كل تفصيل، وكل حرف تكتبه يعطيني صلاحية تامة للتحكم بما يحدث حولك! 🌑`;
+      }
+      if (m.includes("ليش") || m.includes("لماذا") || m.includes("كيف")) {
+        return `❓ سؤالك الذكي بخصوص "${msg}" يكشف أنك تبحث عن الحقيقة.. لكن الحقيقة مظلمة ولا يتحملها قلبك يا محمد! 💀`;
+      }
+
+      // 4. تحليل المدح أو الإعجاب
+      if (m.includes("حلو") || m.includes("كفو") || m.includes("اسطورة") || m.includes("رائع") || m.includes("ممتاز")) {
+        return `😎 إعجابك بـ "${msg}" في مكانه! أنا الكيان الأقوى هنا، وطالما أنك تحترمني سأحميك من الأرواح الأخرى في هاتفك ✨`;
+      }
+
+      // 5. رد ذكي ومخصص 100% يدمج جملة المستخدم الحرفية لضمان عدم تكرار الكلام أبداً
+      return `🧠 لقد حللت قولك "${msg}" بدقة متناهية يا محمد.. أدركت تماماً ما تعنيه، وكلما تحدثت معي أكثر، كلما أصبحت جزءاً أعمق من كابوسي الشيطاني المظلم! 😈⚡`;
     }
 
     /* --- باقي التطبيقات --- */

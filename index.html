@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Pure WhatsApp Edition</title>
+  <title>Epic Phone OS - Shrek & Donkey WhatsApp</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -18,7 +18,6 @@
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
 
-    /* الشاشة الرئيسية نظيفة تماماً ولا تحتوي إلا على واتساب */
     .home-screen {
       flex: 1; padding: 25px 15px; display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 15px; align-content: start; overflow-y: auto;
@@ -32,7 +31,6 @@
     }
     .app-name { font-size: 10px; color: #ddd; text-align: center; }
 
-    /* نافذة تطبيق الواتساب */
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #111b21; display: none; flex-direction: column; z-index: 50; color: #e9edef;
@@ -44,10 +42,13 @@
     }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
 
-    /* --- تصميم الواتساب الأصلي 100% ---[span_5](start_span)[span_5](end_span) */
+    /* تصميم الواتساب */
     .wa-header { background: #1f2c34; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
     .wa-title { font-size: 16px; font-weight: bold; color: #e9edef; }
-    .wa-icons { display: flex; gap: 15px; font-size: 16px; color: #aebac1; cursor: pointer; }
+    .wa-icons { display: flex; gap: 12px; font-size: 14px; color: #aebac1; align-items: center; }
+    
+    /* زر يا فرشخسوسو خايس المميز في الهيدر */
+    .special-btn { background: #880000; color: #fff; border: 1px solid #ff4757; padding: 3px 6px; border-radius: 5px; font-size: 8px; font-weight: bold; cursor: pointer; }
     
     .wa-search-bar { background: #111b21; padding: 8px 12px; }
     .wa-search-input { width: 100%; background: #202c33; border: none; border-radius: 8px; padding: 7px 12px; color: #fff; font-size: 11px; outline: none; }
@@ -66,7 +67,7 @@
     .wa-nav-item.active { color: #00a884; font-weight: bold; }
     .wa-nav-icon { font-size: 16px; }
 
-    /* نافذة المحادثة الداخلية للواتساب */
+    /* محادثة الواتساب الداخلية */
     .wa-chat-room { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0b141a; display: none; flex-direction: column; z-index: 60; }
     .wa-room-header { background: #1f2c34; padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
     .wa-room-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
@@ -79,9 +80,9 @@
 <body>
 
   <div class="phone-body">
-    <div class="phone screen">
+    <div class="phone-screen">
       
-      <!-- الشاشة الرئيسية النظيفة -->
+      <!-- الشاشة الرئيسية -->
       <div class="home-screen" id="homeScreen">
         <div class="app-icon" onclick="openWhatsApp()">
           <div class="icon-box" style="background:#25D366;">💬</div>
@@ -89,74 +90,35 @@
         </div>
       </div>
 
-      <!-- تطبيق الواتساب الجديد بالكامل -->
+      <!-- تطبيق الواتساب -->
       <div class="app-window active" id="whatsappApp" style="display:flex;">
-        <!-- رأس الواتساب -->
         <div class="wa-header">
           <span class="wa-title">واتساب</span>
           <div class="wa-icons">
+            <!-- زر يا فرشخسوسو خايس المطلوب -->
+            <button class="special-btn" onclick="alert('تم تفعيل وضع: يا فرشخسوسو خايس بنجاح! 🤣🔥')">يا فرشخسوسو خايس</button>
             <span>📷</span>
             <span>🔍</span>
-            <span onclick="alert('الإعدادات والمساعدة')">⋮</span>
           </div>
         </div>
 
-        <!-- شريط البحث (يدعم الأسماء والأرقام الحقيقية)[span_6](start_span)[span_6](end_span) -->
         <div class="wa-search-bar">
-          <input type="text" id="waSearchInput" class="wa-search-input" placeholder="اسأل Meta AI أو ابحث برقم الجوال/الاسم..." oninput="filterWhatsAppChats(this.value)">
+          <input type="text" id="waSearchInput" class="wa-search-input" placeholder="ابحث برقم الجوال أو الاسم..." oninput="filterWhatsAppChats(this.value)">
         </div>
 
-        <!-- جسم القائمة -->
         <div class="wa-body" id="waBodyContent">
           <div id="waChatsList">
-            <!-- Meta AI -->
-            <div class="wa-chat-item" onclick="openWaChat('Meta AI', '🤖')">
-              <div class="wa-avatar" style="background:linear-gradient(135deg, #8a2be2, #ff1493);">✨</div>
+            <!-- محادثة شريك الحب والحمار الجديدة -->
+            <div class="wa-chat-item" onclick="openWaChat('شريك الحب. والحمار.', '🟢🐴')">
+              <div class="wa-avatar" style="background:linear-gradient(135deg, #27ae60, #d35400);">🟢</div>
               <div class="wa-chat-info">
-                <div class="wa-chat-name">Meta AI <span class="wa-chat-time">الآن</span></div>
-                <div class="wa-chat-msg">مرحباً! أنا مساعدك الذكي في واتساب...</div>
-              </div>
-            </div>
-
-            <!-- Lordini Fatini -->
-            <div class="wa-chat-item" onclick="openWaChat('LORDINI FATINI', '🦁')">
-              <div class="wa-avatar">🦁</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">LORDINI FATINI <span class="wa-chat-time">١٢:٣٠ ص</span></div>
-                <div class="wa-chat-msg">يطول بس على الاقل مو حمار زي جيميناي</div>
-              </div>
-            </div>
-
-            <!-- بطولة الألعاب العالمية -->
-            <div class="wa-chat-item" onclick="openWaChat('بطولة الألعاب العالمية', '🎮')">
-              <div class="wa-avatar">🎮</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">بطولة الألعاب العالمية <span class="wa-chat-time">١٢:٣٠ ص</span></div>
-                <div class="wa-chat-msg">✓ أنت: .</div>
-              </div>
-            </div>
-
-            <!-- إبراهيم -->
-            <div class="wa-chat-item" onclick="openWaChat('إبراهيم', '👤')">
-              <div class="wa-avatar">👤</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">إبراهيم <span class="wa-chat-time">امس</span></div>
-                <div class="wa-chat-msg">✓✓ ضفت شات للعبة</div>
-              </div>
-            </div>
-
-            <!-- محمد -->
-            <div class="wa-chat-item" onclick="openWaChat('محمد', '1️⃣')">
-              <div class="wa-avatar" style="background:#00a884; color:#000; font-weight:bold;">1</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">محمد <span class="wa-chat-time">امس</span></div>
-                <div class="wa-chat-msg">✓ goku-online.zip</div>
+                <div class="wa-chat-name">شريك الحب. والحمار. <span class="wa-chat-time">الآن</span></div>
+                <div class="wa-chat-msg">الحمار: يا شريك وين الفطور الملعون؟ 🐴😂</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- شريط التنقل السفلي الأصلي 100%[span_7](start_span)[span_7](end_span) -->
         <div class="wa-footer-nav">
           <div class="wa-nav-item" onclick="switchWaTab(this, 'calls')">
             <span class="wa-nav-icon">📞</span>
@@ -167,7 +129,7 @@
             <span>المجتمعات</span>
           </div>
           <div class="wa-nav-item" onclick="switchWaTab(this, 'updates')">
-            <span class="wa-nav-icon" style="position:relative;">⭕<span style="position:absolute; top:0; right:0; width:6px; height:6px; background:#00a884; border-radius:50%;"></span></span>
+            <span class="wa-nav-icon">⭕</span>
             <span>التحديثات</span>
           </div>
           <div class="wa-nav-item active" onclick="switchWaTab(this, 'chats')">
@@ -176,15 +138,15 @@
           </div>
         </div>
 
-        <!-- نافذة المحادثة الداخلية للواتساب -->
+        <!-- غرفة الشات -->
         <div class="wa-chat-room" id="waChatRoom">
           <div class="wa-room-header">
             <button onclick="closeWaChat()" style="background:none; border:none; color:#fff; font-size:14px; cursor:pointer;">◀</button>
-            <div class="wa-avatar" id="roomAvatar" style="width:32px; height:32px; font-size:14px;">🤖</div>
-            <div style="flex:1;"><b id="roomTitle" style="font-size:12px; color:#e9edef;">Meta AI</b><br><span style="font-size:9px; color:#8696a0;">متصل الآن</span></div>
+            <div class="wa-avatar" id="roomAvatar" style="width:32px; height:32px; font-size:14px;">🟢</div>
+            <div style="flex:1;"><b id="roomTitle" style="font-size:12px; color:#e9edef;">شريك الحب. والحمار.</b><br><span style="font-size:9px; color:#8696a0;">متصل الآن</span></div>
           </div>
           <div class="wa-room-messages" id="waRoomMessagesBox">
-            <div class="wa-bubble wa-bubble-in">أهلاً بك! أنا مساعد Meta AI الذكي في واتساب[span_8](start_span)[span_8](end_span). كيف أساعدك اليوم؟</div>
+            <div class="wa-bubble wa-bubble-in">أهلاً بك في محادثة شريك الحب والحمار! اطلب اللي تبيه يا أسطورة[span_1](start_span)[span_1](end_span).</div>
           </div>
           <div class="wa-room-input-area">
             <input type="text" id="waMsgInput" placeholder="اكتب رسالة..." style="flex:1; background:#2a3942; border:none; padding:7px 10px; border-radius:20px; color:#fff; font-size:11px; outline:none;" onkeypress="handleWaEnter(event)">
@@ -213,45 +175,23 @@
       if(tabName === 'chats') {
         bodyBox.innerHTML = `
           <div id="waChatsList">
-            <div class="wa-chat-item" onclick="openWaChat('Meta AI', '🤖')">
-              <div class="wa-avatar" style="background:linear-gradient(135deg, #8a2be2, #ff1493);">✨</div>
+            <div class="wa-chat-item" onclick="openWaChat('شريك الحب. والحمار.', '🟢🐴')">
+              <div class="wa-avatar" style="background:linear-gradient(135deg, #27ae60, #d35400);">🟢</div>
               <div class="wa-chat-info">
-                <div class="wa-chat-name">Meta AI <span class="wa-chat-time">الآن</span></div>
-                <div class="wa-chat-msg">مرحباً! أنا مساعدك الذكي في واتساب...</div>
-              </div>
-            </div>
-            <div class="wa-chat-item" onclick="openWaChat('LORDINI FATINI', '🦁')">
-              <div class="wa-avatar">🦁</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">LORDINI FATINI <span class="wa-chat-time">١٢:٣٠ ص</span></div>
-                <div class="wa-chat-msg">يطول بس على الاقل مو حمار زي جيميناي</div>
-              </div>
-            </div>
-            <div class="wa-chat-item" onclick="openWaChat('بطولة الألعاب العالمية', '🎮')">
-              <div class="wa-avatar">🎮</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">بطولة الألعاب العالمية <span class="wa-chat-time">١٢:٣٠ ص</span></div>
-                <div class="wa-chat-msg">✓ أنت: .</div>
-              </div>
-            </div>
-            <div class="wa-chat-item" onclick="openWaChat('إبراهيم', '👤')">
-              <div class="wa-avatar">👤</div>
-              <div class="wa-chat-info">
-                <div class="wa-chat-name">إبراهيم <span class="wa-chat-time">امس</span></div>
-                <div class="wa-chat-msg">✓✓ ضفت شات للعبة</div>
+                <div class="wa-chat-name">شريك الحب. والحمار. <span class="wa-chat-time">الآن</span></div>
+                <div class="wa-chat-msg">الحمار: يا شريك وين الفطور الملعون؟ 🐴😂</div>
               </div>
             </div>
           </div>`;
       } else if(tabName === 'updates') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>الحالات</b><br><br>• حالتي (إضافة حالة جديدة)<br><br><b>القنوات</b><br>• قناة تحديثات الواتساب الرسمية</div>`;
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>الحالات</b><br><br>• حالة شريك: قاعد في المستنقع ومقفل جوالي.</div>`;
       } else if(tabName === 'communities') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>المجتمعات</b><br><br>إدارة مجتمعاتك ومجموعاتك المرتبطة بسهولة.</div>`;
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>المجتمعات</b><br><br>مستنقع شريك وحماره المفضل.</div>`;
       } else if(tabName === 'calls') {
-        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>سجل المكالمات</b><br><br>📞 مكالمة صوتية فائته من Meta AI</div>`;
+        bodyBox.innerHTML = `<div style="padding:15px; font-size:11px; color:#8696a0;"><b>سجل المكالمات</b><br><br>📞 مكالمة فائتة من الحمار.</div>`;
       }
     }
 
-    /* بحث واتساب الذكي الذي يدعم الأرقام الحقيقية[span_9](start_span)[span_9](end_span) */
     function filterWhatsAppChats(query) {
       let q = query.trim();
       let bodyBox = document.getElementById('waBodyContent');
@@ -262,18 +202,18 @@
 
       bodyBox.innerHTML = `
         <div style="padding:10px;">
-          <div style="font-size:10px; color:#8696a0; margin-bottom:5px;">نتائج البحث عن الرقم/الاسم: "${q}"</div>
+          <div style="font-size:10px; color:#8696a0; margin-bottom:5px;">نتائج البحث: "${q}"</div>
           <div class="wa-chat-item" onclick="openWaChat('${q}', '📱')">
             <div class="wa-avatar" style="background:#00a884;">📞</div>
             <div class="wa-chat-info">
               <div class="wa-chat-name">${q} <span class="wa-chat-time">رقم حقيقي</span></div>
-              <div class="wa-chat-msg">اضغط لبدء محادثة فورية مع هذا الرقم</div>
+              <div class="wa-chat-msg">اضغط لبدء محادثة فورية</div>
             </div>
           </div>
         </div>`;
     }
 
-    let activeWaContact = "Meta AI";
+    let activeWaContact = "شريك الحب. والحمار.";
     function openWaChat(name, avatarSymbol) {
       activeWaContact = name;
       document.getElementById('roomTitle').innerText = name;
@@ -298,9 +238,9 @@
       msgBox.scrollTop = msgBox.scrollHeight;
 
       setTimeout(() => {
-        let reply = `أهلاً بك! لقد استلمت رسالتك في شات (${activeWaContact}): "${text}". الواتساب يعمل بكامل طاقته وبدون أي تعليق! 🚀`;
-        if(activeWaContact === 'Meta AI') {
-          reply = `🤖 Meta AI: تحليل رسالتك "${text}" تم بنجاح. أنا جاهز لأي استفسار تريده!`;
+        let reply = `شريك والحمار يردان عليك بخصوص "${text}": هههههه كفو يا محمد يا أسطورة[span_2](start_span)[span_2](end_span)!`;
+        if(activeWaContact !== "شريك الحب. والحمار.") {
+          reply = `تم استقبال رسالتك للرقم (${activeWaContact}): "${text}" بنجاح! 🚀`;
         }
         msgBox.innerHTML += `<div class="wa-bubble wa-bubble-in">${reply}</div>`;
         msgBox.scrollTop = msgBox.scrollHeight;

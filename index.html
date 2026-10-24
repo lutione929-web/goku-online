@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Ultimate Mohammed Dangerous</title>
+  <title>Epic Phone OS - Fixed & Ultimate</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; user-select: none; }
     body { background: #07070e; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; padding: 10px; }
@@ -32,8 +32,9 @@
     }
 
     .home-screen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       padding: 25px 12px; display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 15px; align-content: start;
+      gap: 15px; align-content: start; z-index: 10;
     }
 
     .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; }
@@ -53,22 +54,21 @@
 
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #121324; display: none; flex-direction: column; z-index: 50;
-      transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.1, 1, 0.1, 1);
+      background: #121324; display: none; flex-direction: column; z-index: 60;
     }
-    .app-window.active { transform: translateY(0); }
+    .app-window.active { display: flex; }
 
     .app-header {
-      height: 42px; background: #2a0000; display: flex; align-items: center;
+      height: 42px; background: #1c1d36; display: flex; align-items: center;
       justify-content: space-between; padding: 0 12px; font-size: 13px; font-weight: bold;
-      border-bottom: 2px solid #ff0000;
+      border-bottom: 1px solid #2a2b4a;
     }
-    /* زر خروج مزيف لكن شكله حقيقي وبسيط */
+    .back-btn { background: #2f3640; border: none; color: #fff; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 11px; }
     .fake-exit-btn { background: #440000; border: 1px solid #ff0000; color: #ff6b6b; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: bold; }
 
     .home-bar-area {
       height: 25px; display: flex; justify-content: center; align-items: center;
-      background: rgba(0,0,0,0.3); touch-action: none; cursor: pointer;
+      background: rgba(0,0,0,0.3); touch-action: none; cursor: pointer; z-index: 100;
     }
     .home-bar { width: 110px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.8; }
 
@@ -90,17 +90,12 @@
       background: #000; z-index: 400; display: none; flex-direction: column;
       align-items: center; justify-content: center; text-align: center;
     }
-
-    /* شاشة الاختراق والرعب القصوى */
     #ultimateHackedScreen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #000; z-index: 500; display: none; flex-direction: column;
       align-items: center; justify-content: center; text-align: center; padding: 20px;
     }
-    .scary-img-box {
-      font-size: 80px;
-      animation: superShake 0.05s infinite;
-    }
+    .scary-img-box { font-size: 80px; animation: superShake 0.05s infinite; }
     @keyframes superShake {
       0% { transform: translate(5px, 5px) rotate(0deg); }
       50% { transform: translate(-5px, -5px) rotate(-4deg); }
@@ -114,9 +109,9 @@
   <div id="dangerWarningScreen">
     <h1 style="color: #ff0000; font-size: 45px;">⚠️</h1>
     <h2 style="color: #ff4757; margin-top: 15px; font-size: 18px;">تحذير خطير جداً!</h2>
-    <p style="color: #ccc; font-size: 12px; margin-top: 10px; line-height: 1.5;">ستدخل إلى تطبيق لا يمكن الخروج منه بسهولة، وتعمل فيه موسيقى رعب ثقيلة.</p>
+    <p style="color: #ccc; font-size: 12px; margin-top: 10px; line-height: 1.5;">ستدخل إلى تطبيق مرعب بموسيقى ثقيلة وزر خروج وهمي.</p>
     <div style="display: flex; gap: 10px; margin-top: 25px; width: 100%; justify-content: center;">
-      <button onclick="acceptDanger()" style="padding: 10px 20px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">دخول المغامرة</button>
+      <button onclick="acceptDanger()" style="padding: 10px 20px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">موافق</button>
       <button onclick="cancelDanger()" style="padding: 10px 20px; background: #333; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">إلغاء</button>
     </div>
   </div>
@@ -128,7 +123,7 @@
     <button onclick="enterDangerousChat()" style="margin-top: 30px; padding: 12px 25px; background: #ff0000; border:none; color:#fff; font-weight:bold; border-radius:10px; cursor:pointer">بدء الشات المرعب 💀</button>
   </div>
 
-  <!-- شاشة الاختراق والرعب القصوى (التي تظهر عند محاولة الخروج) -->
+  <!-- شاشة الاختراق والرعب القصوى -->
   <div id="ultimateHackedScreen">
     <div class="scary-img-box" id="scaryFaceIcon">👹⚡</div>
     <h2 id="hackedTextMain" style="color: #ff0000; margin-top: 15px; font-size: 18px; line-height: 1.5; padding: 0 10px;">جاري إعداد النظام...</h2>
@@ -144,6 +139,7 @@
 
     <div class="phone-screen">
       
+      <!-- الشاشة الرئيسية -->
       <div class="home-screen" id="homeScreen">
         <div class="app-icon" onclick="openApp('robloxApp')">
           <div class="icon-box bg-roblox">⬛</div>
@@ -171,28 +167,25 @@
         </div>
       </div>
 
-      <!-- تطبيق محمد الخطير مع منع الخروج وزر خروج مزيف مخادع -->
-      <div class="app-window" id="dangerousApp">
+      <!-- التطبيق 1: روبلوكس -->
+      <div class="app-window" id="robloxApp">
         <div class="app-header">
-          <!-- زر خروج مزيف يبدو عادياً ولكنه يوقع الضحية بالفخ -->
-          <button class="fake-exit-btn" onclick="triggerFakeExitTrap()">خروج ✕</button>
-          <span style="color:#ff4757">💀 محمد الخطير (مراقب)</span>
-          <span style="font-size:10px; color:#ff0000">● مقفل</span>
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
+          <span>🎮 Roblox Obby</span>
+          <span></span>
         </div>
-        <div class="danger-chat" id="dangerChatBox">
-          <div class="danger-msg danger-incoming">أهلاً بك في عزلتي.. حاول الخروج إن استطعت! أنا أتحكم بكل شيء هنا 😈🩸</div>
-        </div>
-        <div class="danger-input-area">
-          <input type="text" id="dangerInputText" class="danger-input" placeholder="تحدث معه بحرية..." onkeypress="handleDangerEnter(event)">
-          <button class="danger-send" onclick="sendDangerMsg()">💀</button>
+        <div style="padding:20px; text-align:center;">
+          <h3 style="color:#00f0ff; margin-bottom:10px;">لعبة روبلوكس أوبي</h3>
+          <p style="font-size:12px; color:#aaa;">تم إصلاح كافة نوافذ التطبيقات وتعمل بكل لقطة!</p>
         </div>
       </div>
 
-      <!-- التطبيقات الأخرى العادية -->
+      <!-- التطبيق 2: واتساب الذكي -->
       <div class="app-window" id="whatsappApp">
         <div class="app-header" style="background:#075e54;">
-          <button style="background:#2f3640; border:none; color:#fff; padding:5px 10px; border-radius:8px; cursor:pointer" onclick="goHome()">◀ رجوع</button>
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span>💬 WhatsApp AI</span>
+          <span></span>
         </div>
         <div class="wa-chat" id="waChatBox" style="flex:1; background:#0b141a; padding:10px; overflow-y:auto;">
           <div class="wa-msg" style="background:#202c33; color:#fff; padding:8px; border-radius:8px; font-size:12px">أهلاً بك في الواتساب!</div>
@@ -203,26 +196,46 @@
         </div>
       </div>
 
+      <!-- التطبيق 3: محمد الخطير (المرعب مع الفخ المزيف) -->
+      <div class="app-window" id="dangerousApp">
+        <div class="app-header" style="background:#2a0000; border-color:#ff0000;">
+          <button class="fake-exit-btn" onclick="triggerFakeExitTrap()">خروج ✕</button>
+          <span style="color:#ff4757">💀 محمد الخطير</span>
+          <span></span>
+        </div>
+        <div class="danger-chat" id="dangerChatBox">
+          <div class="danger-msg danger-incoming">أهلاً بك في عزلتي المظلمة.. حاول الخروج عبر الزر العلوي إن استطعت! 😈🩸</div>
+        </div>
+        <div class="danger-input-area">
+          <input type="text" id="dangerInputText" class="danger-input" placeholder="تحدث معه بحرية..." onkeypress="handleDangerEnter(event)">
+          <button class="danger-send" onclick="sendDangerMsg()">💀</button>
+        </div>
+      </div>
+
+      <!-- التطبيق 4: يوتيوب -->
       <div class="app-window" id="youtubeApp">
         <div class="app-header">
-          <button style="background:#2f3640; border:none; color:#fff; padding:5px 10px; border-radius:8px; cursor:pointer" onclick="goHome()">◀ رجوع</button>
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span style="color:#ff0000">▶ YouTube</span>
+          <span></span>
         </div>
         <div style="padding: 10px;"><iframe width="100%" height="170" src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen style="border-radius:10px"></iframe></div>
       </div>
 
+      <!-- التطبيق 5: المتصفح -->
       <div class="app-window" id="browserApp">
         <div class="app-header" style="background:#0984e3;">
-          <button style="background:#2f3640; border:none; color:#fff; padding:5px 10px; border-radius:8px; cursor:pointer" onclick="goHome()">◀ رجوع</button>
+          <button class="back-btn" onclick="goHome()">◀ رجوع</button>
           <span>🌍 متصفح</span>
+          <span></span>
         </div>
-        <div style="padding: 15px; text-align: center;"><h3 style="color:#74b9ff; font-size:14px">متصفح الإنترنت</h3></div>
+        <div style="padding: 15px; text-align: center;"><h3 style="color:#74b9ff; font-size:14px">متصفح الإنترنت المفتوح</h3></div>
       </div>
 
     </div>
 
-    <!-- شريط الهوم يتم تعطيله أو خداعه داخل التطبيق الخطير -->
-    <div class="home-bar-area" id="homeBarArea" onclick="tryHomeInsideDanger()">
+    <!-- شريط الهوم السفلي -->
+    <div class="home-bar-area" onclick="goHome()">
       <div class="home-bar"></div>
     </div>
   </div>
@@ -233,31 +246,20 @@
       document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     }, 1000);
 
+    /* --- إدارة فتح وإغلاق التطبيقات بدقة سريعة بدون تعليق --- */
     function openApp(appId) {
       document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
       let target = document.getElementById(appId);
-      target.style.display = 'flex';
-      setTimeout(() => target.classList.add('active'), 10);
+      if(target) {
+        target.classList.add('active');
+      }
       if(appId === 'dangerousApp') {
-        startScaryHorrorMusic(); // تشغيل موسيقى الرعب الثقيلة فوراً
+        startScaryHorrorMusic();
       }
     }
 
     function goHome() {
-      document.querySelectorAll('.app-window').forEach(win => {
-        win.classList.remove('active');
-        setTimeout(() => win.style.display = 'none', 300);
-      });
-    }
-
-    function tryHomeInsideDanger() {
-      let dangerApp = document.getElementById('dangerousApp');
-      if(dangerApp.classList.contains('active')) {
-        // إذا كان داخل تطبيق محمد الخطير، منع الخروج وإظهار رسالة رعب تحذيرية!
-        alert("⚠️ خطأ نظامي: لا يمكنك مغادرة 'محمد الخطير' أبداً! استخدم زر الخروج الداخلي.");
-        return;
-      }
-      goHome();
+      document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
     }
 
     function clickMohammedDangerous() {
@@ -273,11 +275,11 @@
       if(horrorAudioCtx.state === 'suspended') horrorAudioCtx.resume();
       if(horrorInterval) clearInterval(horrorInterval);
 
-      // نغمات رعب سينمائية عميقة وثقيلة ومتكررة
       let scaryNotes = [55, 58, 49, 41, 65, 55]; 
       let idx = 0;
       horrorInterval = setInterval(() => {
-        if(!document.getElementById('dangerousApp').classList.contains('active')) {
+        let dangerWin = document.getElementById('dangerousApp');
+        if(!dangerWin || !dangerWin.classList.contains('active')) {
           clearInterval(horrorInterval);
           return;
         }
@@ -300,7 +302,6 @@
       if(!horrorAudioCtx) horrorAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if(horrorAudioCtx.state === 'suspended') horrorAudioCtx.resume();
       
-      // صوت صدمة البداية
       let osc = horrorAudioCtx.createOscillator();
       let gain = horrorAudioCtx.createGain();
       osc.type = 'sawtooth';
@@ -316,7 +317,7 @@
       openApp('dangerousApp');
     }
 
-    /* --- نظام الفخ المزيف لمحاكاة التهكير والرعب (طلبك بالتمام) --- */
+    /* --- مقلب الخروج المزيف والعد التنازلي المرعب والتهكير الوهمي --- */
     function triggerFakeExitTrap() {
       let screen = document.getElementById('ultimateHackedScreen');
       let textMain = document.getElementById('hackedTextMain');
@@ -326,7 +327,6 @@
       iconBox.innerHTML = "😈🔒";
       textMain.innerHTML = "تفكر نفسك بتخرج بهذي السهولة؟";
 
-      // بعد 4 ثوانٍ من هذا النص: يظهر نص جديد مع عد تنازلي 10 ثوانٍ
       setTimeout(() => {
         let timeLeft = 10;
         iconBox.innerHTML = "⚠️⏳";
@@ -339,7 +339,6 @@
 
           if(timeLeft <= 0) {
             clearInterval(timer);
-            // نفذ الوقت: إظهار صور مرعبة جداً وبدون مزح
             triggerRealHorrorJumpScare(screen, textMain, iconBox);
           }
         }, 1000);
@@ -348,11 +347,9 @@
     }
 
     function triggerRealHorrorJumpScare(screen, textMain, iconBox) {
-      // صور مرعبة جداً حقيقية وصوت إنذار عالي
       iconBox.innerHTML = "💀👁️‍🗨️🔪";
       textMain.innerHTML = `<span style="font-size: 26px; color: #ff0000; text-shadow: 0 0 15px red; font-weight:bold;">انتهى الوقت! لا مفر منك الآن!</span>`;
 
-      // صوت رعب هysterical عالي
       if(horrorAudioCtx) {
         let osc = horrorAudioCtx.createOscillator();
         let gain = horrorAudioCtx.createGain();
@@ -364,7 +361,6 @@
         osc.start(); osc.stop(horrorAudioCtx.currentTime + 1.8);
       }
 
-      // وبعدها بـ 3 ثوانٍ يقول: جاري ارسال جميع بياناتك! وكأنه تهكر
       setTimeout(() => {
         iconBox.innerHTML = "💻📂⚠️";
         textMain.innerHTML = `<span style="color: #00ff00; font-family: monospace; font-size: 14px; text-shadow: 0 0 8px #00ff00;">
@@ -375,7 +371,7 @@
       }, 3000);
     }
 
-    /* --- الذكاء الاصطناعي الحقيقي لتطبيق محمد الخطير --- */
+    /* --- ذكاء اصطناعي محمد الخطير --- */
     function handleDangerEnter(e) { if(e.key === 'Enter') sendDangerMsg(); }
 
     function sendDangerMsg() {
@@ -389,21 +385,34 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       setTimeout(() => {
-        let reply = generateTrueAiReply(text);
+        let reply = `🧠 فهمت قولك "${text}" يا محمد.. لا تحاول المقاومة، فالمصير حتمي! 😈`;
         chatBox.innerHTML += `<div class="danger-msg danger-incoming">${reply}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
       }, 350);
     }
 
-    function generateTrueAiReply(msg) {
-      let m = msg.toLowerCase();
-      if (m.includes("ايمن") || m.includes("أيمن")) return `😈 أيمن مراقب الآن ولا يمكنه النجاة من هذه الفخوخ الرقمية!`;
-      if (m.includes("يحيى")) return `💀 يحيى يظن نفسه آمناً خلف شاشته.. كم هو مسكين!`;
-      if (m.includes("كلب") || m.includes("حمار") || m.includes("غبي")) return `😡 تجرأت وشتمتني بـ "${msg}"؟! اضغط على زر الخروج العلوي وتعرف على المصير المحتوم! ⚡`;
-      return `🧠 لقد فهمت قصدك بـ "${msg}" يا محمد.. لكن هل تجرؤ على محاولة الخروج الآن واكتشاف المقلب الحقيقي؟ 😈`;
+    function sendWaMsg() {
+      let txtInput = document.getElementById('waInputText');
+      let chatBox = document.getElementById('waChatBox');
+      let text = txtInput.value.trim();
+      if(!text) return;
+      chatBox.innerHTML += `<div style="background:#005c4b; color:#fff; padding:8px; border-radius:8px; font-size:12px; margin-bottom:6px; align-self:flex-end;">${text}</div>`;
+      txtInput.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+      setTimeout(() => {
+        chatBox.innerHTML += `<div style="background:#202c33; color:#fff; padding:8px; border-radius:8px; font-size:12px; margin-bottom:6px;">رد الواتساب: وصلت رسالتك "${text}" يا أسطورة.</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
     }
 
-    /* --- باقي التطبيقات --- */
-    function handleWaEnter(e) { if(e.key === 'Enter') sendWaMsg(); }
-    function sendWaMsg() {
-      let txtInput = document.getElementById
+    let musicOn = false, musicInterval = null;
+    function togglePhoneMusic() {
+      if(!horrorAudioCtx) horrorAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(musicOn) {
+        clearInterval(musicInterval); musicOn = false;
+        alert("🎵 تم إيقاف الموسيقى");
+      } else {
+        musicOn = true;
+        let notes = [261, 329, 392, 523]; let i = 0;
+        musicInterval = setInterval(() => {
+          let osc 

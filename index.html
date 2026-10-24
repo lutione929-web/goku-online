@@ -1,1 +1,304 @@
-socket.emit('playerJoin', { id: socket.id, name: nameVal, isDev: isDev, x: 140, y: 60, form: currentForm }, ...
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goku Fighter Online</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:5px;touch-action:none}
+    
+    #loginScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a12;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;padding:20px}
+    .login-box{background:#1e272e;border:2px solid #ff7675;padding:25px;border-radius:12px;text-align:center;width:100%;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+    .login-box h2{color:#ff7675;margin-bottom:15px;font-size:1.3rem}
+    .login-box input{width:100%;padding:10px;border-radius:8px;border:none;background:#2d3436;color:#fff;font-size:1rem;margin-bottom:12px;text-align:center}
+    .login-box button{width:100%;background:#0984e3;color:#fff;border:none;padding:10px;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:bold}
+    .error-msg{color:#d63031;font-size:0.75rem;margin-top:5px;display:block}
+
+    #shopModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200;padding:15px}
+    .shop-container{background:#1e272e;border:2px solid #f1c40f;width:100%;max-width:320px;border-radius:12px;padding:15px;text-align:center}
+    .shop-item{background:#2d3436;padding:10px;margin:8px 0;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:0.85rem}
+    .shop-btn{background:#e17055;border:none;padding:5px 10px;color:#fff;border-radius:5px;cursor:pointer;font-weight:bold}
+
+    #leaderboardModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200;padding:15px}
+    .lb-container{background:#1e272e;border:2px solid #0984e3;width:100%;max-width:320px;border-radius:12px;padding:15px;text-align:center}
+    .lb-item{background:#2d3436;padding:8px;margin:6px 0;border-radius:6px;display:flex;justify-content:space-between;align-items:center;font-size:0.8rem}
+
+    #gameUI{display:none;flex-direction:column;align-items:center;width:100%}
+
+    h1{font-size:1.1rem;margin:2px 0;background:linear-gradient(90deg,#ff7675,#fab1a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    
+    .menu-bar{display:flex;gap:5px;margin-bottom:4px}
+    .menu-btn{background:#e17055;color:#fff;border:none;padding:4px 7px;border-radius:6px;font-size:0.65rem;cursor:pointer}
+
+    #gameCanvas{background:#1e272e;border:2px solid #ff7675;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.5)}
+    
+    .stats-bar{display:flex;justify-content:space-between;width:320px;font-size:0.7rem;margin-top:3px;color:#f1c40f;font-weight:bold}
+    .ki-container{width:320px;background:#2d3436;border-radius:6px;margin-top:2px;overflow:hidden;border:1px solid #ff7675;height:12px;position:relative}
+    .ki-fill{height:100%;background:linear-gradient(90deg,#0984e3,#00cec9);width:0%;transition:width 0.2s}
+    .ki-text{position:absolute;width:100%;top:0;text-align:center;font-size:0.6rem;font-weight:bold;color:#fff}
+
+    .chat-box{width:320px;height:45px;background:#1e272e;border:1px solid #444;border-radius:6px;margin-top:4px;padding:4px;overflow-y:auto;font-size:0.7rem;text-align:right}
+    .chat-input-area{display:flex;gap:4px;width:320px;margin-top:3px}
+    .chat-input-area input{flex:1;padding:4px;border-radius:6px;border:none;background:#2d3436;color:#fff;font-size:0.7rem}
+    .chat-input-area button{background:#0984e3;color:#fff;border:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.7rem}
+
+    .joystick-area{width:320px;height:90px;background:#1e272e;border:2px dashed #ff7675;border-radius:10px;margin-top:4px;display:flex;align-items:center;justify-content:center;position:relative;user-select:none}
+    .joystick-knob{width:45px;height:45px;background:#ff7675;border-radius:50%;position:absolute;box-shadow:0 4px 10px rgba(0,0,0,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
+    
+    .action-bar{display:flex;gap:6px;margin-top:4px;width:320px;justify-content:center}
+    .btn-action{flex:1;padding:7px;border-radius:6px;border:none;color:#fff;font-weight:bold;cursor:pointer;font-size:0.75rem}
+  </style>
+</head>
+<body>
+
+  <div id="loginScreen">
+    <div class="login-box">
+      <h2>⚡ Goku Fighter Login</h2>
+      <input type="text" id="playerNameInput" placeholder="Enter name (English only)">
+      <button onclick="joinGame()">دخول اللعبة</button>
+      <span class="error-msg" id="errorMsg"></span>
+    </div>
+  </div>
+
+  <div id="shopModal">
+    <div class="shop-container">
+      <h3 style="color:#f1c40f; margin-bottom:10px;">🛒 متجر التحولات الأسطورية</h3>
+      <div style="font-size:0.8rem; margin-bottom:10px;">العملات لديك: <span id="shopCoins" style="color:#f1c40f;">50</span> 🪙</div>
+      
+      <div class="shop-item">
+        <span>⚡ Super Saiyan 2 (50 Coins)</span>
+        <button class="shop-btn" onclick="buyForm('ssj2', 50)">شراء</button>
+      </div>
+      <div class="shop-item">
+        <span>🔥 Super Saiyan Blue (100 Coins)</span>
+        <button class="shop-btn" onclick="buyForm('blue', 100)">شراء</button>
+      </div>
+      <div class="shop-item">
+        <span>🌌 Ultra Instinct (200 Coins)</span>
+        <button class="shop-btn" onclick="buyForm('ui', 200)">شراء</button>
+      </div>
+
+      <button onclick="closeShop()" style="margin-top:10px; background:#d63031; border:none; padding:6px 15px; color:#fff; border-radius:6px; cursor:pointer;">إغلاق</button>
+    </div>
+  </div>
+
+  <div id="leaderboardModal">
+    <div class="lb-container">
+      <h3 style="color:#0984e3; margin-bottom:10px;">🏆 لوحة المتصدرين (Top Kills)</h3>
+      <div id="lbList" style="max-height:180px; overflow-y:auto;"></div>
+      <button onclick="closeLeaderboard()" style="margin-top:10px; background:#d63031; border:none; padding:6px 15px; color:#fff; border-radius:6px; cursor:pointer;">إغلاق</button>
+    </div>
+  </div>
+
+  <div id="gameUI">
+    <h1>⚡ Goku Fighter Online</h1>
+    
+    <div class="menu-bar">
+      <button class="menu-btn" onclick="openShop()">🛒 المتجر</button>
+      <button class="menu-btn" onclick="openLeaderboard()" style="background:#0984e3;">🏆 المتصدرين</button>
+      <button class="menu-btn" onclick="addFriend()">👥 أصدقاء</button>
+      <button class="menu-btn" style="background:#6c5ce7" onclick="transformGoku()">🔥 التحول</button>
+    </div>
+
+    <canvas id="gameCanvas" width="320" height="150"></canvas>
+
+    <div class="stats-bar">
+      <span id="playerKillsText">⚔️ Kills: 0</span>
+      <span id="playerCoinsText">🪙 Coins: 50</span>
+      <span id="playerFormText">⚡ Form: Normal</span>
+    </div>
+
+    <div class="ki-container">
+      <div class="ki-fill" id="kiFill"></div>
+      <div class="ki-text" id="kiText">طاقة Ki: 0%</div>
+    </div>
+
+    <div class="chat-box" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <input type="text" id="msgInput" placeholder="اكتب رسالتك...">
+      <button onclick="sendChat()">إرسال</button>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-action" style="background:#6c5ce7" onclick="chargeKi()">⚡ شحن Ki</button>
+      <button class="btn-action" style="background:#d63031" onclick="useKamehameha()">💥 كامیهامیها</button>
+    </div>
+
+    <div class="joystick-area" id="joystickArea">
+      <div class="joystick-knob" id="joystickKnob">🕹️</div>
+    </div>
+  </div>
+
+  <script>
+    let socket;
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let players = {};
+    let myId = null;
+    let myName = "";
+    let isDev = false;
+    let myCoins = 50;
+    let myKills = 0;
+    let ki = 0;
+    let currentForm = 'normal';
+    let unlockedForms = ['normal', 'ssj'];
+    let moveVector = { x: 0, y: 0 };
+    let isDragging = false;
+
+    window.onload = function() {
+      const savedName = localStorage.getItem('goku_player_name');
+      if (savedName) {
+        document.getElementById('playerNameInput').value = savedName;
+        joinGame();
+      }
+    };
+
+    function joinGame() {
+      const input = document.getElementById('playerNameInput');
+      const nameVal = input.value.trim();
+      const errorSpan = document.getElementById('errorMsg');
+
+      const englishRegex = /^[A-Za-z0-9_]{3,12}$/;
+      if (!englishRegex.test(nameVal)) {
+        errorSpan.innerText = "⚠️ اسم إنجليزي غير صالح (3 لـ 12 حرف بدون مسافات أو عربي)!";
+        return;
+      }
+
+      myName = nameVal;
+      isDev = (myName.toUpperCase() === 'EPIKDEV' || myName.toUpperCase() === 'MOHAMMED');
+
+      socket = io({ reconnection: true, reconnectionAttempts: 5 });
+
+      socket.on('connect', () => {
+        myId = socket.id;
+        socket.emit('playerJoin', { id: socket.id, name: myName, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
+          if (!response.success) {
+            errorSpan.innerText = "⚠️ " + response.message;
+            socket.disconnect();
+          } else {
+            myCoins = response.coins;
+            myKills = response.kills;
+            localStorage.setItem('goku_player_name', myName);
+
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('gameUI').style.display = 'flex';
+            updateStatsUI();
+          }
+        });
+      });
+
+      socket.on('reconnect', () => {
+        if (myName) {
+          socket.emit('playerJoin', { id: socket.id, name: myName, isDev: isDev, x: 140, y: 60, form: currentForm }, (response) => {
+            if (response.success) {
+              myCoins = response.coins;
+              myKills = response.kills;
+              updateStatsUI();
+            }
+          });
+        }
+      });
+
+      initGameListeners();
+    }
+
+    function initGameListeners() {
+      socket.on('currentPlayers', (serverPlayers) => {
+        players = serverPlayers;
+        draw();
+      });
+
+      socket.on('playerMove', (data) => {
+        players[data.id] = data;
+        draw();
+      });
+
+      socket.on('playerAction', (data) => {
+        if(players[data.id]) {
+          players[data.id].form = data.form;
+          draw();
+        }
+      });
+
+      socket.on('updateLeaderboard', (list) => {
+        const lbList = document.getElementById('lbList');
+        lbList.innerHTML = '';
+        list.forEach((p, index) => {
+          let badge = p.isDev ? ' <span style="color:#f1c40f">[👑 DEV]</span>' : '';
+          lbList.innerHTML += `<div class="lb-item"><span>#${index+1} ${p.name}${badge}</span> <span>⚔️ ${p.kills} | 🪙 ${p.coins}</span></div>`;
+        });
+      });
+
+      socket.on('disconnect', (id) => {
+        if (id) {
+          delete players[id];
+          draw();
+        }
+      });
+
+      socket.on('chatMessage', (data) => {
+        const box = document.getElementById('chatMessages');
+        let badge = data.isDev ? ' <span style="color:#f1c40f">[👑 DEV]</span>' : '';
+        box.innerHTML += `<div><b>${data.name}${badge}:</b> ${data.text}</div>`;
+        box.scrollTop = box.scrollHeight;
+      });
+
+      setInterval(updateMovement, 25);
+    }
+
+    const area = document.getElementById('joystickArea');
+    const knob = document.getElementById('joystickKnob');
+
+    function handleTouch(e) {
+      e.preventDefault();
+      const rect = area.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      let dx = clientX - (rect.left + rect.width / 2);
+      let dy = clientY - (rect.top + rect.height / 2);
+      let dist = Math.sqrt(dx * dx + dy * dy);
+      let maxDist = 35;
+
+      if (dist > maxDist) {
+        dx = (dx / dist) * maxDist;
+        dy = (dy / dist) * maxDist;
+      }
+
+      knob.style.transform = `translate(${dx}px, ${dy}px)`;
+      moveVector = { x: dx / maxDist, y: dy / maxDist };
+      isDragging = true;
+    }
+
+    function endTouch() {
+      knob.style.transform = `translate(0px, 0px)`;
+      moveVector = { x: 0, y: 0 };
+      isDragging = false;
+    }
+
+    area.addEventListener('touchstart', handleTouch);
+    area.addEventListener('touchmove', handleTouch);
+    area.addEventListener('touchend', endTouch);
+
+    area.addEventListener('mousedown', (e) => {
+      window.addEventListener('mousemove', handleTouch);
+      window.addEventListener('mouseup', () => {
+        window.removeEventListener('mousemove', handleTouch);
+        endTouch();
+      }, { once: true });
+      handleTouch(e);
+    });
+
+    function updateMovement() {
+      if (!myId || !players[myId] || !isDragging) return;
+
+      const speed = 4;
+      let newX = players[myId].x + moveVector.x * speed;
+      let newY = players[myId].y + moveVector.y * speed;
+
+      const maxX = canvas.width - 25;
+      const maxY = canvas.height - 25;
+

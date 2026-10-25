@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Phonk Beat Maker</title>
+  <title>Epic Phone OS - Auto Phonk Beat Maker</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -25,20 +25,20 @@
 
     .app-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 8px;
+      margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 6px;
     }
-    .app-title { font-size: 14px; font-weight: bold; background: linear-gradient(45deg, #ff0055, #9900ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .app-title { font-size: 13px; font-weight: bold; background: linear-gradient(45deg, #ff0055, #9900ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    /* شبكة أزرار الفونك */
+    /* شبكة الأزرار */
     .pad-grid {
       flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr);
-      gap: 8px; margin-bottom: 10px;
+      gap: 8px; margin-bottom: 8px;
     }
 
     .pad-btn {
       border-radius: 12px; border: none; cursor: pointer;
       box-shadow: 0 4px 15px rgba(0,0,0,0.6); transition: transform 0.05s, filter 0.05s;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: rgba(255,255,255,0.95);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: rgba(255,255,255,0.95);
     }
     .pad-btn:active {
       transform: scale(0.9);
@@ -46,7 +46,6 @@
       box-shadow: 0 0 25px currentColor;
     }
 
-    /* ألوان وتصاميم أزرار الفونك المشتعلة */
     .p-cowbell { background: linear-gradient(135deg, #ff0055, #ff5500); color: #fff; }
     .p-808     { background: linear-gradient(135deg, #7700ff, #ff00aa); color: #ffccff; }
     .p-bass    { background: linear-gradient(135deg, #111122, #333355); color: #00ffcc; border: 1px solid #00ffcc; }
@@ -54,11 +53,21 @@
     .p-synth   { background: linear-gradient(135deg, #ffea00, #ff5500); color: #ffff99; }
     .p-kick    { background: linear-gradient(135deg, #ff0000, #880000); color: #ff9999; }
 
-    .status-bar-dj {
-      background: #141620; padding: 8px; border-radius: 8px; text-align: center; font-size: 11px; color: #ff0055; border: 1px solid #222; font-weight: bold;
+    .control-panel {
+      display: flex; gap: 6px; margin-bottom: 8px;
+    }
+    .auto-btn {
+      flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; font-size: 11px; cursor: pointer;
+      background: linear-gradient(45deg, #00ffcc, #0088ff); color: #000; box-shadow: 0 0 15px rgba(0,255,204,0.4);
+    }
+    .auto-btn.active {
+      background: linear-gradient(45deg, #ff0055, #ffaa00); color: #fff;
     }
 
-    /* شاشة تفعيل الصوت الأول */
+    .status-bar-dj {
+      background: #141620; padding: 6px; border-radius: 8px; text-align: center; font-size: 10px; color: #ff0055; border: 1px solid #222; font-weight: bold;
+    }
+
     #soundGate {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(7, 7, 11, 0.96); z-index: 100; display: flex; flex-direction: column;
@@ -71,12 +80,11 @@
 </head>
 <body>
 
-  <!-- شاشة تفعيل الصوت الإجبارية -->
   <div id="soundGate">
     <div style="font-size: 50px; margin-bottom: 10px;">🎧🔥</div>
-    <h3 style="color: #ff0055; font-size: 16px; margin-bottom: 8px;">PHONK BEAT MAKER</h3>
-    <p style="color: #aaa; font-size: 11px; margin-bottom: 20px;">اضغط الزر لتفعيل أصوات الكاوبيل (Cowbell) والباس المرعب!</p>
-    <button onclick="unlockAudio()" style="background: linear-gradient(45deg, #ff0055, #9900ff); color: #fff; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 25px rgba(255,0,85,0.6);">اضغط هنا للبدء 🔥</button>
+    <h3 style="color: #ff0055; font-size: 16px; margin-bottom: 8px;">AUTO PHONK MAKER</h3>
+    <p style="color: #aaa; font-size: 11px; margin-bottom: 20px;">اضغط لبدء العزف والتشغيل التلقائي للإيقاعات!</p>
+    <button onclick="unlockAudio()" style="background: linear-gradient(45deg, #ff0055, #9900ff); color: #fff; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 25px rgba(255,0,85,0.6);">تشغيل الاستوديو 🔥</button>
   </div>
 
   <div class="phone-body">
@@ -84,11 +92,14 @@
       
       <div class="app-window">
         <div class="app-header">
-          <span class="app-title">🔥 PHONK DRUM PAD</span>
-          <span style="font-size: 10px; color: #00ffcc;">● 140 BPM</span>
+          <span class="app-title">🔥 AUTO PHONK BEATS</span>
+          <span style="font-size: 10px; color: #00ffcc;" id="bpmBadge">● AUTO OFF</span>
         </div>
 
-        <!-- لوحة أزرار الفونك والكاوبيل -->
+        <div class="control-panel">
+          <button class="auto-btn" id="autoToggleBtn" onclick="toggleAutoPhonk()">▶ تشغيل الفونك التلقائي (AUTO BEAT)</button>
+        </div>
+
         <div class="pad-grid">
           <button class="pad-btn p-cowbell" onclick="playPhonk('cowbell1', 600, 'COWBELL HIGH')">🔔 <span>COWBELL 1</span></button>
           <button class="pad-btn p-cowbell" onclick="playPhonk('cowbell2', 450, 'COWBELL LOW')">🔔 <span>COWBELL 2</span></button>
@@ -96,6 +107,7 @@
           
           <button class="pad-btn p-bass"    onclick="playPhonk('subbass', 60, 'SUB BASS')">🔊 <span>SUB BASS</span></button>
           <button class="pad-btn p-synth"   onclick="playPhonk('darklead', 330, 'DARK LEAD')">🎹 <span>DARK LEAD</span></button>
+          
           <button class="pad-btn p-kick"    onclick="playPhonk('hardkick', 100, 'HARD KICK')">🥁 <span>HARD KICK</span></button>
           
           <button class="pad-btn p-vocal"   onclick="playPhonk('vocalchop', 500, 'VOCAL CHOP')">🎤 <span>HEY! CHOP</span></button>
@@ -107,7 +119,7 @@
           <button class="pad-btn p-cowbell" onclick="playPhonk('cowbell_drop', 300, 'COWBELL DROP')">🔥 <span>DROP BELL</span></button>
         </div>
 
-        <div class="status-bar-dj" id="djStatus">جاهز لصنع رتم الفونك المرعب! اطلق العنان 🎶</div>
+        <div class="status-bar-dj" id="djStatus">اضغط AUTO BEAT ليعزف الفونك لحاله تلقائياً! 🎶</div>
       </div>
 
     </div>
@@ -119,11 +131,13 @@
 
   <script>
     let audioCtx = null;
+    let autoInterval = null;
+    let isAutoPlaying = false;
 
     function unlockAudio() {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if(audioCtx.state === 'suspended') audioCtx.resume();
-      
+
       let osc = audioCtx.createOscillator();
       let gain = audioCtx.createGain();
       osc.frequency.setValueAtTime(440, audioCtx.currentTime);
@@ -135,6 +149,43 @@
       document.getElementById('soundGate').style.display = 'none';
     }
 
+    function toggleAutoPhonk() {
+      let btn = document.getElementById('autoToggleBtn');
+      let badge = document.getElementById('bpmBadge');
+
+      if(!isAutoPlaying) {
+        isAutoPlaying = true;
+        btn.classList.add('active');
+        btn.innerText = "⏹ إيقاف الفونك التلقائي";
+        badge.innerText = "● AUTO PLAYING";
+        
+        let step = 0;
+        let sequence = [
+          () => playPhonk('hardkick', 100, 'AUTO KICK'),
+          () => playPhonk('cowbell1', 600, 'AUTO BELL 1'),
+          () => playPhonk('subbass', 60, 'AUTO BASS'),
+          () => playPhonk('cowbell2', 450, 'AUTO BELL 2'),
+          () => playPhonk('hardkick', 100, 'AUTO KICK'),
+          () => playPhonk('phonk808', 120, 'AUTO 808'),
+          () => playPhonk('vocalchop', 500, 'AUTO HEY'),
+          () => playPhonk('cowbell_r', 750, 'AUTO BELL RUSH')
+        ];
+
+        autoInterval = setInterval(() => {
+          sequence[step % sequence.length]();
+          step++;
+        }, 220);
+
+      } else {
+        isAutoPlaying = false;
+        clearInterval(autoInterval);
+        btn.classList.remove('active');
+        btn.innerText = "▶ تشغيل الفونك التلقائي (AUTO BEAT)";
+        badge.innerText = "● AUTO OFF";
+        document.getElementById('djStatus').innerText = "تم إيقاف العزف التلقائي!";
+      }
+    }
+
     function playPhonk(type, freq, name) {
       if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -144,28 +195,24 @@
       let gain = audioCtx.createGain();
 
       if(type.includes('cowbell')) {
-        // صوت الكاوبيل (Cowbell) الأيقوني في الفونك
         osc.type = 'square';
         osc.frequency.setValueAtTime(freq, now);
         osc.frequency.exponentialRampToValueAtTime(freq * 0.8, now + 0.15);
         gain.gain.setValueAtTime(0.7, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
       } else if(type.includes('808') || type.includes('bass')) {
-        // باس فايبر مذهل (808 Phonk Slide)
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(freq * 2, now);
         osc.frequency.exponentialRampToValueAtTime(freq, now + 0.3);
         gain.gain.setValueAtTime(0.9, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
       } else if(type === 'hardkick') {
-        // كيك قوي وثقيل
         osc.type = 'sine';
         osc.frequency.setValueAtTime(150, now);
         osc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
         gain.gain.setValueAtTime(1.0, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
       } else {
-        // نغمات الليد المظلمة والمرعبة
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(freq, now);
         gain.gain.setValueAtTime(0.4, now);
@@ -177,7 +224,7 @@
       osc.start(now);
       osc.stop(now + 0.35);
 
-      document.getElementById('djStatus').innerText = `🔥 تم عزف الفونك: [ ${name} ]`;
+      document.getElementById('djStatus').innerText = `⚡ Phonk: [ ${name} ]`;
     }
   </script>
 </body>

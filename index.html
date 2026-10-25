@@ -3,110 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Montagem Eclipse - Beat Maker</title>
+  <title>Spotify Web - Real Search Player</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
-      width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(255, 0, 85, 0.6); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      width: 320px; height: 620px; background: #000; border-radius: 35px; border: 4px solid #222;
+      box-shadow: 0 0 35px rgba(29, 185, 84, 0.4); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
-      flex: 1; background: #07070b;
-      position: relative; overflow: hidden; display: flex; flex-direction: column;
+      flex: 1; background: #121212;
+      position: relative; overflow: hidden; display: flex; flex-direction: column; color: #fff;
     }
 
-    .app-window {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0b0c10; display: flex; flex-direction: column; z-index: 50; color: #fff; padding: 12px;
+    /* شتات سبوتفاي */
+    .spotify-header {
+      padding: 14px 16px 8px; background: #121212; display: flex; align-items: center; justify-content: space-between;
+    }
+    .spotify-logo { font-size: 15px; font-weight: bold; color: #1db954; display: flex; align-items: center; gap: 5px; }
+
+    .search-container {
+      padding: 0 16px 10px; background: #121212;
+    }
+    .search-box {
+      display: flex; align-items: center; background: #282828; border-radius: 20px; padding: 8px 12px; gap: 8px;
+    }
+    .search-box input {
+      background: transparent; border: none; outline: none; color: #fff; font-size: 12px; width: 100%;
+    }
+    .search-box input::placeholder { color: #b3b3b3; }
+
+    .content-area {
+      flex: 1; overflow-y: auto; padding: 0 16px;
+    }
+    .section-title { font-size: 13px; font-weight: bold; margin-bottom: 10px; color: #fff; }
+
+    /* قائمة نتائج الأغاني */
+    .song-list { display: flex; flex-direction: column; gap: 8px; padding-bottom: 80px; }
+    .song-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #181818; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s;
+    }
+    .song-item:active { background: #282828; }
+    .song-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+    .song-thumb { width: 38px; height: 38px; border-radius: 4px; background: #333; object-fit: cover; }
+    .song-details { display: flex; flex-direction: column; overflow: hidden; }
+    .song-name { font-size: 12px; font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-artist { font-size: 10px; color: #b3b3b3; }
+    .play-icon { color: #1db954; font-size: 14px; }
+
+    /* مشغل الموسيقى العائم بالأسفل */
+    .player-bar {
+      position: absolute; bottom: 0; left: 0; width: 100%; background: #282828; padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #333;
+    }
+    .player-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+    .player-thumb { width: 32px; height: 32px; border-radius: 4px; background: #444; }
+    .player-text { display: flex; flex-direction: column; }
+    .player-title { font-size: 11px; font-weight: bold; color: #fff; width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .player-artist { font-size: 9px; color: #b3b3b3; }
+
+    .player-controls { display: flex; align-items: center; gap: 12px; }
+    .ctrl-btn { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; }
+    .play-pause-btn {
+      width: 30px; height: 30px; background: #fff; color: #000; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: pointer;
     }
 
-    .app-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 6px;
-    }
-    .app-title { font-size: 11px; font-weight: bold; background: linear-gradient(45deg, #ff0055, #00f0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-    /* شبكة أزرار الفونك */
-    .pad-grid {
-      flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr);
-      gap: 8px; margin-bottom: 8px;
-    }
-
-    .pad-btn {
-      border-radius: 12px; border: none; cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.6); transition: transform 0.05s, filter 0.05s;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: rgba(255,255,255,0.95);
-    }
-    .pad-btn:active, .pad-btn.active-glow {
-      transform: scale(0.92);
-      filter: brightness(1.8);
-      box-shadow: 0 0 25px currentColor;
-    }
-
-    .p-cowbell { background: linear-gradient(135deg, #ff0055, #ff5500); color: #fff; }
-    .p-808     { background: linear-gradient(135deg, #7700ff, #ff00aa); color: #ffccff; }
-    .p-bass    { background: linear-gradient(135deg, #111122, #333355); color: #00ffcc; border: 1px solid #00ffcc; }
-    .p-vocal   { background: linear-gradient(135deg, #00f0ff, #0044ff); color: #ccffff; }
-    .p-synth   { background: linear-gradient(135deg, #ffea00, #ff5500); color: #ffff99; }
-    .p-kick    { background: linear-gradient(135deg, #ff0000, #880000); color: #ff9999; }
-
-    .control-panel {
-      display: flex; gap: 6px; margin-bottom: 8px;
-    }
-    .eclipse-btn {
-      flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; font-size: 11px; cursor: pointer;
-      background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; box-shadow: 0 0 20px rgba(255,0,85,0.5);
-    }
-    .eclipse-btn.active {
-      background: linear-gradient(45deg, #00ffcc, #0088ff); color: #000;
-    }
-
-    .status-bar-dj {
-      background: #141620; padding: 6px; border-radius: 8px; text-align: center; font-size: 10px; color: #ff0055; border: 1px solid #222; font-weight: bold;
-    }
-
-    .home-bar-area { height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); }
+    /* شريط التنقل السفلي */
+    .home-bar-area { height: 18px; display: flex; justify-content: center; align-items: center; background: #000; }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
+
+    /* شاشة السماح بالأذونات أول ما يدخل */
+    #permissionGate {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(18, 18, 18, 0.98); z-index: 100; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
   </style>
 </head>
 <body>
 
+  <!-- بوابة تفعيل أذونات الصوت الحقيقي -->
+  <div id="permissionGate">
+    <div style="font-size: 45px; margin-bottom: 10px;">🟢</div>
+    <h3 style="color: #1db954; font-size: 16px; margin-bottom: 8px;">Spotify Real Search</h3>
+    <p style="color: #b3b3b3; font-size: 11px; margin-bottom: 20px;">اضغط لتفعيل أذونات البحث والتشغيل الحقيقي لجميع الأغاني!</p>
+    <button onclick="grantPermissions()" style="background: #1db954; color: #000; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 20px rgba(29,185,84,0.5);">تفعيل ودخول 🎧</button>
+  </div>
+
   <div class="phone-body">
     <div class="phone-screen">
       
-      <div class="app-window">
-        <div class="app-header">
-          <span class="app-title">🌑 MONTAGEM ECLIPSE (SOUND ENGINE)</span>
-          <span style="font-size: 10px; color: #00ffcc;" id="eclipseBadge">● READY</span>
-        </div>
+      <div class="spotify-header">
+        <span class="spotify-logo">🟢 Spotify</span>
+        <span style="font-size: 10px; color: #b3b3b3;" id="statusText">جاهز للبحث</span>
+      </div>
 
-        <div class="control-panel">
-          <button class="eclipse-btn" id="eclipseToggleBtn" onclick="toggleLoop()">▶ تشغيل رتم Eclipse التلقائي</button>
+      <div class="search-container">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" id="searchInput" placeholder="ابحث عن أي أغنية أو فنان..." oninput="searchSongs()">
         </div>
+      </div>
 
-        <!-- أزرار الإيقاع الفورية -->
-        <div class="pad-grid">
-          <button class="pad-btn p-cowbell" id="p1" onclick="playSound(650, 'square', 'BELL HIGH')">🔔 <span>BELL HIGH</span></button>
-          <button class="pad-btn p-cowbell" id="p2" onclick="playSound(520, 'square', 'BELL LOW')">🔔 <span>BELL LOW</span></button>
-          <button class="pad-btn p-808"     id="p3" onclick="playSound(110, 'sawtooth', '808 SLIDE')">🎸 <span>808 SLIDE</span></button>
-          
-          <button class="pad-btn p-bass"    id="p4" onclick="playSound(55, 'sawtooth', 'SUB BASS')">🔊 <span>SUB BASS</span></button>
-          <button class="pad-btn p-synth"   id="p5" onclick="playSound(380, 'triangle', 'LEAD')">🎹 <span>LEAD SYNTH</span></button>
-          <button class="pad-btn p-kick"    id="p6" onclick="playSound(90, 'sine', 'HEAVY KICK')">🥁 <span>HEAVY KICK</span></button>
-          
-          <button class="pad-btn p-vocal"   id="p7" onclick="playSound(500, 'square', 'HEY CHOP')">🎤 <span>HEY! CHOP</span></button>
-          <button class="pad-btn p-808"     id="p8" onclick="playSound(800, 'square', 'RUSH BELL')">⚡ <span>RUSH BELL</span></button>
-          <button class="pad-btn p-synth"   id="p9" onclick="playSound(950, 'sawtooth', 'CREEP FX')">🌀 <span>CREEP FX</span></button>
-          
-          <button class="pad-btn p-bass"    id="p10" onclick="playSound(75, 'sawtooth', 'DIST BASS')">🔥 <span>DIST BASS</span></button>
-          <button class="pad-btn p-kick"    id="p11" onclick="playSound(240, 'triangle', 'SNARE')">💥 <span>SNARE</span></button>
-          <button class="pad-btn p-cowbell" id="p12" onclick="playSound(350, 'square', 'DROP BELL')">🔥 <span>DROP BELL</span></button>
+      <div class="content-area">
+        <div class="section-title">النتائج الشائعة والبحث</div>
+        <div class="song-list" id="songList">
+          <!-- الأغاني تظهر هنا ديناميكياً -->
         </div>
+      </div>
 
-        <div class="status-bar-dj" id="djStatus">اضغط أي زر، والصوت سيشتعل فوراً! 🎶</div>
+      <!-- مشغل الموسيقى السفلي -->
+      <div class="player-bar" id="playerBar" style="display: none;">
+        <div class="player-info">
+          <img id="playerThumb" class="player-thumb" src="" alt="">
+          <div class="player-text">
+            <span class="player-title" id="playerTitle">اختر أغنية</span>
+            <span class="player-artist" id="playerArtist">Spotify</span>
+          </div>
+        </div>
+        <div class="player-controls">
+          <button class="ctrl-btn" onclick="togglePlayPause()" id="playPauseIcon">⏸</button>
+        </div>
       </div>
 
     </div>
@@ -116,97 +137,112 @@
     </div>
   </div>
 
+  <!-- عنصر الصوت الحقيقي -->
+  <audio id="audioPlayer" onended="songEnded()"></audio>
+
   <script>
-    let audioCtx = null;
-    let isLooping = false;
-    let loopTimer = null;
+    let audio = document.getElementById('audioPlayer');
+    let currentTracks = [];
+    let isPlaying = false;
 
-    function getAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      return audioCtx;
+    function grantPermissions() {
+      audio.play().then(() => {
+        audio.pause();
+      }).catch(e => {});
+      document.getElementById('permissionGate').style.display = 'none';
+      // بحث افتراضي عند الدخول (مثل Montagem Eclipse أو فونك)
+      document.getElementById('searchInput').value = "Montagem Eclipse";
+      searchSongs();
     }
 
-    function playSound(freq, type, name) {
-      let ctx = getAudioContext();
-      let now = ctx.currentTime;
-
-      let osc = ctx.createOscillator();
-      let gain = ctx.createGain();
-
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, now);
+    // بحث حقيقي باستخدام API مجاني ومتاح للموسيقى
+    async function searchSongs() {
+      let query = document.getElementById('searchInput').value.trim();
+      if(!query) query = "phonk";
       
-      if(type === 'sine') {
-        // كيك قوي
-        osc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
-        gain.gain.setValueAtTime(1.0, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
-      } else if(type === 'square') {
-        // كاوبيل فونك
-        osc.frequency.exponentialRampToValueAtTime(freq * 0.75, now + 0.12);
-        gain.gain.setValueAtTime(0.8, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-      } else {
-        // باس وسينث
-        gain.gain.setValueAtTime(0.8, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-      }
+      document.getElementById('statusText').innerText = "جاري البحث...";
 
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.3);
-
-      document.getElementById('djStatus').innerText = `⚡ تفاعل: [ ${name} ]`;
-    }
-
-    function toggleLoop() {
-      getAudioContext();
-      let btn = document.getElementById('eclipseToggleBtn');
-      let badge = document.getElementById('eclipseBadge');
-
-      if (!isLooping) {
-        isLooping = true;
-        btn.classList.add('active');
-        btn.innerText = "⏹ إيقاف الرتم التلقائي";
-        badge.innerText = "● PLAYING";
-
-        let sequence = [
-          {f: 90, t: 'sine', id: 'p6'},
-          {f: 650, t: 'square', id: 'p1'},
-          {f: 55, t: 'sawtooth', id: 'p4'},
-          {f: 520, t: 'square', id: 'p2'},
-          {f: 90, t: 'sine', id: 'p6'},
-          {f: 110, t: 'sawtooth', id: 'p3'},
-          {f: 500, t: 'square', id: 'p7'},
-          {f: 650, t: 'square', id: 'p1'}
-        ];
-
-        let index = 0;
-        loopTimer = setInterval(() => {
-          let item = sequence[index % sequence.length];
-          let pad = document.getElementById(item.id);
-          if(pad) {
-            pad.click();
-          }
-          index++;
-        }, 160);
-
-        document.getElementById('djStatus').innerText = "🔥 رتم Eclipse البرازيلي يشتغل تلقائياً!";
-      } else {
-        isLooping = false;
-        clearInterval(loopTimer);
-        btn.classList.remove('active');
-        btn.innerText = "▶ تشغيل رتم Eclipse التلقائي";
-        badge.innerText = "● READY";
-        document.getElementById('djStatus').innerText = "تم إيقاف الرتم.";
+      try {
+        let response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=15`);
+        let data = await response.json();
+        currentTracks = data.results;
+        renderSongs(currentTracks);
+        document.getElementById('statusText').innerText = "جاهز";
+      } catch(err) {
+        document.getElementById('statusText').innerText = "خطأ في الاتصال";
       }
     }
+
+    function renderSongs(tracks) {
+      let list = document.getElementById('songList');
+      list.innerHTML = "";
+
+      if(tracks.length === 0) {
+        list.innerHTML = `<div style="color: #b3b3b3; font-size: 11px; text-align: center; margin-top: 20px;">لا توجد نتائج مطابقة</div>`;
+        return;
+      }
+
+      tracks.forEach((track, index) => {
+        let item = document.createElement('div');
+        item.className = 'song-item';
+        item.onclick = () => playSong(index);
+
+        item.innerHTML = `
+          <div class="song-info">
+            <img class="song-thumb" src="${track.artworkUrl100 || 'https://via.placeholder.com/50'}" alt="">
+            <div class="song-details">
+              <span class="song-name">${track.trackName}</span>
+              <span class="song-artist">${track.artistName}</span>
+            </div>
+          </div>
+          <span class="play-icon">▶</span>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function playSong(index) {
+      let track = currentTracks[index];
+      if(!track || !track.previewUrl) return;
+
+      audio.src = track.previewUrl;
+      audio.play().then(() => {
+        isPlaying = true;
+        document.getElementById('playerBar').style.display = 'flex';
+        document.getElementById('playerTitle').innerText = track.trackName;
+        document.getElementById('playerArtist').innerText = track.artistName;
+        document.getElementById('playerThumb').src = track.artworkUrl100;
+        document.getElementById('playPauseIcon').innerText = "⏸";
+        document.getElementById('statusText').innerText = "يعمل الآن 🟢";
+      }).catch(err => {
+        alert("يرجى التأكد من السماح بالتشغيل الصوتي!");
+      });
+    }
+
+    function togglePlayPause() {
+      if(isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        document.getElementById('playPauseIcon').innerText = "▶";
+        document.getElementById('statusText').innerText = "متوقف مؤقتاً";
+      } else {
+        audio.play();
+        isPlaying = true;
+        document.getElementById('playPauseIcon').innerText = "⏸";
+        document.getElementById('statusText').innerText = "يعمل الآن 🟢";
+      }
+    }
+
+    function songEnded() {
+      isPlaying = false;
+      document.getElementById('playPauseIcon').innerText = "▶";
+      document.getElementById('statusText').innerText = "انتهت الأغنية";
+    }
+
+    // تنفيذ بحث أولي عند تحميل الصفحة لوضع أغاني افتراضية
+    window.onload = () => {
+      // سيتم تفعيل البحث بعد النقر على زر الأذونات
+    };
   </script>
 </body>
 </html>

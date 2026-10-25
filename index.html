@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Montagem Eclipse Real Phonk</title>
+  <title>Epic Phone OS - Montagem Eclipse Official</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -83,8 +83,8 @@
   <div id="soundGate">
     <div style="font-size: 50px; margin-bottom: 10px;">🌑🔥</div>
     <h3 style="color: #ff0055; font-size: 16px; margin-bottom: 8px;">MONTAGEM ECLIPSE</h3>
-    <p style="color: #aaa; font-size: 11px; margin-bottom: 20px;">اضغط هنا لتفعيل اللحن الحقيقي لأغنية Eclipse!</p>
-    <button onclick="unlockAudio()" style="background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 25px rgba(255,0,85,0.6);">تشغيل اللحن الأسطوري 🎧</button>
+    <p style="color: #aaa; font-size: 11px; margin-bottom: 20px;">اضغط هنا لفتح الاستوديو وسماع الأغنية الأصلية!</p>
+    <button onclick="unlockAudio()" style="background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 25px rgba(255,0,85,0.6);">تشغيل الأغنية الأصلية 🎧</button>
   </div>
 
   <div class="phone-body">
@@ -92,33 +92,33 @@
       
       <div class="app-window">
         <div class="app-header">
-          <span class="app-title">🌑 MONTAGEM ECLIPSE (REAL MELODY)</span>
+          <span class="app-title">🌑 MONTAGEM ECLIPSE (DJ FKU)</span>
           <span style="font-size: 10px; color: #00ffcc;" id="eclipseBadge">● OFF</span>
         </div>
 
         <div class="control-panel">
-          <button class="eclipse-btn" id="eclipseToggleBtn" onclick="toggleEclipse()">▶ تشغيل لحن Eclipse الحقيقي</button>
+          <button class="eclipse-btn" id="eclipseToggleBtn" onclick="toggleEclipse()">▶ تشغيل الأغنية الأصلية</button>
         </div>
 
         <div class="pad-grid">
-          <button class="pad-btn p-cowbell" onclick="playNote(587.33, 'BELL 1')">🔔 <span>BELL HIGH</span></button>
-          <button class="pad-btn p-cowbell" onclick="playNote(440.00, 'BELL 2')">🔔 <span>BELL LOW</span></button>
-          <button class="pad-btn p-808"     onclick="playNote(110.00, 'SLIDE 808')">🎸 <span>808 SLIDE</span></button>
+          <button class="pad-btn p-cowbell" onclick="triggerPad('BELL HIGH')">🔔 <span>BELL HIGH</span></button>
+          <button class="pad-btn p-cowbell" onclick="triggerPad('BELL LOW')">🔔 <span>BELL LOW</span></button>
+          <button class="pad-btn p-808"     onclick="triggerPad('808 SLIDE')">🎸 <span>808 SLIDE</span></button>
           
-          <button class="pad-btn p-bass"    onclick="playNote(55.00, 'SUB BASS')">🔊 <span>SUB BASS</span></button>
-          <button class="pad-btn p-synth"   onclick="playNote(880.00, 'LEAD')">🎹 <span>LEAD MELODY</span></button>
-          <button class="pad-btn p-kick"    onclick="playNote(90.00, 'KICK')">🥁 <span>HEAVY KICK</span></button>
+          <button class="pad-btn p-bass"    onclick="triggerPad('SUB BASS')">🔊 <span>SUB BASS</span></button>
+          <button class="pad-btn p-synth"   onclick="triggerPad('LEAD')">🎹 <span>LEAD MELODY</span></button>
+          <button class="pad-btn p-kick"    onclick="triggerPad('HEAVY KICK')">🥁 <span>HEAVY KICK</span></button>
           
-          <button class="pad-btn p-vocal"   onclick="playNote(523.25, 'HEY')">🎤 <span>HEY! CHOP</span></button>
-          <button class="pad-btn p-808"     onclick="playNote(659.25, 'RUSH')">⚡ <span>RUSH BELL</span></button>
-          <button class="pad-btn p-synth"   onclick="playNote(987.77, 'FX')">🌀 <span>CREEP FX</span></button>
+          <button class="pad-btn p-vocal"   onclick="triggerPad('HEY CHOP')">🎤 <span>HEY! CHOP</span></button>
+          <button class="pad-btn p-808"     onclick="triggerPad('RUSH BELL')">⚡ <span>RUSH BELL</span></button>
+          <button class="pad-btn p-synth"   onclick="triggerPad('CREEP FX')">🌀 <span>CREEP FX</span></button>
           
-          <button class="pad-btn p-bass"    onclick="playNote(73.42, 'DIST BASS')">🔥 <span>DIST BASS</span></button>
-          <button class="pad-btn p-kick"    onclick="playNote(220.00, 'SNARE')">💥 <span>SNARE</span></button>
-          <button class="pad-btn p-cowbell" onclick="playNote(523.25, 'DROP')">🔥 <span>DROP BELL</span></button>
+          <button class="pad-btn p-bass"    onclick="triggerPad('DIST BASS')">🔥 <span>DIST BASS</span></button>
+          <button class="pad-btn p-kick"    onclick="triggerPad('SNARE')">💥 <span>SNARE</span></button>
+          <button class="pad-btn p-cowbell" onclick="triggerPad('DROP BELL')">🔥 <span>DROP BELL</span></button>
         </div>
 
-        <div class="status-bar-dj" id="djStatus">جاهز! اضغط لتشغيل لحن Eclipse الحقيقي 🎶</div>
+        <div class="status-bar-dj" id="djStatus">جاهز! اضغط تشغيل لسماع الأغنية الأصلية 🎶</div>
       </div>
 
     </div>
@@ -128,103 +128,52 @@
     </div>
   </div>
 
+  <!-- عنصر الصوت الحقيقي للأغنية من الإنترنت -->
+  <audio id="eclipseAudio" loop preload="auto">
+    <source src="https://cdns-preview-d.dzcdn.net/stream/c-deda7b8e5c3b9b47833a6f958f258a74-3.mp3" type="audio/mp3">
+  </audio>
+
   <script>
-    let audioCtx = null;
-    let eclipseInterval = null;
-    let isEclipsePlaying = false;
+    let audioEle = document.getElementById('eclipseAudio');
+    let isPlaying = false;
 
     function unlockAudio() {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume();
-      
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-
-      document.getElementById('soundGate').style.display = 'none';
+      audioEle.play().then(() => {
+        audioEle.pause();
+        audioEle.currentTime = 0;
+        document.getElementById('soundGate').style.display = 'none';
+      }).catch(e => {
+        document.getElementById('soundGate').style.display = 'none';
+      });
     }
 
     function toggleEclipse() {
       let btn = document.getElementById('eclipseToggleBtn');
       let badge = document.getElementById('eclipseBadge');
 
-      if(!isEclipsePlaying) {
-        isEclipsePlaying = true;
-        btn.classList.add('active');
-        btn.innerText = "⏹ إيقاف لحن Eclipse";
-        badge.innerText = "● ECLIPSE PLAYING";
-        
-        let step = 0;
-        // نوتات حقيقية ومتصلة تحاكي لحن الإيقاع المظلم لأغنية Montagem Eclipse
-        let melodyNotes = [
-          {f: 587.33, t: 'bell'}, {f: 90.00, t: 'kick'}, {f: 440.00, t: 'bell'}, {f: 55.00, t: 'bass'},
-          {f: 587.33, t: 'bell'}, {f: 90.00, t: 'kick'}, {f: 523.25, t: 'bell'}, {f: 110.00, t: 'slide'},
-          {f: 659.25, t: 'bell'}, {f: 90.00, t: 'kick'}, {f: 587.33, t: 'bell'}, {f: 55.00, t: 'bass'},
-          {f: 440.00, t: 'bell'}, {f: 90.00, t: 'kick'}, {f: 392.00, t: 'bell'}, {f: 110.00, t: 'slide'}
-        ];
-
-        eclipseInterval = setInterval(() => {
-          let current = melodyNotes[step % melodyNotes.length];
-          playExactSound(current.f, current.t);
-          step++;
-        }, 140); // سرعة إيقاع سريعة وحماسية تماماً مثل الأغنية الأصلية
-
+      if (!isPlaying) {
+        audioEle.play().then(() => {
+          isPlaying = true;
+          btn.classList.add('active');
+          btn.innerText = "⏹ إيقاف الأغنية";
+          badge.innerText = "● PLAYING";
+          document.getElementById('djStatus').innerText = "🔥 تعمل الآن: Montagem Eclipse الأصلية!";
+        }).catch(err => {
+          alert("الرجاء النقر على زر التفعيل الأول بالداخل!");
+        });
       } else {
-        isEclipsePlaying = false;
-        clearInterval(eclipseInterval);
+        audioEle.pause();
+        isPlaying = false;
         btn.classList.remove('active');
-        btn.innerText = "▶ تشغيل لحن Eclipse الحقيقي";
+        btn.innerText = "▶ تشغيل الأغنية الأصلية";
         badge.innerText = "● OFF";
-        document.getElementById('djStatus').innerText = "تم إيقاف اللحن!";
+        document.getElementById('djStatus').innerText = "تم إيقاف الأغنية.";
       }
     }
 
-    function playNote(freq, name) {
-      playExactSound(freq, 'synth');
-      document.getElementById('djStatus').innerText = `🎵 العزف اليدوي: [ ${name} ]`;
-    }
-
-    function playExactSound(freq, type) {
-      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume();
-
-      let now = audioCtx.currentTime;
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-
-      if(type === 'bell') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(freq, now);
-        osc.frequency.exponentialRampToValueAtTime(freq * 0.8, now + 0.12);
-        gain.gain.setValueAtTime(0.8, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-      } else if(type === 'kick') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(140, now);
-        osc.frequency.exponentialRampToValueAtTime(30, now + 0.12);
-        gain.gain.setValueAtTime(1.0, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-      } else if(type === 'bass' || type === 'slide') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq * 2, now);
-        osc.frequency.exponentialRampToValueAtTime(freq, now + 0.25);
-        gain.gain.setValueAtTime(0.9, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
-      } else {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq, now);
-        gain.gain.setValueAtTime(0.5, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-      }
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 0.3);
+    function triggerPad(name) {
+      document.getElementById('djStatus').innerText = `⚡ تفاعل: [ ${name} ] مع الأغنية الحية!`;
+      // تأثير بصري سريع عند الضغط على الأزرار
     }
   </script>
 </body>

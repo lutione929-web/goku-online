@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA RNG - Ultra Simulator</title>
+  <title>AURA RNG - Fixed Touch Edition</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; touch-action: manipulation; }
     body { background-color: #070913; color: #ffffff; min-height: 100vh; overflow-x: hidden; display: flex; justify-content: center; align-items: center; }
 
-    /* Container for Landscape / Mobile View */
     .app-container {
       width: 100vw; height: 100vh; max-width: 950px; max-height: 480px;
       background: radial-gradient(circle at center, #0f1429 0%, #060810 100%);
@@ -16,7 +15,6 @@
       position: relative; overflow: hidden; border: 1px solid #1e2942; border-radius: 12px;
     }
 
-    /* Top Stats Bar */
     .top-bar {
       height: 52px; background: rgba(13, 17, 34, 0.85); backdrop-filter: blur(10px);
       display: flex; align-items: center; justify-content: space-between;
@@ -33,7 +31,6 @@
     }
     .stat-badge .val { color: #ffffff; font-weight: 700; }
 
-    /* Center Stage / Aura Orb Display */
     .display-area {
       flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
       position: relative; padding: 10px;
@@ -45,7 +42,6 @@
     }
     .equipped-pill span { color: #38ef7d; font-weight: bold; }
 
-    /* Big Main Aura Card */
     .aura-card {
       width: 85%; max-width: 380px; height: 210px;
       background: rgba(15, 22, 41, 0.6); border: 2px solid #233257; border-radius: 20px;
@@ -54,7 +50,6 @@
       transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    /* Aura Orb Glow */
     .aura-orb {
       width: 70px; height: 70px; border-radius: 50%; background: #ffffff;
       box-shadow: 0 0 25px rgba(255, 255, 255, 0.8); margin-bottom: 12px;
@@ -67,7 +62,6 @@
       font-size: 11px; font-weight: 700; color: #a1b4e0; display: flex; gap: 8px; align-items: center;
     }
 
-    /* Bottom Control Bar */
     .bottom-controls {
       height: 75px; background: rgba(11, 15, 30, 0.95); backdrop-filter: blur(8px);
       display: flex; align-items: center; justify-content: space-between;
@@ -81,7 +75,6 @@
     }
     .btn-secondary:active { transform: scale(0.95); background: #1a243f; }
 
-    /* Main Roll Button with Cooldown */
     .roll-btn-wrapper { position: relative; }
     .roll-btn {
       background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); border: none;
@@ -98,7 +91,6 @@
       align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #00f0ff;
     }
 
-    /* Modal Screens (Shop & Inventory) */
     .modal-screen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(6, 8, 16, 0.95); backdrop-filter: blur(12px); z-index: 50;
@@ -124,7 +116,6 @@
     .shop-card .multiplier { font-size: 16px; font-weight: 900; color: #00f0ff; margin-bottom: 4px; }
     .shop-card .cost { font-size: 11px; color: #ffd700; margin-bottom: 8px; font-weight: 700; }
 
-    /* Cutscene Fullscreen Rare Drop Effect */
     .cutscene-overlay {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -140,7 +131,6 @@
 
   <div class="app-container" id="app">
     
-    <!-- Top Stats Bar -->
     <div class="top-bar">
       <div class="brand">💎 AURA <span>RNG</span></div>
       <div class="stats-group">
@@ -150,7 +140,6 @@
       </div>
     </div>
 
-    <!-- Center Display -->
     <div class="display-area">
       <div class="equipped-pill">Equipped: <span id="equippedTxt">None</span></div>
 
@@ -161,49 +150,3 @@
           <span id="rarityLabel">COMMON</span>
           <span id="rarityChance" style="color: #38ef7d;">1 in 2</span>
         </div>
-      </div>
-    </div>
-
-    <!-- Bottom Controls -->
-    <div class="bottom-controls">
-      <button class="btn-secondary" onclick="openModal('shopModal')">🛒 SHOP (LUCK)</button>
-      
-      <div class="roll-btn-wrapper">
-        <button class="roll-btn" id="rollBtn" onclick="triggerRoll()">
-          <span>ROLL</span>
-          <span style="font-size: 10px; opacity: 0.8;">AURA</span>
-        </button>
-        <div class="cooldown-overlay hidden" id="cdOverlay">2.0s</div>
-      </div>
-
-      <button class="btn-secondary" onclick="openModal('inventoryModal')">🎒 BAG</button>
-    </div>
-
-    <!-- Shop Modal (Multipliers: 2x, 4x, 6x, 8x, 10x, 50x, 100x, 188x, 250x, 1000x) -->
-    <div class="modal-screen hidden" id="shopModal">
-      <div class="modal-header">
-        <div class="modal-title">🛒 LUCK BOOST SHOP</div>
-        <button class="btn-secondary" onclick="closeModal('shopModal')">✕ CLOSE</button>
-      </div>
-      <div class="grid-container" id="shopGrid"></div>
-    </div>
-
-    <!-- Inventory Modal -->
-    <div class="modal-screen hidden" id="inventoryModal">
-      <div class="modal-header">
-        <div class="modal-title">🎒 AURA INVENTORY</div>
-        <button class="btn-secondary" onclick="closeModal('inventoryModal')">✕ CLOSE</button>
-      </div>
-      <div class="grid-container" id="inventoryGrid"></div>
-    </div>
-
-    <!-- Ultra Rare Drop Cutscene -->
-    <div class="cutscene-overlay hidden" id="cutsceneOverlay">
-      <div style="font-size: 14px; color: #ffaa00; font-weight: bold; margin-bottom: 10px;">🌟 UNBELIEVABLE DROP! 🌟</div>
-      <div class="cutscene-title" id="cutsceneTitle" style="color: #ff0055;">SUPREME</div>
-      <div style="font-size: 18px; color: #38ef7d; font-weight: 800;" id="cutsceneChance">1 in 100,000,000</div>
-    </div>
-
-  </div>
-
-  

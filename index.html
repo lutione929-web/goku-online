@@ -1,215 +1,400 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Shadow Ninja Runner - Ultimate</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
-    html, body { width: 100%; height: 100%; background: #050508; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-
-    .game-container {
-      width: 100vw; height: 100vh; background: #0a0a14; display: flex; flex-direction: column; position: relative; overflow: hidden;
-    }
-
-    .overlay-screen {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0a0a14; z-index: 100; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 20px; text-align: center;
-    }
-    .hidden { display: none !important; }
-
-    h1 { font-size: 26px; color: #00ffcc; text-shadow: 0 0 15px rgba(0,255,204,0.6); margin-bottom: 8px; }
-    p { font-size: 13px; color: #88a; margin-bottom: 15px; }
-
-    .btn {
-      background: linear-gradient(45deg, #00ffcc, #0077ff); color: #000; border: none;
-      padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 14px; cursor: pointer;
-      box-shadow: 0 0 18px rgba(0,255,204,0.4); margin: 6px;
-    }
-    .btn:active { transform: scale(0.92); }
-
-    .top-bar {
-      height: 40px; background: #10101c; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 15px; border-bottom: 1px solid #223; font-size: 12px; font-weight: bold; z-index: 20;
-    }
-
-    .game-canvas {
-      flex: 1; position: relative; background: #070710; overflow: hidden;
-    }
-
-    /* النينجا والعقبات */
-    .ninja {
-      position: absolute; left: 60px; bottom: 30px; width: 28px; height: 32px;
-      background: #00ffcc; border-radius: 6px; box-shadow: 0 0 15px #00ffcc; z-index: 10;
-    }
-    .ground {
-      position: absolute; bottom: 0; left: 0; width: 100%; height: 30px;
-      background: linear-gradient(90deg, #16162c, #222244); border-top: 2px solid #00ffcc; z-index: 5;
-    }
-    .obstacle {
-      position: absolute; bottom: 30px; width: 22px; height: 26px;
-      background: #ff0055; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 6;
-    }
-    .coin {
-      position: absolute; bottom: 70px; width: 18px; height: 18px;
-      background: #ffaa00; border-radius: 50%; box-shadow: 0 0 10px #ffaa00; z-index: 6;
-    }
-
-    /* زر القفز الكبير يملأ الشاشة لتسهيل اللعب */
-    .jump-zone {
-      height: 100px; background: #0c0c18; display: flex; align-items: center; justify-content: center;
-      border-top: 1px solid #223; z-index: 20;
-    }
-    .big-jump-btn {
-      width: 90%; max-width: 350px; height: 60px; background: linear-gradient(45deg, #00ffcc, #0088ff);
-      color: #000; font-size: 18px; font-weight: bold; border: none; border-radius: 30px;
-      box-shadow: 0 0 20px rgba(0,255,204,0.5); cursor: pointer;
-    }
-    .big-jump-btn:active { transform: scale(0.95); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Goku Fighter 2</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#05050c;color:#fff;font-family:Tahoma,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+h1{font-size:1.45rem;margin:8px 0 4px;background:linear-gradient(90deg,#f39c12,#e74c3c,#f1c40f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{font-size:.85rem;opacity:.7;margin-bottom:8px}
+#wrap{position:relative;border:3px solid #f39c12;border-radius:10px;box-shadow:0 0 28px rgba(243,156,18,.3);max-width:100%}
+canvas{display:block;max-width:100%;height:auto;border-radius:7px;background:#111}
+#hud{display:none;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:8px;font-size:.88rem;padding:0 6px}
+.box{background:rgba(255,255,255,.08);padding:5px 11px;border-radius:14px}
+.bar{height:7px;background:#333;border-radius:4px;margin-top:3px;overflow:hidden;width:90px}
+.bar>div{height:100%;border-radius:4px}
+#hpF{background:#e74c3c}#kiF{background:#3498db}
+.btns{display:none;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px;padding:0 6px}
+button{padding:9px 14px;font-size:.88rem;border:none;border-radius:20px;cursor:pointer;font-family:inherit;color:#fff}
+button:disabled{opacity:.4}
+#punchB{background:#c0392b}#kameB{background:#2980b9}#ssjB{background:#f1c40f;color:#111}
+#muiB{background:linear-gradient(90deg,#a29bfe,#74b9ff);color:#111}#menuB{background:#636e72}
+#menu{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;
+background:radial-gradient(ellipse at center,#1a1030 0%,#0a0a12 70%);border-radius:7px;padding:16px;text-align:center}
+#menu h2{font-size:1.6rem;margin-bottom:6px;color:#f1c40f}
+.mbtn{width:220px;padding:12px;margin:6px;border-radius:28px;font-size:1rem;border:2px solid transparent}
+.mbtn:active{transform:scale(.96)}
+.start{background:linear-gradient(90deg,#e67e22,#f39c12)}
+.shop{background:linear-gradient(90deg,#6c5ce7,#a29bfe)}
+.about{background:#2d3436}
+#msg{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);font-size:1.35rem;font-weight:bold;
+text-align:center;text-shadow:0 0 14px #000;z-index:30;display:none;white-space:pre-line;pointer-events:none}
+#shopO{display:none;position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:12px;border-radius:7px}
+#shopO.open{display:flex}
+.panel{background:#1e272e;border:2px solid #f39c12;border-radius:14px;padding:16px;width:min(380px,96%);max-height:90%;overflow-y:auto;text-align:center}
+.item{background:rgba(255,255,255,.07);border-radius:10px;padding:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:right}
+.help{display:none;margin:10px;font-size:.78rem;opacity:.65;text-align:center;max-width:520px;line-height:1.45}
+</style>
 </head>
 <body>
+<h1>⚡ Goku Fighter 2</h1>
+<p class="sub">موجات · تحولات · Kamehameha · متجر</p>
 
-  <div class="game-container">
-    
-    <!-- القائمة الرئيسية -->
-    <div id="mainMenu" class="overlay-screen">
-      <h1>🥷 SHADOW NINJA RUN</h1>
-      <p>اضغط للقفز وتفادي الشوك واجمع الجواهر!</p>
-      <p style="color: #ffaa00; font-weight: bold;">أعلى نتيجة: <span id="highScoreTxt">0</span></p>
-      <button class="btn" onclick="startGame()">ابدأ الجري الحماسي ⚡</button>
-    </div>
+<div id="wrap">
+<canvas id="c" width="860" height="480"></canvas>
+<div id="msg"></div>
 
-    <!-- الشريط العلوي -->
-    <div class="top-bar">
-      <span>النقاط: <span id="scoreTxt" style="color: #00ffcc;">0</span></span>
-      <span>💎 <span id="gemsTxt">0</span></span>
-      <button class="btn" style="padding: 3px 10px; font-size: 10px;" onclick="returnMenu()">قائمة</button>
-    </div>
+<div id="menu">
+  <h2>Goku Fighter 2</h2>
+  <p style="opacity:.75;margin-bottom:14px;font-size:.9rem">قاتل أمواج الأعداء وتطور قوتك</p>
+  <button class="mbtn start" onclick="startGame()">▶ ابدأ القتال</button>
+  <button class="mbtn shop" onclick="openShop()">🛒 المتجر</button>
+  <button class="mbtn about" onclick="showAbout()">ℹ عن اللعبة</button>
+  <p style="margin-top:14px;font-size:.85rem;opacity:.7">أفضل نتيجة: <span id="bestTxt">0</span></p>
+</div>
 
-    <!-- مسرح اللعبة -->
-    <div class="game-canvas" id="canvas">
-      <div class="ninja" id="ninja"></div>
-      <div class="ground"></div>
-    </div>
-
-    <!-- زر التحكم بالقفز -->
-    <div class="jump-zone">
-      <button class="big-jump-btn" ontouchstart="jumpNinja()" onclick="jumpNinja()">⬆ اضغط للقفز (Jump)</button>
-    </div>
-
+<div id="shopO">
+  <div class="panel">
+    <h2 style="color:#f1c40f;margin-bottom:8px">🛒 المتجر</h2>
+    <div style="color:#2ecc71;margin-bottom:12px">عملاتك: <span id="shopCoins">0</span></div>
+    <div id="shopList"></div>
+    <button onclick="closeShop()" style="background:#e74c3c;width:100%;margin-top:10px;border-radius:18px;padding:10px">إغلاق</button>
   </div>
+</div>
+</div>
 
-  <script>
-    let score = 0;
-    let gems = 0;
-    let highScore = 0;
-    let ny = 30;
-    let nvy = 0;
-    let isJumping = false;
-    let gameActive = false;
-    let gameInterval = null;
-    let obstacles = [];
-    let gameSpeed = 6;
+<div id="hud">
+  <div class="box">❤️ HP<div class="bar"><div id="hpF" style="width:100%"></div></div></div>
+  <div class="box">🔵 Ki<div class="bar"><div id="kiF" style="width:100%"></div></div></div>
+  <div class="box">💰 <span id="coinT">0</span></div>
+  <div class="box">النموذج: <span id="formT">Base</span></div>
+  <div class="box">الموجة: <span id="waveT">1</span></div>
+  <div class="box">النقاط: <span id="scoreT">0</span></div>
+</div>
+<div class="btns" id="gbtns">
+  <button id="punchB" onclick="doPunch()">👊 ضربة</button>
+  <button id="kameB" onclick="doKame()">💥 Kamehameha</button>
+  <button id="ssjB" onclick="goForm('ssj2')">🔥 SSJ2</button>
+  <button id="muiB" onclick="goForm('mui')">✨ MUI</button>
+  <button id="menuB" onclick="toMenu()">القائمة</button>
+</div>
+<p class="help" id="help">الأسهم/WASD حركة · مسافة ضربة · Q كامهـامهـا · E SSJ2 · R MUI</p>
 
-    window.onload = () => {
-      let saved = localStorage.getItem('ninjaRunnerSave');
-      if(saved) {
-        let data = JSON.parse(saved);
-        highScore = data.highScore || 0;
-        gems = data.gems || 0;
-      }
-      document.getElementById('highScoreTxt').innerText = highScore;
-      document.getElementById('gemsTxt').innerText = gems;
-    };
+<script>
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+const msgEl=document.getElementById('msg');
 
-    function saveGame() {
-      if(score > highScore) highScore = score;
-      localStorage.setItem('ninjaRunnerSave', JSON.stringify({ highScore, gems }));
-      document.getElementById('highScoreTxt').innerText = highScore;
-      document.getElementById('gemsTxt').innerText = gems;
+// Audio
+let actx=null;
+function audio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext);if(actx.state==='suspended')actx.resume()}
+function beep(f,d,t='square',v=.14,s=0){
+  audio();const o=actx.createOscillator(),g=actx.createGain();
+  o.type=t;o.frequency.setValueAtTime(f,actx.currentTime);
+  if(s)o.frequency.linearRampToValueAtTime(f+s,actx.currentTime+d);
+  g.gain.setValueAtTime(v,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d);
+  o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d);
+}
+
+const FORMS={
+  base:{name:'Base',power:1,speed:4.5,maxHp:100,maxKi:100,kame:1,color:'#f5c542',hair:'#1c2833'},
+  ssj2:{name:'SSJ2',power:2.6,speed:5.5,maxHp:155,maxKi:145,kame:1.9,color:'#ffd700',hair:'#f1c40f'},
+  mui:{name:'MUI',power:4.5,speed:6.5,maxHp:210,maxKi:185,kame:3,color:'#dfe6e9',hair:'#b2bec3'},
+  blue:{name:'SSB',power:5.5,speed:7,maxHp:240,maxKi:210,kame:3.6,color:'#74b9ff',hair:'#0984e3'},
+  ui:{name:'Ultra Instinct',power:7,speed:7.8,maxHp:280,maxKi:250,kame:4.5,color:'#fff',hair:'#dfe6e9'}
+};
+
+const SHOP=[
+  {id:'blue',name:'Super Saiyan Blue',price:8000,desc:'قوة زرقاء عالية'},
+  {id:'ui',name:'Ultra Instinct',price:20000,desc:'أقوى نموذج في الجزء 2'}
+];
+
+let coins=+localStorage.getItem('gf2c')||0;
+let owned=JSON.parse(localStorage.getItem('gf2o')||'["base","ssj2","mui"]');
+let best=+localStorage.getItem('gf2b')||0;
+document.getElementById('bestTxt').textContent=best;
+
+let running=false,score=0,wave=1,form='base';
+let goku,enemies=[],beams=[],parts=[];
+let keys={},pCD=0,kCD=0,inv=0,tf=false,tfT=0,tfTo=null;
+let kameCh=false,kameT=0;
+
+function save(){localStorage.setItem('gf2c',coins);localStorage.setItem('gf2o',JSON.stringify(owned));localStorage.setItem('gf2b',best)}
+function msg(t,ms=1300){msgEl.textContent=t;msgEl.style.display='block';clearTimeout(msgEl._t);msgEl._t=setTimeout(()=>msgEl.style.display='none',ms)}
+function hud(){
+  if(!goku)return;
+  const f=FORMS[form];
+  document.getElementById('hpF').style.width=Math.max(0,goku.hp/f.maxHp*100)+'%';
+  document.getElementById('kiF').style.width=Math.max(0,goku.ki/f.maxKi*100)+'%';
+  document.getElementById('formT').textContent=f.name;
+  document.getElementById('waveT').textContent=wave;
+  document.getElementById('scoreT').textContent=score;
+  document.getElementById('coinT').textContent=coins;
+  document.getElementById('ssjB').disabled=!running||tf||form!=='base'||goku.ki<30;
+  document.getElementById('muiB').disabled=!running||tf||!['base','ssj2'].includes(form)||goku.ki<50;
+  document.getElementById('kameB').disabled=!running||kCD>0||kameCh||goku.ki<30;
+  document.getElementById('punchB').disabled=!running||pCD>0;
+}
+
+function toMenu(){
+  running=false;
+  document.getElementById('menu').style.display='flex';
+  document.getElementById('hud').style.display='none';
+  document.getElementById('gbtns').style.display='none';
+  document.getElementById('help').style.display='none';
+  document.getElementById('bestTxt').textContent=best;
+}
+function showAbout(){msg('Goku Fighter 2\nقتال موجات + تحولات\nارفعها على GitHub Pages',2500)}
+function openShop(){
+  document.getElementById('shopCoins').textContent=coins;
+  const list=document.getElementById('shopList');list.innerHTML='';
+  SHOP.forEach(it=>{
+    const own=owned.includes(it.id);
+    const d=document.createElement('div');d.className='item';
+    d.innerHTML=`<div style="text-align:right"><b>${it.name}</b><br><span style="font-size:.8rem;opacity:.75">${it.desc}</span><br><span style="color:#f1c40f">${own?'✓ مملوك':it.price.toLocaleString()+' 💰'}</span></div>
+      <button style="background:${own?'#27ae60':'#6c5ce7'};padding:7px 12px;border-radius:14px" onclick="buy('${it.id}')">${own?'✓':'شراء'}</button>`;
+    list.appendChild(d);
+  });
+  document.getElementById('shopO').classList.add('open');
+}
+function closeShop(){document.getElementById('shopO').classList.remove('open')}
+function buy(id){
+  const it=SHOP.find(x=>x.id===id);if(!it||owned.includes(id))return;
+  if(coins<it.price){msg('ما يكفيك عملات!',900);return}
+  coins-=it.price;owned.push(id);save();
+  document.getElementById('shopCoins').textContent=coins;
+  openShop();msg('🎉 اشتريت '+it.name,1200);
+}
+
+const ETYPES={
+  saibaman:{hp:38,sp:1.0,dmg:8,pts:20,col:'#27ae60',lab:'Saibaman',r:17},
+  vegeta:{hp:110,sp:1.25,dmg:14,pts:70,col:'#2980b9',lab:'Vegeta',r:24},
+  frieza:{hp:150,sp:1.15,dmg:17,pts:100,col:'#a29bfe',lab:'Frieza',r:25},
+  cell:{hp:190,sp:1.1,dmg:19,pts:130,col:'#1abc9c',lab:'Cell',r:27},
+  beerus:{hp:250,sp:1.3,dmg:24,pts:190,col:'#6c5ce7',lab:'Beerus',r:28},
+  jiren:{hp:310,sp:1.2,dmg:28,pts:260,col:'#e74c3c',lab:'Jiren',r:29}
+};
+
+function spawnE(type){
+  const t=ETYPES[type]||ETYPES.saibaman;
+  enemies.push({...t,type,x:canvas.width+40+Math.random()*50,y:130+Math.random()*250,maxHp:t.hp,flash:0,atk:0});
+}
+function spawnWave(){
+  enemies=[];
+  const n=2+Math.floor(wave*1.15);
+  for(let i=0;i<n;i++){
+    let type='saibaman';
+    if(wave>=2)type=Math.random()<.4?'vegeta':'saibaman';
+    if(wave>=4)type=Math.random()<.3?'frieza':(Math.random()<.5?'vegeta':'saibaman');
+    if(wave>=6)type=Math.random()<.28?'cell':(Math.random()<.4?'frieza':'vegeta');
+    if(wave>=8)type=Math.random()<.25?'beerus':(Math.random()<.4?'cell':'frieza');
+    if(wave>=11)type=Math.random()<.22?'jiren':(Math.random()<.4?'beerus':'cell');
+    setTimeout(()=>{if(running)spawnE(type)},i*380);
+  }
+}
+
+window.addEventListener('keydown',e=>{
+  keys[e.key.toLowerCase()]=true;
+  if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()))e.preventDefault();
+  if(!running)return;
+  if(e.key===' ')doPunch();
+  if(e.key.toLowerCase()==='q')doKame();
+  if(e.key.toLowerCase()==='e')goForm('ssj2');
+  if(e.key.toLowerCase()==='r')goForm('mui');
+});
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+
+let touch=null;
+canvas.addEventListener('touchstart',e=>{
+  e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();
+  touch={x:(t.clientX-r.left)*(canvas.width/r.width),y:(t.clientY-r.top)*(canvas.height/r.height)};
+},{passive:false});
+canvas.addEventListener('touchmove',e=>{
+  e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();
+  touch={x:(t.clientX-r.left)*(canvas.width/r.width),y:(t.clientY-r.top)*(canvas.height/r.height)};
+},{passive:false});
+canvas.addEventListener('touchend',()=>touch=null);
+
+function doPunch(){
+  if(!running||pCD>0||tf)return;audio();
+  const f=FORMS[form];pCD=form==='ui'?11:form==='blue'?13:form==='mui'?15:18;
+  beep(170,.08,'square',.18,-70);goku.anim=7;
+  const range=56+f.power*5;let hit=false;
+  for(const e of enemies){
+    const dx=e.x-goku.x,dy=e.y-goku.y;
+    if(Math.hypot(dx,dy)<range+e.r&&Math.sign(dx||1)===goku.facing){
+      e.hp-=12*f.power+Math.random()*7;e.flash=6;e.x+=goku.facing*18;hit=true;
+      burst(e.x,e.y,'#fff',6);if(e.hp<=0)kill(e);
     }
+  }
+  if(hit)beep(100,.1,'sawtooth',.15,-50);
+}
+function doKame(){
+  if(!running||kCD>0||kameCh||goku.ki<30||tf)return;audio();
+  kameCh=true;kameT=0;beep(160,.45,'sawtooth',.12,350);msg('Ka...me...',500);
+}
+function fireKame(){
+  const f=FORMS[form];goku.ki-=30;kCD=75;kameCh=false;
+  beep(60,.7,'sawtooth',.22,-25);msg('HAAA!!',600);
+  const col=form==='ui'?'#fff':form==='blue'?'#74b9ff':form==='mui'?'#a29bfe':form==='ssj2'?'#feca57':'#3498db';
+  beams.push({x:goku.x+goku.facing*35,y:goku.y-4,dir:goku.facing,life:50,max:50,w:26+f.kame*9,dmg:38*f.power*f.kame,col});
+  burst(goku.x+goku.facing*40,goku.y,col,12);
+}
+function goForm(t){
+  if(!running||tf)return;
+  if(t==='ssj2'){if(form!=='base'||goku.ki<30)return;goku.ki-=30}
+  else if(t==='mui'){if(!['base','ssj2'].includes(form)||goku.ki<50)return;goku.ki-=50}
+  else if(t==='blue'){if(!owned.includes('blue')||goku.ki<55)return;goku.ki-=55}
+  else if(t==='ui'){if(!owned.includes('ui')||goku.ki<70)return;goku.ki-=70}
+  else return;
+  audio();tf=true;tfT=38;tfTo=t;
+  beep(200,.2,'sawtooth',.16,150);setTimeout(()=>beep(400,.25,'square',.14,100),150);
+  msg(t==='ssj2'?'🔥 SSJ2...':t==='mui'?'✨ MUI...':t==='blue'?'💙 SSB...':'⚪ Ultra Instinct...',700);
+  hud();
+}
+function kill(e){
+  score+=e.pts;coins+=Math.floor(e.pts/3)+4;save();
+  burst(e.x,e.y,e.col,14);enemies=enemies.filter(x=>x!==e);
+  if(!enemies.length){
+    beep(440,.1,'square',.1);setTimeout(()=>beep(554,.1,'square',.1),80);
+    msg('الموجة '+wave+' انتهت!',1100);wave++;
+    setTimeout(()=>{if(running)spawnWave()},1300);
+  }
+}
+function burst(x,y,c,n){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,life:16+Math.random()*12,c,s:2+Math.random()*3})}
 
-    function startGame() {
-      document.getElementById('mainMenu').classList.add('hidden');
-      score = 0;
-      gameSpeed = 6;
-      ny = 30;
-      nvy = 0;
-      isJumping = false;
-      gameActive = true;
-      
-      // مسح العوائق القديمة
-      document.querySelectorAll('.obstacle, .coin').forEach(e => e.remove());
-      obstacles = [];
+function drawGoku(){
+  const x=goku.x,y=goku.y,f=FORMS[form],dir=goku.facing;
+  if(form!=='base'||tf){
+    const pulse=Math.sin(Date.now()/55)*7;
+    const t=tf?tfTo:form;
+    const col=t==='ui'||t==='mui'?'rgba(255,255,255,.28)':t==='blue'?'rgba(116,185,255,.3)':'rgba(255,215,0,.3)';
+    ctx.beginPath();ctx.arc(x,y,50+pulse,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+  }
+  if(kameCh){ctx.beginPath();ctx.arc(x+dir*32,y-4,12+kameT*.9,0,Math.PI*2);ctx.fillStyle=`rgba(100,180,255,${.25+kameT/70})`;ctx.fill()}
+  // body
+  ctx.save();if(dir<0){ctx.translate(x,0);ctx.scale(-1,1);ctx.translate(-x,0)}
+  ctx.fillStyle='#e67e22';
+  ctx.fillRect(x-14,y-6,28,22);
+  ctx.fillStyle='#2980b9';ctx.fillRect(x-8,y-6,16,14);
+  ctx.fillStyle='#1a5276';ctx.fillRect(x-15,y+12,30,5);
+  // head
+  ctx.fillStyle='#f5cba7';ctx.beginPath();ctx.arc(x,y-18,13,0,Math.PI*2);ctx.fill();
+  // hair
+  ctx.fillStyle=f.hair;
+  ctx.beginPath();
+  ctx.moveTo(x-11,y-22);ctx.lineTo(x-8,y-40);ctx.lineTo(x-2,y-26);
+  ctx.lineTo(x+2,y-44);ctx.lineTo(x+6,y-26);ctx.lineTo(x+12,y-38);ctx.lineTo(x+10,y-22);
+  ctx.closePath();ctx.fill();
+  // eyes
+  ctx.fillStyle=form==='mui'||form==='ui'?'#74b9ff':'#111';
+  ctx.beginPath();ctx.arc(x-5,y-19,3,0,Math.PI*2);ctx.arc(x+5,y-19,3,0,Math.PI*2);ctx.fill();
+  // boots
+  ctx.fillStyle='#1a5276';ctx.fillRect(x-13,y+20,11,9);ctx.fillRect(x+2,y+20,11,9);
+  if(goku.anim>0){
+    ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(x+36,y,11+(7-goku.anim),0,Math.PI*2);ctx.stroke();goku.anim--;
+  }
+  ctx.restore();
+  ctx.fillStyle='#fff';ctx.font='bold 11px Tahoma';ctx.textAlign='center';
+  ctx.fillText('Goku',x,y+42);
+  if(form!=='base'){ctx.fillStyle=f.hair;ctx.font='bold 10px Tahoma';ctx.fillText(f.name,x,y+54)}
+}
+function drawEnemy(e){
+  if(e.flash>0){ctx.globalAlpha=.5+Math.sin(e.flash)*.5;e.flash--}
+  ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fillStyle=e.col;ctx.fill();
+  ctx.strokeStyle='#222';ctx.lineWidth=2;ctx.stroke();
+  if(e.type==='vegeta'){ctx.fillStyle='#2c3e50';ctx.fillRect(e.x-e.r*.7,e.y-2,e.r*1.4,e.r*.85)}
+  if(e.type==='beerus'){
+    ctx.fillStyle='#6c5ce7';
+    ctx.beginPath();ctx.moveTo(e.x-e.r*.6,e.y-e.r*.5);ctx.lineTo(e.x-e.r*.3,e.y-e.r*1.2);ctx.lineTo(e.x,e.y-e.r*.4);ctx.fill();
+    ctx.beginPath();ctx.moveTo(e.x+e.r*.6,e.y-e.r*.5);ctx.lineTo(e.x+e.r*.3,e.y-e.r*1.2);ctx.lineTo(e.x,e.y-e.r*.4);ctx.fill();
+  }
+  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(e.x-5,e.y-3,3,0,Math.PI*2);ctx.arc(e.x+5,e.y-3,3,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+  const bw=e.r*2;ctx.fillStyle='#333';ctx.fillRect(e.x-bw/2,e.y-e.r-12,bw,4);
+  ctx.fillStyle='#e74c3c';ctx.fillRect(e.x-bw/2,e.y-e.r-12,bw*(e.hp/e.maxHp),4);
+  ctx.fillStyle='#fff';ctx.font='9px Tahoma';ctx.textAlign='center';ctx.fillText(e.lab,e.x,e.y+e.r+11);
+}
+function drawBg(){
+  const g=ctx.createLinearGradient(0,0,0,canvas.height);
+  g.addColorStop(0,'#0f0c29');g.addColorStop(.55,'#302b63');g.addColorStop(1,'#24243e');
+  ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#1a1a2e';ctx.fillRect(0,canvas.height-50,canvas.width,50);
+}
 
-      if(gameInterval) clearInterval(gameInterval);
-      gameInterval = setInterval(updateGame, 20);
+function update(){
+  if(pCD>0)pCD--;if(kCD>0)kCD--;if(inv>0)inv--;
+  if(kameCh){kameT++;if(kameT>=32)fireKame()}
+  if(tf){
+    tfT--;if(tfT%2===0)burst(goku.x+(Math.random()-.5)*40,goku.y+(Math.random()-.5)*45,tfTo==='mui'||tfTo==='ui'?'#fff':'#f1c40f',2);
+    if(tfT<=0){
+      form=tfTo;const f=FORMS[form];goku.hp=Math.min(f.maxHp,goku.hp+35);
+      tf=false;tfTo=null;
+      msg(form==='ssj2'?'🔥 Super Saiyan 2!':form==='mui'?'✨ MUI!':form==='blue'?'💙 Super Saiyan Blue!':'⚪ Ultra Instinct!',1300);
+      burst(goku.x,goku.y,FORMS[form].hair,35);hud();
     }
+  }
+  const f=FORMS[form];let dx=0,dy=0;
+  if(keys['arrowleft']||keys['a'])dx-=1;if(keys['arrowright']||keys['d'])dx+=1;
+  if(keys['arrowup']||keys['w'])dy-=1;if(keys['arrowdown']||keys['s'])dy+=1;
+  if(touch){const tdx=touch.x-goku.x,tdy=touch.y-goku.y,d=Math.hypot(tdx,tdy);if(d>12){dx=tdx/d;dy=tdy/d}}
+  if(!tf&&!kameCh&&(dx||dy)){const l=Math.hypot(dx,dy)||1;goku.x+=(dx/l)*f.speed;goku.y+=(dy/l)*f.speed;if(dx)goku.facing=Math.sign(dx)}
+  goku.x=Math.max(28,Math.min(canvas.width-28,goku.x));
+  goku.y=Math.max(50,Math.min(canvas.height-65,goku.y));
+  goku.ki=Math.min(f.maxKi,goku.ki+.09*(form==='ui'?1.6:form==='blue'?1.4:1));
 
-    function returnMenu() {
-      gameActive = false;
-      if(gameInterval) clearInterval(gameInterval);
-      document.getElementById('mainMenu').classList.remove('hidden');
-      saveGame();
+  for(const e of enemies){
+    const dx=goku.x-e.x,dy=goku.y-e.y,d=Math.hypot(dx,dy)||1;
+    e.x+=(dx/d)*e.sp;e.y+=(dy/d)*e.sp;
+    if(e.atk>0)e.atk--;
+    if(d<e.r+goku.r-5&&e.atk<=0&&inv<=0&&!tf){
+      const red=form==='ui'?.4:form==='blue'?.5:form==='mui'?.6:form==='ssj2'?.75:1;
+      goku.hp-=e.dmg*red;inv=20;e.atk=36;beep(180,.12,'sawtooth',.12,-100);
+      burst(goku.x,goku.y,'#e74c3c',7);
+      if(goku.hp<=0){gameOver();return}
     }
-
-    function jumpNinja() {
-      if(!gameActive) return;
-      if(!isJumping) {
-        nvy = 13;
-        isJumping = true;
+  }
+  for(const b of beams){
+    b.life--;
+    const len=Math.min(canvas.width,60+(1-b.life/b.max)*850);
+    for(const e of[...enemies]){
+      const end=b.x+b.dir*len,minX=Math.min(b.x,end),maxX=Math.max(b.x,end);
+      if(e.x>minX-e.r&&e.x<maxX+e.r&&Math.abs(e.y-b.y)<b.w+e.r){
+        e.hp-=b.dmg*.035;e.flash=4;e.x+=b.dir*2;
+        if(Math.random()<.25)burst(e.x,e.y,b.col,2);
+        if(e.hp<=0)kill(e);
       }
     }
-
-    function updateGame() {
-      if(!gameActive) return;
-
-      // جاذبية
-      nvy -= 0.7;
-      ny += nvy;
-      if(ny <= 30) {
-        ny = 30;
-        nvy = 0;
-        isJumping = false;
-      }
-
-      let ninjaEl = document.getElementById('ninja');
-      ninjaEl.style.bottom = ny + 'px';
-
-      score += 1;
-      document.getElementById('scoreTxt').innerText = score;
-
-      // زيادة السرعة تدريجياً
-      if(score % 200 === 0) gameSpeed += 1;
-
-      // توليد عوائق وجواهر عشوائية
-      if(Math.random() < 0.02) {
-        createObstacle();
-      }
-
-      // تحريك العوائق
-      let canvas = document.getElementById('canvas');
-      let canvasWidth = canvas.clientWidth;
-
-      // تحديث مكان النينجا أفقياً للأمان
-      let obsList = document.querySelectorAll('.obstacle, .coin');
-      obsList.forEach(obs => {
-        let right = parseFloat(obs.style.right || '0');
-        right += gameSpeed;
-        obs.style.right = right + 'px';
-
-        // فحص الاصطدام بالشوك
-        if(obs.classList.contains('obstacle') && right > canvasWidth - 100 && right < canvasWidth - 50) {
-          if(ny < 55) {
-            // صدمة خسران
-            gameActive = false;
-            alert("💥 اصطدمت بالشوك! انتهت اللعبة. نقاطك: " + score);
-            saveGame();
-            returnMenu();
-          }
-        }
-
-        // إزالة العناصر التي خرجت من الشاشة
-        
+  }
+  beams=beams.filter(b=>b.life>0);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.life--}
+  parts=parts.filter(p=>p.life>0);
+  hud();
+}
+function gameOver(){
+  running=false;
+  if(score>best){best=score;save()}
+  msg('انتهت!\nالنقاط: '+score+'\nالموجة: '+wave,3000);
+  setTimeout(toMenu,2600);
+}
+function startGame(){
+  audio();
+  document.getElementById('menu').style.display='none';
+  document.getElementById('hud').style.display='flex';
+  document.getElementById('gbtns').style.display='flex';
+  document.getElementById('help').style.display='block';
+  running=true;score=0;wave=1;form='base';
+  goku={x:140,y:300,r:30,hp:100,ki:100,facing:1,anim:0};
+  enemies=[];beams=[];parts=[];pCD=kCD=inv=0;tf=false;kameCh=false;
+  msg('ابدأ!',800);spawnWave();requestAnimationFrame(loop);
+}
+function loop(){
+  if(!running){drawBg();return}
+  update();drawBg();
+  for(const b of beams){
+    const len=Math.min(canvas.width,60+(1-b.life/b.max)*850);
+    const gr=ctx.createLinearGradient(b.x,b.y,b.x+b.dir*len,b.y);
+    gr.addColorStop(0,b.col);gr.addColorStop(.5,'#fff');gr.addColorStop(1,b.col);
+    ctx.fillStyle=gr;c

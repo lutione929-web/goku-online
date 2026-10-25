@@ -3,96 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Level Devil - Ultimate Edition</title>
+  <title>Level Devil - Ultimate Mobile Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
-    body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+    html, body { width: 100%; height: 100%; background: #07070d; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 
-    /* حاوية العرض الأفقية للجوال */
-    .game-container {
-      width: 100vw; height: 100vh; max-width: 900px; max-height: 450px; background: #111;
-      position: relative; overflow: hidden; display: flex; flex-direction: column; border: 3px solid #333;
+    /* شاشة اللعبة الحاكمة بالكامل */
+    .game-screen-container {
+      width: 100vw; height: 100vh; background: #0f0f1b; display: flex; flex-direction: column; position: relative; overflow: hidden;
     }
 
-    /* الشاشات والقوائم */
-    .screen {
+    /* الشاشات التفاعلية (دخول / قائمة / متجر) */
+    .overlay-screen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0f0f1a; z-index: 50; display: flex; flex-direction: column;
+      background: #0f0f1b; z-index: 100; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 20px; text-align: center;
     }
     .hidden { display: none !important; }
 
-    h1 { font-size: 24px; color: #ff0055; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255,0,85,0.5); }
-    p { font-size: 12px; color: #aaa; margin-bottom: 15px; }
+    h1 { font-size: 26px; color: #ff0055; margin-bottom: 8px; text-shadow: 0 0 15px rgba(255,0,85,0.6); }
+    p { font-size: 13px; color: #aaa; margin-bottom: 12px; }
 
-    .btn {
+    .input-box {
+      width: 80%; max-width: 280px; padding: 12px 15px; border-radius: 20px; border: 2px solid #ff0055;
+      background: #1a1a2e; color: #fff; font-size: 14px; text-align: center; outline: none; margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+    }
+
+    .main-btn {
       background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; border: none;
-      padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 13px; cursor: pointer;
-      box-shadow: 0 0 15px rgba(255,0,85,0.4); margin: 5px;
+      padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 14px; cursor: pointer;
+      box-shadow: 0 0 18px rgba(255,0,85,0.5); margin: 4px; transition: 0.1s;
     }
-    .btn:active { transform: scale(0.95); }
+    .main-btn:active { transform: scale(0.92); }
 
-    input {
-      padding: 8px 15px; border-radius: 15px; border: 1px solid #444; background: #222; color: #fff;
-      font-size: 12px; text-align: center; margin-bottom: 10px; outline: none;
-    }
-
-    /* شريط العلوي للعبة */
+    /* الشريط العلوي */
     .top-bar {
-      height: 40px; background: #1a1a2e; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 15px; border-bottom: 2px solid #333; font-size: 12px; font-weight: bold; z-index: 10;
+      height: 42px; background: #141422; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 15px; border-bottom: 2px solid #222; font-size: 12px; font-weight: bold; z-index: 20;
     }
 
-    /* منطقة اللعب */
-    .game-canvas-area {
-      flex: 1; position: relative; background: #141422; overflow: hidden;
+    /* بيئة اللعب */
+    .game-area {
+      flex: 1; position: relative; background: #161628; overflow: hidden;
     }
 
     /* عناصر اللعبة */
     .player {
-      position: absolute; width: 24px; height: 24px; background: #00ffcc; border-radius: 6px;
-      box-shadow: 0 0 10px #00ffcc; z-index: 5;
+      position: absolute; width: 26px; height: 26px; background: #00ffcc; border-radius: 6px;
+      box-shadow: 0 0 12px #00ffcc; z-index: 10; transition: background 0.2s;
     }
-    .platform {
-      position: absolute; background: #ff5500; border-radius: 4px; z-index: 2;
-    }
-    .spike {
-      position: absolute; width: 20px; height: 16px; background: #ff0000; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 2;
-    }
-    .coin {
-      position: absolute; width: 16px; height: 16px; background: #ffea00; border-radius: 50%;
-      box-shadow: 0 0 8px #ffea00; z-index: 2; animation: bounce 0.5s infinite alternate;
-    }
-    .door {
-      position: absolute; width: 28px; height: 36px; background: #9900ff; border-radius: 4px;
-      box-shadow: 0 0 12px #9900ff; z-index: 2;
-    }
+    .platform { position: absolute; background: #ff5500; border-radius: 4px; z-index: 5; }
+    .spike { position: absolute; width: 22px; height: 18px; background: #ff0055; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 5; }
+    .coin { position: absolute; width: 18px; height: 18px; background: #ffea00; border-radius: 50%; box-shadow: 0 0 10px #ffea00; z-index: 5; }
+    .door { position: absolute; width: 32px; height: 42px; background: #9900ff; border-radius: 6px; box-shadow: 0 0 15px #9900ff; z-index: 5; }
 
-    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-4px); } }
-
-    /* أزرار التحكم السفلیة للجوال (أفقي) */
-    .controls-bar {
-      height: 55px; background: #161625; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 20px; z-index: 10; border-top: 1px solid #333;
+    /* أزرار التحكم اللمسية للجوال */
+    .controls-panel {
+      height: 65px; background: #0b0b14; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 25px; border-top: 2px solid #222; z-index: 20;
     }
-    .control-group { display: flex; gap: 10px; }
-    .ctrl-btn {
-      width: 45px; height: 38px; background: #2a2a40; color: #fff; border: 1px solid #444;
-      border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; display: flex;
-      align-items: center; justify-content: center;
+    .btn-group { display: flex; gap: 12px; }
+    .touch-btn {
+      width: 52px; height: 48px; background: #222238; color: #fff; border: 1px solid #444;
+      border-radius: 12px; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center;
     }
-    .ctrl-btn:active { background: #ff0055; }
+    .touch-btn:active { background: #ff0055; }
 
-    /* متجر وسكنات */
-    .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 15px; }
-    .shop-item { background: #1c1c2d; border: 1px solid #333; padding: 8px; border-radius: 10px; text-align: center; }
+    /* شبكة المتجر */
+    .shop-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; width: 90%; max-width: 350px; }
+    .shop-card { background: #1c1c30; border: 1px solid #333; padding: 10px; border-radius: 12px; }
   </style>
 </head>
 <body>
 
-  <div class="game-container">
+  <div class="game-screen-container">
     
-    <!-- 1. شاشة تسجيل الدخول -->
-    <div id="loginScreen" class="screen">
+    <!-- 1. شاشة الدخول المكتملة 100% -->
+    <div id="loginScreen" class="overlay-screen">
       <h1>😈 LEVEL DEVIL</h1>
-      <p>أدخل اسمك لح
+      <p>أدخل اسمك لحفظ تقدمك والـ Coins بالكامل!</p>
+      <input type="text" id="usernameInput" class="input-box" placeholder="اكتب اسمك هنا..." autocomplete="off">
+      <button class="main-btn" onclick="loginUser()">دخول واستمرار 🚀</button>
+    </div>
+
+    <!-- 2. القائمة الرئيسية -->
+    <div id="menuScreen" class="overlay-screen hidden">
+      <h1>😈 LEVEL DEVIL</h1>
+      <p id="welcomeMsg" style="color: #00ffcc; font-size: 15px; font-weight: bold;"></p>
+      <p style="font-size: 14px;">رصيدك: <span id="menuCoins" style="color: #ffea00; font-weight: bold;">🪙 0</span></p>
+      
+      <button class="main-btn" onclick="startGame(1)">بدء اللعب 🎮</button>
+      <button class="main-btn" style="background: linear-gradient(45deg, #ffea00, #ff5500); color: #000;" onclick="showScreen('shopScreen')">المتجر والسكنات 🛒</button>
+      <button class="main-btn" style="background: linear-gradient(45deg, #00f0ff, #0044ff);" onclick="showScreen('wheelScreen')">عجلة الحظ 🎡</button>
+    </div>
+
+    <!-- 3. متجر السكنات والـ Jetpack -->
+    <div id="shopScreen" class="overlay-screen hidden">
+      <h1>🛒 المتجر الخرافي</h1>
+      <p>رصيدك: <span id="shopCoins" style="color: #ffea00;">🪙 0</span></p>
+      <div class="shop-items">
+        <div class="shop-card">
+          <p style="font-size: 11px;">سكن النيون الذهبي 👑</p>
+          <button class="main-btn" style="padding: 6px 10px; font-size: 10px;" onclick="buySkin('gold', 50)">شراء (50 🪙)</button>
+        </div>
+        <div class="shop-card">
+          <p style="font-size: 11px;">سكن الشبح الأرجواني 👻</p>
+          <button class="main-btn" style="padding: 6px 10px; font-size: 10px;" onclick="buySkin('ghost', 80)">شراء (80 🪙)</button>
+        </div>
+        <div class="shop-card" style="grid-column: span 2;">
+          <p style="font-size: 11px; color: #00ffcc;">قدرة الطيران الخارقة (Jetpack) 🚀</p>
+          <button class="main

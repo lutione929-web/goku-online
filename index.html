@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA RNG Ultra Simulator</title>
+  <title>AURA RNG - Admin Infinity Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
     body, html { width: 100%; height: 100%; background: #050714; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
@@ -25,7 +25,8 @@
     .c-title { font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
     .rarity { background: #0d1324; border: 1px solid #23345a; padding: 3px 12px; border-radius: 12px; font-size: 10px; font-weight: 700; color: #a0b6e0; display: flex; gap: 6px; }
 
-    .bottom-bar { height: 85px; background: rgba(8, 12, 24, 0.98); display: flex; align-items: center; justify-content: space-around; padding: 10px; border-top: 1px solid #1a2542; }
+    /* رفعنا الشريط السفلي وزر الـ ROLL للأعلى شوي ليكون مكشوفاً تماماً */
+    .bottom-bar { height: 105px; background: rgba(8, 12, 24, 0.98); display: flex; align-items: center; justify-content: space-around; padding: 10px 10px 30px 10px; border-top: 1px solid #1a2542; }
     .btn-sec { background: #121a30; border: 1px solid #202e52; color: #9cb3e0; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; }
     .btn-sec:active { transform: scale(0.92); }
 
@@ -52,9 +53,9 @@
     <div class="top-bar">
       <div class="brand">💎 AURA <span>RNG</span></div>
       <div class="stats">
-        <div class="badge">🪙 <span id="cVal" style="color:#ffd700;">100</span></div>
+        <div class="badge">🪙 <span id="cVal" style="color:#ffd700;">Infinity</span></div>
         <div class="badge">🎲 <span id="rVal">0</span></div>
-        <div class="badge">⚡ <span id="lVal" style="color:#00f0ff;">1.0x</span></div>
+        <div class="badge">⚡ <span id="lVal" style="color:#00f0ff;">999,999,999x</span></div>
       </div>
     </div>
 
@@ -102,7 +103,7 @@
 
     <!-- Cutscene -->
     <div class="cutscene hidden" id="cutScene">
-      <div style="font-size: 12px; color: #ffaa00; font-weight: bold; margin-bottom: 6px;">🌟 EPIC DROP! 🌟</div>
+      <div style="font-size: 12px; color: #ffaa00; font-weight: bold; margin-bottom: 6px;">🌟 GOD-TIER DROP! 🌟</div>
       <div id="csTitle" style="font-size: 26px; font-weight: 900; text-transform: uppercase;">SUPREME</div>
       <div id="csChance" style="font-size: 15px; color: #38ef7d; font-weight: 800; margin-top: 5px;">1 in 100,000,000</div>
     </div>
@@ -131,24 +132,36 @@
       { m: 188, c: 15000 }, { m: 250, c: 25000 }, { m: 1000, c: 100000 }
     ];
 
-    let game = { coins: 100, rolls: 0, luck: 1.0, eq: "None", inv: {}, rolling: false };
+    let game = { coins: 999999999, rolls: 0, luck: 999999999, eq: "None", inv: {}, rolling: false };
 
     window.onload = () => {
-      let saved = localStorage.getItem('auraRngCleanSave');
-      if (saved) { try { game = Object.assign(game, JSON.parse(saved)); } catch(e){} }
+      let saved = localStorage.getItem('auraRngAdminSave');
+      if (saved) { 
+        try { 
+          game = Object.assign(game, JSON.parse(saved)); 
+          // فرض الحظ الخارق والفلوس للأبد
+          game.luck = 999999999;
+          game.coins = 999999999;
+        } catch(e){} 
+      } else {
+        game.luck = 999999999;
+        game.coins = 999999999;
+      }
       updateUI();
       buildShop();
     };
 
     function save() {
-      localStorage.setItem('auraRngCleanSave', JSON.stringify(game));
+      game.luck = 999999999; // تثبيت الحظ للأبد
+      game.coins = 999999999;
+      localStorage.setItem('auraRngAdminSave', JSON.stringify(game));
       updateUI();
     }
 
     function updateUI() {
-      document.getElementById('cVal').innerText = game.coins.toLocaleString();
+      document.getElementById('cVal').innerText = "Infinity";
       document.getElementById('rVal').innerText = game.rolls.toLocaleString();
-      document.getElementById('lVal').innerText = game.luck + 'x';
+      document.getElementById('lVal').innerText = "999M+x";
       document.getElementById('eqTxt').innerText = game.eq;
     }
 
@@ -156,7 +169,6 @@
       if (game.rolling) return;
       game.rolling = true;
       game.rolls++;
-      game.coins += Math.floor(5 * game.luck);
 
       let btn = document.getElementById('rollBtn');
       let cd = document.getElementById('cdOver');
@@ -184,12 +196,8 @@
     }
 
     function pickAura() {
-      for (let i = AURAS.length - 1; i >= 0; i--) {
-        let a = AURAS[i];
-        let eff = a.chance / game.luck;
-        if (Math.random() * eff <= 1 || i === 0) return a;
-      }
-      return AURAS[0];
+      // مع 999M حظ، ستحصل فوراً على أقوى هالة في اللعبة!
+      return AURAS[AURAS.length - 1];
     }
 
     function showAura(a) {
@@ -226,19 +234,8 @@
       let g = document.getElementById('shopGrid');
       g.innerHTML = "";
       SHOPS.forEach(s => {
-        g.innerHTML += `<div class="s-card"><div style="font-weight:900;color:#00f0ff;">${s.m}x LUCK</div><div style="font-size:11px;color:#ffd700;font-weight:700;">🪙 ${s.c.toLocaleString()}</div><button class="btn-sec" style="padding:4px 10px;font-size:10px;" onclick="buy(${s.m},${s.c})">BUY</button></div>`;
+        g.innerHTML += `<div class="s-card"><div style="font-weight:900;color:#00f0ff;">${s.m}x LUCK</div><div style="font-size:11px;color:#ffd700;font-weight:700;">FREE (ADMIN)</div><button class="btn-sec" style="padding:4px 10px;font-size:10px;" onclick="alert('أنت تمتلك أعلى حظ في الكون مسبقاً يامحمد!')">MAX</button></div>`;
       });
-    }
-
-    function buy(m, c) {
-      if (game.coins >= c) {
-        game.coins -= c;
-        game.luck = m;
-        save();
-        alert("🎉 Purchased " + m + "x Luck!");
-      } else {
-        alert("❌ Not enough coins!");
-      }
     }
 
     function buildInv() {

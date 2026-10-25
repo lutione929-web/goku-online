@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Level Devil - Ultimate Mobile Edition</title>
+  <title>Level Devil - Fixed Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     html, body { width: 100%; height: 100%; background: #07070d; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 
-    /* شاشة اللعبة الحاكمة بالكامل */
     .game-screen-container {
       width: 100vw; height: 100vh; background: #0f0f1b; display: flex; flex-direction: column; position: relative; overflow: hidden;
     }
 
-    /* الشاشات التفاعلية (دخول / قائمة / متجر) */
     .overlay-screen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #0f0f1b; z-index: 100; display: flex; flex-direction: column;
@@ -33,32 +31,27 @@
     .main-btn {
       background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; border: none;
       padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 14px; cursor: pointer;
-      box-shadow: 0 0 18px rgba(255,0,85,0.5); margin: 4px; transition: 0.1s;
+      box-shadow: 0 0 18px rgba(255,0,85,0.5); margin: 6px; transition: 0.1s;
     }
     .main-btn:active { transform: scale(0.92); }
 
-    /* الشريط العلوي */
     .top-bar {
       height: 42px; background: #141422; display: flex; align-items: center; justify-content: space-between;
       padding: 0 15px; border-bottom: 2px solid #222; font-size: 12px; font-weight: bold; z-index: 20;
     }
 
-    /* بيئة اللعب */
     .game-area {
       flex: 1; position: relative; background: #161628; overflow: hidden;
     }
 
-    /* عناصر اللعبة */
     .player {
       position: absolute; width: 26px; height: 26px; background: #00ffcc; border-radius: 6px;
-      box-shadow: 0 0 12px #00ffcc; z-index: 10; transition: background 0.2s;
+      box-shadow: 0 0 12px #00ffcc; z-index: 10;
     }
     .platform { position: absolute; background: #ff5500; border-radius: 4px; z-index: 5; }
-    .spike { position: absolute; width: 22px; height: 18px; background: #ff0055; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 5; }
     .coin { position: absolute; width: 18px; height: 18px; background: #ffea00; border-radius: 50%; box-shadow: 0 0 10px #ffea00; z-index: 5; }
     .door { position: absolute; width: 32px; height: 42px; background: #9900ff; border-radius: 6px; box-shadow: 0 0 15px #9900ff; z-index: 5; }
 
-    /* أزرار التحكم اللمسية للجوال */
     .controls-panel {
       height: 65px; background: #0b0b14; display: flex; align-items: center; justify-content: space-between;
       padding: 0 25px; border-top: 2px solid #222; z-index: 20;
@@ -70,7 +63,6 @@
     }
     .touch-btn:active { background: #ff0055; }
 
-    /* شبكة المتجر */
     .shop-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; width: 90%; max-width: 350px; }
     .shop-card { background: #1c1c30; border: 1px solid #333; padding: 10px; border-radius: 12px; }
   </style>
@@ -79,12 +71,12 @@
 
   <div class="game-screen-container">
     
-    <!-- 1. شاشة الدخول المكتملة 100% -->
+    <!-- 1. شاشة تسجيل الدخول المصلحة -->
     <div id="loginScreen" class="overlay-screen">
       <h1>😈 LEVEL DEVIL</h1>
       <p>أدخل اسمك لحفظ تقدمك والـ Coins بالكامل!</p>
-      <input type="text" id="usernameInput" class="input-box" placeholder="اكتب اسمك هنا..." autocomplete="off">
-      <button class="main-btn" onclick="loginUser()">دخول واستمرار 🚀</button>
+      <input type="text" id="usernameInput" class="input-box" value="EPIKDEV" autocomplete="off">
+      <button class="main-btn" id="loginBtn">دخول واستمرار 🚀</button>
     </div>
 
     <!-- 2. القائمة الرئيسية -->
@@ -98,7 +90,7 @@
       <button class="main-btn" style="background: linear-gradient(45deg, #00f0ff, #0044ff);" onclick="showScreen('wheelScreen')">عجلة الحظ 🎡</button>
     </div>
 
-    <!-- 3. متجر السكنات والـ Jetpack -->
+    <!-- 3. المتجر -->
     <div id="shopScreen" class="overlay-screen hidden">
       <h1>🛒 المتجر الخرافي</h1>
       <p>رصيدك: <span id="shopCoins" style="color: #ffea00;">🪙 0</span></p>
@@ -108,9 +100,38 @@
           <button class="main-btn" style="padding: 6px 10px; font-size: 10px;" onclick="buySkin('gold', 50)">شراء (50 🪙)</button>
         </div>
         <div class="shop-card">
-          <p style="font-size: 11px;">سكن الشبح الأرجواني 👻</p>
+          <p style="font-size: 11px;">سكن الشبح 👻</p>
           <button class="main-btn" style="padding: 6px 10px; font-size: 10px;" onclick="buySkin('ghost', 80)">شراء (80 🪙)</button>
         </div>
         <div class="shop-card" style="grid-column: span 2;">
-          <p style="font-size: 11px; color: #00ffcc;">قدرة الطيران الخارقة (Jetpack) 🚀</p>
-          <button class="main
+          <p style="font-size: 11px; color: #00ffcc;">قدرة الطيران (Jetpack) 🚀</p>
+          <button class="main-btn" style="padding: 8px 15px; font-size: 11px; background: linear-gradient(45deg, #00ffcc, #0088ff); color: #000;" onclick="buyJetpack(150)">شراء طيران (150 🪙)</button>
+        </div>
+      </div>
+      <button class="main-btn" onclick="showScreen('menuScreen')">رجوع للقائمة ↩</button>
+    </div>
+
+    <!-- 4. عجلة الحظ -->
+    <div id="wheelScreen" class="overlay-screen hidden">
+      <h1>🎡 عجلة الحظ الساعية</h1>
+      <div id="wheelReward" style="font-size: 22px; margin: 20px 0; color: #ffea00; font-weight: bold;">🎁 اضغط للحصول على الجائزة!</div>
+      <button class="main-btn" onclick="spinWheel()">تدحرج واستلم الكوينز 🎰</button>
+      <button class="main-btn" onclick="showScreen('menuScreen')">رجوع ↩</button>
+    </div>
+
+    <!-- 5. شريط اللعبة العلوي -->
+    <div class="top-bar">
+      <span id="levelLabel">المستوى: 1</span>
+      <span>🪙 <span id="gameCoinsDisplay">0</span></span>
+      <button class="main-btn" style="padding: 4px 10px; font-size: 10px;" onclick="showScreen('menuScreen')">قائمة</button>
+    </div>
+
+    <!-- 6. مسرح اللعبة -->
+    <div class="game-area" id="gameCanvas">
+      <div class="player" id="playerObj"></div>
+    </div>
+
+    <!-- 7. لوحة التحكم -->
+    <div class="controls-panel">
+      <div class="btn-group">
+        <button class="touch-btn" ontouchstart="setMove(-1)" onmousedown="setMove(-1)" ontouchend="setMove(0)" onmouseup="setMove

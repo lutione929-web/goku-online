@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Montagem Eclipse</title>
+  <title>Montagem Eclipse - Official Beat Maker</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
       width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(255, 0, 85, 0.5); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 0 35px rgba(255, 0, 85, 0.6); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
@@ -42,7 +42,7 @@
     }
     .pad-btn:active, .pad-btn.active-glow {
       transform: scale(0.92);
-      filter: brightness(1.7);
+      filter: brightness(1.8);
       box-shadow: 0 0 25px currentColor;
     }
 
@@ -79,34 +79,34 @@
       
       <div class="app-window">
         <div class="app-header">
-          <span class="app-title">🌑 MONTAGEM ECLIPSE (BEAT PAD)</span>
+          <span class="app-title">🌑 MONTAGEM ECLIPSE (ORIGINAL)</span>
           <span style="font-size: 10px; color: #00ffcc;" id="eclipseBadge">● READY</span>
         </div>
 
         <div class="control-panel">
-          <button class="eclipse-btn" id="eclipseToggleBtn" onclick="toggleEclipseMelody()">▶ تشغيل لحن Montagem Eclipse</button>
+          <button class="eclipse-btn" id="eclipseToggleBtn" onclick="toggleRealSong()">▶ تشغيل الأغنية الأصلية (Montagem Eclipse)</button>
         </div>
 
-        <!-- أزرار الإيقاع المباشرة -->
+        <!-- أزرار الاستوديو التفاعلية -->
         <div class="pad-grid">
-          <button class="pad-btn p-cowbell" id="btn-c1" onclick="playPhonkSound('cowbell', 650, 'ECLIPSE BELL 1')">🔔 <span>ECLIPSE BELL 1</span></button>
-          <button class="pad-btn p-cowbell" id="btn-c2" onclick="playPhonkSound('cowbell', 520, 'ECLIPSE BELL 2')">🔔 <span>ECLIPSE BELL 2</span></button>
-          <button class="pad-btn p-808"     id="btn-808" onclick="playPhonkSound('808', 110, 'SLIDING 808')">🎸 <span>808 SLIDE</span></button>
+          <button class="pad-btn p-cowbell" id="btn-c1" onclick="hitPad('btn-c1', 'BELL HIGH')">🔔 <span>BELL HIGH</span></button>
+          <button class="pad-btn p-cowbell" id="btn-c2" onclick="hitPad('btn-c2', 'BELL LOW')">🔔 <span>BELL LOW</span></button>
+          <button class="pad-btn p-808"     id="btn-808" onclick="hitPad('btn-808', '808 SLIDE')">🎸 <span>808 SLIDE</span></button>
           
-          <button class="pad-btn p-bass"    id="btn-sub" onclick="playPhonkSound('subbass', 55, 'SUB BASS')">🔊 <span>SUB BASS</span></button>
-          <button class="pad-btn p-synth"   id="btn-lead" onclick="playPhonkSound('synth', 380, 'LEAD SYNTH')">🎹 <span>LEAD SYNTH</span></button>
-          <button class="pad-btn p-kick"    id="btn-kick" onclick="playPhonkSound('kick', 90, 'HEAVY KICK')">🥁 <span>HEAVY KICK</span></button>
+          <button class="pad-btn p-bass"    id="btn-sub" onclick="hitPad('btn-sub', 'SUB BASS')">🔊 <span>SUB BASS</span></button>
+          <button class="pad-btn p-synth"   id="btn-lead" onclick="hitPad('btn-lead', 'LEAD SYNTH')">🎹 <span>LEAD SYNTH</span></button>
+          <button class="pad-btn p-kick"    id="btn-kick" onclick="hitPad('btn-kick', 'HEAVY KICK')">🥁 <span>HEAVY KICK</span></button>
           
-          <button class="pad-btn p-vocal"   id="btn-hey" onclick="playPhonkSound('vocal', 500, 'HEY! CHOP')">🎤 <span>HEY! CHOP</span></button>
-          <button class="pad-btn p-808"     id="btn-rush" onclick="playPhonkSound('cowbell', 800, 'RUSH BELL')">⚡ <span>RUSH BELL</span></button>
-          <button class="pad-btn p-synth"   id="btn-fx" onclick="playPhonkSound('synth', 950, 'CREEP FX')">🌀 <span>CREEP FX</span></button>
+          <button class="pad-btn p-vocal"   id="btn-hey" onclick="hitPad('btn-hey', 'HEY! CHOP')">🎤 <span>HEY! CHOP</span></button>
+          <button class="pad-btn p-808"     id="btn-rush" onclick="hitPad('btn-rush', 'RUSH BELL')">⚡ <span>RUSH BELL</span></button>
+          <button class="pad-btn p-synth"   id="btn-fx" onclick="hitPad('btn-fx', 'CREEP FX')">🌀 <span>CREEP FX</span></button>
           
-          <button class="pad-btn p-bass"    id="btn-dist" onclick="playPhonkSound('distbass', 75, 'DIST BASS')">🔥 <span>DIST BASS</span></button>
-          <button class="pad-btn p-kick"    id="btn-snare" onclick="playPhonkSound('snare', 240, 'PHONK SNARE')">💥 <span>SNARE</span></button>
-          <button class="pad-btn p-cowbell" id="btn-drop" onclick="playPhonkSound('cowbell', 350, 'DROP BELL')">🔥 <span>DROP BELL</span></button>
+          <button class="pad-btn p-bass"    id="btn-dist" onclick="hitPad('btn-dist', 'DIST BASS')">🔥 <span>DIST BASS</span></button>
+          <button class="pad-btn p-kick"    id="btn-snare" onclick="hitPad('btn-snare', 'SNARE')">💥 <span>SNARE</span></button>
+          <button class="pad-btn p-cowbell" id="btn-drop" onclick="hitPad('btn-drop', 'DROP BELL')">🔥 <span>DROP BELL</span></button>
         </div>
 
-        <div class="status-bar-dj" id="djStatus">جاهز فوراً! اضغط الأزرار أو شغل اللحن 🎶</div>
+        <div class="status-bar-dj" id="djStatus">اضغط زر التشغيل لسماع الأغنية الأصلية والتفاعل معها! 🎶</div>
       </div>
 
     </div>
@@ -116,104 +116,46 @@
     </div>
   </div>
 
+  <!-- ملف الأغنية الحقيقي الصافي -->
+  <audio id="realSong" loop preload="auto">
+    <source src="https://cdns-preview-d.dzcdn.net/stream/c-deda7b8e5c3b9b47833a6f958f258a74-3.mp3" type="audio/mp3">
+  </audio>
+
   <script>
-    let audioCtx = null;
-    let isMelodyPlaying = false;
-    let melodyTimer = null;
+    let song = document.getElementById('realSong');
+    let isPlaying = false;
 
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }
-
-    function toggleEclipseMelody() {
-      initAudio();
+    function toggleRealSong() {
       let btn = document.getElementById('eclipseToggleBtn');
       let badge = document.getElementById('eclipseBadge');
 
-      if (!isMelodyPlaying) {
-        isMelodyPlaying = true;
-        btn.classList.add('active');
-        btn.innerText = "⏹ إيقاف اللحن";
-        badge.innerText = "● PLAYING";
-
-        let pattern = [
-          { type: 'kick', freq: 90, name: 'KICK', btnId: 'btn-kick' },
-          { type: 'cowbell', freq: 650, name: 'BELL 1', btnId: 'btn-c1' },
-          { type: 'subbass', freq: 55, name: 'BASS', btnId: 'btn-sub' },
-          { type: 'cowbell', freq: 520, name: 'BELL 2', btnId: 'btn-c2' },
-          { type: 'kick', freq: 90, name: 'KICK', btnId: 'btn-kick' },
-          { type: '808', freq: 110, name: '808', btnId: 'btn-808' },
-          { type: 'vocal', freq: 500, name: 'HEY!', btnId: 'btn-hey' },
-          { type: 'cowbell', freq: 650, name: 'BELL 1', btnId: 'btn-c1' }
-        ];
-
-        let step = 0;
-        melodyTimer = setInterval(() => {
-          let current = pattern[step % pattern.length];
-          playPhonkSound(current.type, current.freq, current.name);
-          
-          let b = document.getElementById(current.btnId);
-          if(b) {
-            b.classList.add('active-glow');
-            setTimeout(() => b.classList.remove('active-glow'), 100);
-          }
-          step++;
-        }, 150);
-
-        document.getElementById('djStatus').innerText = "🔥 يعزف الآن: Montagem Eclipse الفونك!";
+      if (!isPlaying) {
+        song.play().then(() => {
+          isPlaying = true;
+          btn.classList.add('active');
+          btn.innerText = "⏹ إيقاف الأغنية الأصلية";
+          badge.innerText = "● PLAYING";
+          document.getElementById('djStatus').innerText = "🔥 تعمل الآن: Montagem Eclipse الأصلية الحقيقية!";
+        }).catch(err => {
+          alert("الرجاء النقر مرة أخرى لسماع الصوت!");
+        });
       } else {
-        isMelodyPlaying = false;
-        clearInterval(melodyTimer);
+        song.pause();
+        isPlaying = false;
         btn.classList.remove('active');
-        btn.innerText = "▶ تشغيل لحن Montagem Eclipse";
+        btn.innerText = "▶ تشغيل الأغنية الأصلية (Montagem Eclipse)";
         badge.innerText = "● READY";
-        document.getElementById('djStatus').innerText = "تم إيقاف اللحن.";
+        document.getElementById('djStatus').innerText = "تم إيقاف الأغنية.";
       }
     }
 
-    function playPhonkSound(type, freq, name) {
-      initAudio();
-
-      let now = audioCtx.currentTime;
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-
-      if (type === 'cowbell') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(freq, now);
-        osc.frequency.exponentialRampToValueAtTime(freq * 0.75, now + 0.12);
-        gain.gain.setValueAtTime(0.8, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-      } else if (type === 'kick') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(150, now);
-        osc.frequency.exponentialRampToValueAtTime(30, now + 0.12);
-        gain.gain.setValueAtTime(1.0, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-      } else if (type === '808' || type === 'subbass' || type === 'distbass') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq * 2, now);
-        osc.frequency.exponentialRampToValueAtTime(freq, now + 0.25);
-        gain.gain.setValueAtTime(0.85, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
-      } else {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq, now);
-        gain.gain.setValueAtTime(0.4, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+    function hitPad(id, name) {
+      let el = document.getElementById(id);
+      if(el) {
+        el.classList.add('active-glow');
+        setTimeout(() => el.classList.remove('active-glow'), 120);
       }
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 0.3);
-
-      document.getElementById('djStatus').innerText = `⚡ Phonk: [ ${name} ]`;
+      document.getElementById('djStatus').innerText = `⚡ تفاعل دي جي: [ ${name} ] مع الأغنية!`;
     }
   </script>
 </body>

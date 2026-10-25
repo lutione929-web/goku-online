@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA RNG - Cosmic God Edition</title>
+  <title>AURA RNG - Touch Fixed Edition</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
     body, html { width: 100%; height: 100%; background: #050714; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
     .app { width: 100vw; height: 100vh; max-width: 500px; background: radial-gradient(circle at center, #0f162e 0%, #050714 100%); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
     
@@ -39,60 +39,3 @@
     .hidden { display: none !important; }
     .m-header { width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #1a2646; padding-bottom: 8px; }
     .m-title { font-size: 15px; font-weight: 800; color: #38ef7d; }
-    .grid { width: 100%; max-width: 400px; flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding-bottom: 10px; }
-    .s-card { background: #0f162a; border: 1px solid #1e2c4c; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: space-between; }
-    
-    .cutscene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; animation: flash 0.5s infinite alternate; }
-    @keyframes flash { 0% { background: #000; } 100% { background: #15002a; } }
-  </style>
-</head>
-<body>
-
-  <div class="app">
-    <div class="top-bar">
-      <div class="brand">💎 AURA <span>RNG</span></div>
-      <div class="stats">
-        <div class="badge">🪙 <span id="cVal" style="color:#ffd700;">Infinity</span></div>
-        <div class="badge">🎲 <span id="rVal">0</span></div>
-        <div class="badge">⚡ <span id="lVal" style="color:#00f0ff;">999M+x</span></div>
-      </div>
-    </div>
-
-    <div class="main-screen">
-      <div class="equipped">Equipped: <span id="eqTxt">None</span></div>
-      <div class="card" id="cardBox">
-        <div class="orb" id="orbBox"></div>
-        <div class="c-title" id="titleBox" style="color:#b0b0b0;">COMMON</div>
-        <div class="rarity">
-          <span id="rarityLbl">Common</span>
-          <span id="chanceLbl" style="color:#38ef7d;">1 in 2</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bottom-bar">
-      <button class="btn-sec" onclick="openModal('shopModal')">🛒 SHOP</button>
-      <div class="roll-wrap">
-        <button class="roll-btn" id="rollBtn" onclick="doRoll()">
-          <span>ROLL</span>
-          <span style="font-size: 8px; opacity: 0.8;">AURA</span>
-        </button>
-        <div class="cd-overlay hidden" id="cdOver">2.0s</div>
-      </div>
-      <button class="btn-sec" onclick="openModal('invModal')">🎒 BAG</button>
-    </div>
-
-    <!-- Shop -->
-    <div class="modal hidden" id="shopModal">
-      <div class="m-header">
-        <div class="m-title">🛒 LUCK SHOP</div>
-        <button class="btn-sec" onclick="closeModal('shopModal')">✕ CLOSE</button>
-      </div>
-      <div class="grid" id="shopGrid"></div>
-    </div>
-
-    <!-- Inventory -->
-    <div class="modal hidden" id="invModal">
-      <div class="m-header">
-        <div class="m-title">🎒 INVENTORY</div>
-        <button class="btn-sec" onclick="

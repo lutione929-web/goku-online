@@ -3,204 +3,260 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA RNG - Ultra Simulator</title>
+  <title>AURA RNG Ultra Simulator</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
+    body, html { width: 100%; height: 100%; background: #050714; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+    .app { width: 100vw; height: 100vh; max-width: 500px; background: radial-gradient(circle at center, #0f162e 0%, #050714 100%); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+    
+    .top-bar { height: 50px; background: rgba(10, 14, 29, 0.95); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; border-bottom: 1px solid #1a2542; }
+    .brand { font-weight: 900; font-size: 13px; color: #38ef7d; }
+    .brand span { color: #00c6ff; }
+    .stats { display: flex; gap: 5px; }
+    .badge { background: #11182a; border: 1px solid #1f2d4e; padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; color: #b0c4de; }
+    .badge span { color: #fff; }
+
+    .main-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
+    .equipped { background: rgba(16, 24, 46, 0.85); border: 1px solid #25365d; padding: 4px 14px; border-radius: 20px; font-size: 11px; color: #8da3d0; margin-bottom: 12px; }
+    .equipped span { color: #38ef7d; font-weight: bold; }
+
+    .card { width: 85%; max-width: 320px; height: 190px; background: rgba(14, 21, 41, 0.8); border: 2px solid #213259; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(0,0,0,0.8); }
+    .orb { width: 60px; height: 60px; border-radius: 50%; background: #fff; box-shadow: 0 0 25px rgba(255,255,255,0.9); margin-bottom: 10px; }
+    .c-title { font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
+    .rarity { background: #0d1324; border: 1px solid #23345a; padding: 3px 12px; border-radius: 12px; font-size: 10px; font-weight: 700; color: #a0b6e0; display: flex; gap: 6px; }
+
+    .bottom-bar { height: 85px; background: rgba(8, 12, 24, 0.98); display: flex; align-items: center; justify-content: space-around; padding: 10px; border-top: 1px solid #1a2542; }
+    .btn-sec { background: #121a30; border: 1px solid #202e52; color: #9cb3e0; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; }
+    .btn-sec:active { transform: scale(0.92); }
+
+    .roll-wrap { position: relative; }
+    .roll-btn { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); border: none; color: #fff; padding: 10px 28px; border-radius: 16px; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 0 20px rgba(0,114,255,0.6); display: flex; flex-direction: column; align-items: center; }
+    .roll-btn:active { transform: scale(0.92); }
+    .roll-btn.disabled { opacity: 0.5; pointer-events: none; }
+    .cd-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #00f0ff; }
+
+    .modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,18,0.96); backdrop-filter: blur(10px); z-index: 50; display: flex; flex-direction: column; padding: 15px; align-items: center; }
+    .hidden { display: none !important; }
+    .m-header { width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #1a2646; padding-bottom: 8px; }
+    .m-title { font-size: 15px; font-weight: 800; color: #38ef7d; }
+    .grid { width: 100%; max-width: 400px; flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding-bottom: 10px; }
+    .s-card { background: #0f162a; border: 1px solid #1e2c4c; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: space-between; }
+    
+    .cutscene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; animation: flash 0.5s infinite alternate; }
+    @keyframes flash { 0% { background: #000; } 100% { background: #15002a; } }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <div class="top-bar">
+      <div class="brand">💎 AURA <span>RNG</span></div>
+      <div class="stats">
+        <div class="badge">🪙 <span id="cVal" style="color:#ffd700;">100</span></div>
+        <div class="badge">🎲 <span id="rVal">0</span></div>
+        <div class="badge">⚡ <span id="lVal" style="color:#00f0ff;">1.0x</span></div>
+      </div>
+    </div>
+
+    <div class="main-screen">
+      <div class="equipped">Equipped: <span id="eqTxt">None</span></div>
+      <div class="card" id="cardBox">
+        <div class="orb" id="orbBox"></div>
+        <div class="c-title" id="titleBox" style="color:#b0b0b0;">COMMON</div>
+        <div class="rarity">
+          <span id="rarityLbl">Common</span>
+          <span id="chanceLbl" style="color:#38ef7d;">1 in 2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <button class="btn-sec" onclick="openModal('shopModal')">🛒 SHOP</button>
+      <div class="roll-wrap">
+        <button class="roll-btn" id="rollBtn" onclick="doRoll()">
+          <span>ROLL</span>
+          <span style="font-size: 8px; opacity: 0.8;">AURA</span>
+        </button>
+        <div class="cd-overlay hidden" id="cdOver">2.0s</div>
+      </div>
+      <button class="btn-sec" onclick="openModal('invModal')">🎒 BAG</button>
+    </div>
+
+    <!-- Shop -->
+    <div class="modal hidden" id="shopModal">
+      <div class="m-header">
+        <div class="m-title">🛒 LUCK SHOP</div>
+        <button class="btn-sec" onclick="closeModal('shopModal')">✕ CLOSE</button>
+      </div>
+      <div class="grid" id="shopGrid"></div>
+    </div>
+
+    <!-- Inventory -->
+    <div class="modal hidden" id="invModal">
+      <div class="m-header">
+        <div class="m-title">🎒 INVENTORY</div>
+        <button class="btn-sec" onclick="closeModal('invModal')">✕ CLOSE</button>
+      </div>
+      <div class="grid" id="invGrid"></div>
+    </div>
+
+    <!-- Cutscene -->
+    <div class="cutscene hidden" id="cutScene">
+      <div style="font-size: 12px; color: #ffaa00; font-weight: bold; margin-bottom: 6px;">🌟 EPIC DROP! 🌟</div>
+      <div id="csTitle" style="font-size: 26px; font-weight: 900; text-transform: uppercase;">SUPREME</div>
+      <div id="csChance" style="font-size: 15px; color: #38ef7d; font-weight: 800; margin-top: 5px;">1 in 100,000,000</div>
+    </div>
+  </div>
+
+  <script>
+    const AURAS = [
+      { name: "Common", chance: 2, color: "#b0b0b0", orb: "#fff" },
+      { name: "Uncommon", chance: 4, color: "#38ef7d", orb: "#38ef7d" },
+      { name: "Rare", chance: 10, color: "#00c6ff", orb: "#00c6ff" },
+      { name: "Epic", chance: 50, color: "#a855f7", orb: "#a855f7" },
+      { name: "Legendary", chance: 250, color: "#ffaa00", orb: "#ffaa00" },
+      { name: "Mythic", chance: 1250, color: "#ff0055", orb: "#ff0055" },
+      { name: "Solaris", chance: 12500, color: "#ffe600", orb: "#ffe600" },
+      { name: "Celestial", chance: 150000, color: "#00f0ff", orb: "#00f0ff" },
+      { name: "Gargantua", chance: 1500000, color: "#ff00ff", orb: "#ff00ff" },
+      { name: "ARCHANGEL", chance: 77779647, color: "#ffff00", orb: "#fff" },
+      { name: "OVERLORD", chance: 250000000, color: "#ff3300", orb: "#ff3300" },
+      { name: "SINGULARITY", chance: 1000000000, color: "#00ffff", orb: "#00ffff" },
+      { name: "ABSOLUTE INFINITY", chance: 10000000000, color: "#ff00aa", orb: "#fff" }
+    ];
+
+    const SHOPS = [
+      { m: 2, c: 50 }, { m: 4, c: 120 }, { m: 6, c: 250 }, { m: 8, c: 450 },
+      { m: 10, c: 800 }, { m: 50, c: 3500 }, { m: 100, c: 8000 },
+      { m: 188, c: 15000 }, { m: 250, c: 25000 }, { m: 1000, c: 100000 }
+    ];
+
+    let game = { coins: 100, rolls: 0, luck: 1.0, eq: "None", inv: {}, rolling: false };
+
+    window.onload = () => {
+      let saved = localStorage.getItem('auraRngCleanSave');
+      if (saved) { try { game = Object.assign(game, JSON.parse(saved)); } catch(e){} }
+      updateUI();
+      buildShop();
+    };
+
+    function save() {
+      localStorage.setItem('auraRngCleanSave', JSON.stringify(game));
+      updateUI();
     }
 
-    body {
-      background-color: #050714;
-      color: #ffffff;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    function updateUI() {
+      document.getElementById('cVal').innerText = game.coins.toLocaleString();
+      document.getElementById('rVal').innerText = game.rolls.toLocaleString();
+      document.getElementById('lVal').innerText = game.luck + 'x';
+      document.getElementById('eqTxt').innerText = game.eq;
     }
 
-    .app-container {
-      width: 100%;
-      height: 100%;
-      max-width: 900px;
-      max-height: 100vh;
-      background: radial-gradient(circle at center, #0f162e 0%, #050714 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
+    function doRoll() {
+      if (game.rolling) return;
+      game.rolling = true;
+      game.rolls++;
+      game.coins += Math.floor(5 * game.luck);
+
+      let btn = document.getElementById('rollBtn');
+      let cd = document.getElementById('cdOver');
+      btn.classList.add('disabled');
+      cd.classList.remove('hidden');
+
+      let t = 2.0;
+      let timer = setInterval(() => {
+        t -= 0.1;
+        cd.innerText = t.toFixed(1) + 's';
+        if (t <= 0) {
+          clearInterval(timer);
+          cd.classList.add('hidden');
+          btn.classList.remove('disabled');
+          game.rolling = false;
+        }
+      }, 100);
+
+      let res = pickAura();
+      if (res.chance >= 100000) showCut(res);
+      else showAura(res);
+
+      game.inv[res.name] = (game.inv[res.name] || 0) + 1;
+      save();
     }
 
-    /* Top Stats Bar */
-    .top-bar {
-      height: 50px;
-      background: rgba(10, 14, 29, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
-      border-bottom: 1px solid #1a2542;
-      z-index: 10;
-      flex-shrink: 0;
+    function pickAura() {
+      for (let i = AURAS.length - 1; i >= 0; i--) {
+        let a = AURAS[i];
+        let eff = a.chance / game.luck;
+        if (Math.random() * eff <= 1 || i === 0) return a;
+      }
+      return AURAS[0];
     }
 
-    .brand {
-      font-weight: 900;
-      font-size: 13px;
-      letter-spacing: 1px;
-      color: #38ef7d;
+    function showAura(a) {
+      document.getElementById('titleBox').innerText = a.name;
+      document.getElementById('titleBox').style.color = a.color;
+      document.getElementById('rarityLbl').innerText = a.name;
+      document.getElementById('chanceLbl').innerText = "1 in " + a.chance.toLocaleString();
+      document.getElementById('orbBox').style.background = a.orb;
+      document.getElementById('orbBox').style.boxShadow = "0 0 25px " + a.color;
+      document.getElementById('cardBox').style.borderColor = a.color;
     }
 
-    .brand span {
-      color: #00c6ff;
+    function showCut(a) {
+      let cs = document.getElementById('cutScene');
+      let t = document.getElementById('csTitle');
+      let c = document.getElementById('csChance');
+      t.innerText = a.name;
+      t.style.color = a.color;
+      c.innerText = "1 in " + a.chance.toLocaleString();
+      cs.classList.remove('hidden');
+      setTimeout(() => {
+        cs.classList.add('hidden');
+        showAura(a);
+      }, 2500);
     }
 
-    .stats-group {
-      display: flex;
-      gap: 6px;
+    function openModal(id) {
+      if (id === 'invModal') buildInv();
+      document.getElementById(id).classList.remove('hidden');
+    }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function buildShop() {
+      let g = document.getElementById('shopGrid');
+      g.innerHTML = "";
+      SHOPS.forEach(s => {
+        g.innerHTML += `<div class="s-card"><div style="font-weight:900;color:#00f0ff;">${s.m}x LUCK</div><div style="font-size:11px;color:#ffd700;font-weight:700;">🪙 ${s.c.toLocaleString()}</div><button class="btn-sec" style="padding:4px 10px;font-size:10px;" onclick="buy(${s.m},${s.c})">BUY</button></div>`;
+      });
     }
 
-    .stat-badge {
-      background: #11182a;
-      border: 1px solid #1f2d4e;
-      padding: 4px 8px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #b0c4de;
+    function buy(m, c) {
+      if (game.coins >= c) {
+        game.coins -= c;
+        game.luck = m;
+        save();
+        alert("🎉 Purchased " + m + "x Luck!");
+      } else {
+        alert("❌ Not enough coins!");
+      }
     }
 
-    .stat-badge .val {
-      color: #ffffff;
-      font-weight: 800;
+    function buildInv() {
+      let g = document.getElementById('invGrid');
+      g.innerHTML = "";
+      AURAS.forEach(a => {
+        let cnt = game.inv[a.name] || 0;
+        if (cnt > 0) {
+          g.innerHTML += `<div class="s-card" style="border-color:${a.color}"><div style="font-weight:800;font-size:11px;color:${a.color}">${a.name}</div><div style="font-size:10px;color:#8a9cc4;">Count: ${cnt}</div><button class="btn-sec" style="padding:3px 8px;font-size:9px;" onclick="eq('${a.name}')">EQUIP</button></div>`;
+        }
+      });
     }
 
-    /* Main Aura Display - ضبط المسافات لرفع الأزرار */
-    .display-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 5px 10px;
-      width: 100%;
-      overflow: hidden;
+    function eq(name) {
+      game.eq = name;
+      save();
+      closeModal('invModal');
     }
-
-    .equipped-pill {
-      background: rgba(16, 24, 46, 0.85);
-      border: 1px solid #25365d;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 11px;
-      color: #8da3d0;
-      margin-bottom: 10px;
-      z-index: 2;
-    }
-
-    .equipped-pill span {
-      color: #38ef7d;
-      font-weight: bold;
-    }
-
-    .aura-card {
-      width: 88%;
-      max-width: 340px;
-      height: 180px;
-      background: rgba(14, 21, 41, 0.75);
-      border: 2px solid #213259;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .aura-orb {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
-      margin-bottom: 10px;
-      transition: background 0.3s, box-shadow 0.3s;
-    }
-
-    .aura-title {
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      text-align: center;
-    }
-
-    .rarity-pill {
-      background: #0d1324;
-      border: 1px solid #23345a;
-      padding: 3px 12px;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #a0b6e0;
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    /* Bottom Control Bar - مرفع ومكشوف بالكامل */
-    .bottom-controls {
-      height: 90px;
-      background: rgba(8, 12, 24, 0.98);
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 10px 15px 20px 15px;
-      border-top: 1px solid #1a2542;
-      z-index: 10;
-      flex-shrink: 0;
-    }
-
-    .btn-secondary {
-      background: #121a30;
-      border: 1px solid #202e52;
-      color: #9cb3e0;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn-secondary:active {
-      transform: scale(0.92);
-      background: #182442;
-    }
-
-    .roll-btn-wrapper {
-      position: relative;
-    }
-
-    .roll-btn {
-      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-      border: none;
-      color: #ffffff;
-      padding: 10px 30px;
-      border-radius:
+  </script>
+</body>
+</html>

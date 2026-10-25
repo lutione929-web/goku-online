@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA RNG - Admin Infinity Edition</title>
+  <title>AURA RNG - Cosmic God Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
     body, html { width: 100%; height: 100%; background: #050714; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
@@ -22,10 +22,9 @@
 
     .card { width: 85%; max-width: 320px; height: 190px; background: rgba(14, 21, 41, 0.8); border: 2px solid #213259; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(0,0,0,0.8); }
     .orb { width: 60px; height: 60px; border-radius: 50%; background: #fff; box-shadow: 0 0 25px rgba(255,255,255,0.9); margin-bottom: 10px; }
-    .c-title { font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
+    .c-title { font-size: 16px; font-weight: 900; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
     .rarity { background: #0d1324; border: 1px solid #23345a; padding: 3px 12px; border-radius: 12px; font-size: 10px; font-weight: 700; color: #a0b6e0; display: flex; gap: 6px; }
 
-    /* رفعنا الشريط السفلي وزر الـ ROLL للأعلى شوي ليكون مكشوفاً تماماً */
     .bottom-bar { height: 105px; background: rgba(8, 12, 24, 0.98); display: flex; align-items: center; justify-content: space-around; padding: 10px 10px 30px 10px; border-top: 1px solid #1a2542; }
     .btn-sec { background: #121a30; border: 1px solid #202e52; color: #9cb3e0; padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; }
     .btn-sec:active { transform: scale(0.92); }
@@ -55,7 +54,7 @@
       <div class="stats">
         <div class="badge">🪙 <span id="cVal" style="color:#ffd700;">Infinity</span></div>
         <div class="badge">🎲 <span id="rVal">0</span></div>
-        <div class="badge">⚡ <span id="lVal" style="color:#00f0ff;">999,999,999x</span></div>
+        <div class="badge">⚡ <span id="lVal" style="color:#00f0ff;">999M+x</span></div>
       </div>
     </div>
 
@@ -96,164 +95,4 @@
     <div class="modal hidden" id="invModal">
       <div class="m-header">
         <div class="m-title">🎒 INVENTORY</div>
-        <button class="btn-sec" onclick="closeModal('invModal')">✕ CLOSE</button>
-      </div>
-      <div class="grid" id="invGrid"></div>
-    </div>
-
-    <!-- Cutscene -->
-    <div class="cutscene hidden" id="cutScene">
-      <div style="font-size: 12px; color: #ffaa00; font-weight: bold; margin-bottom: 6px;">🌟 GOD-TIER DROP! 🌟</div>
-      <div id="csTitle" style="font-size: 26px; font-weight: 900; text-transform: uppercase;">SUPREME</div>
-      <div id="csChance" style="font-size: 15px; color: #38ef7d; font-weight: 800; margin-top: 5px;">1 in 100,000,000</div>
-    </div>
-  </div>
-
-  <script>
-    const AURAS = [
-      { name: "Common", chance: 2, color: "#b0b0b0", orb: "#fff" },
-      { name: "Uncommon", chance: 4, color: "#38ef7d", orb: "#38ef7d" },
-      { name: "Rare", chance: 10, color: "#00c6ff", orb: "#00c6ff" },
-      { name: "Epic", chance: 50, color: "#a855f7", orb: "#a855f7" },
-      { name: "Legendary", chance: 250, color: "#ffaa00", orb: "#ffaa00" },
-      { name: "Mythic", chance: 1250, color: "#ff0055", orb: "#ff0055" },
-      { name: "Solaris", chance: 12500, color: "#ffe600", orb: "#ffe600" },
-      { name: "Celestial", chance: 150000, color: "#00f0ff", orb: "#00f0ff" },
-      { name: "Gargantua", chance: 1500000, color: "#ff00ff", orb: "#ff00ff" },
-      { name: "ARCHANGEL", chance: 77779647, color: "#ffff00", orb: "#fff" },
-      { name: "OVERLORD", chance: 250000000, color: "#ff3300", orb: "#ff3300" },
-      { name: "SINGULARITY", chance: 1000000000, color: "#00ffff", orb: "#00ffff" },
-      { name: "ABSOLUTE INFINITY", chance: 10000000000, color: "#ff00aa", orb: "#fff" }
-    ];
-
-    const SHOPS = [
-      { m: 2, c: 50 }, { m: 4, c: 120 }, { m: 6, c: 250 }, { m: 8, c: 450 },
-      { m: 10, c: 800 }, { m: 50, c: 3500 }, { m: 100, c: 8000 },
-      { m: 188, c: 15000 }, { m: 250, c: 25000 }, { m: 1000, c: 100000 }
-    ];
-
-    let game = { coins: 999999999, rolls: 0, luck: 999999999, eq: "None", inv: {}, rolling: false };
-
-    window.onload = () => {
-      let saved = localStorage.getItem('auraRngAdminSave');
-      if (saved) { 
-        try { 
-          game = Object.assign(game, JSON.parse(saved)); 
-          // فرض الحظ الخارق والفلوس للأبد
-          game.luck = 999999999;
-          game.coins = 999999999;
-        } catch(e){} 
-      } else {
-        game.luck = 999999999;
-        game.coins = 999999999;
-      }
-      updateUI();
-      buildShop();
-    };
-
-    function save() {
-      game.luck = 999999999; // تثبيت الحظ للأبد
-      game.coins = 999999999;
-      localStorage.setItem('auraRngAdminSave', JSON.stringify(game));
-      updateUI();
-    }
-
-    function updateUI() {
-      document.getElementById('cVal').innerText = "Infinity";
-      document.getElementById('rVal').innerText = game.rolls.toLocaleString();
-      document.getElementById('lVal').innerText = "999M+x";
-      document.getElementById('eqTxt').innerText = game.eq;
-    }
-
-    function doRoll() {
-      if (game.rolling) return;
-      game.rolling = true;
-      game.rolls++;
-
-      let btn = document.getElementById('rollBtn');
-      let cd = document.getElementById('cdOver');
-      btn.classList.add('disabled');
-      cd.classList.remove('hidden');
-
-      let t = 2.0;
-      let timer = setInterval(() => {
-        t -= 0.1;
-        cd.innerText = t.toFixed(1) + 's';
-        if (t <= 0) {
-          clearInterval(timer);
-          cd.classList.add('hidden');
-          btn.classList.remove('disabled');
-          game.rolling = false;
-        }
-      }, 100);
-
-      let res = pickAura();
-      if (res.chance >= 100000) showCut(res);
-      else showAura(res);
-
-      game.inv[res.name] = (game.inv[res.name] || 0) + 1;
-      save();
-    }
-
-    function pickAura() {
-      // مع 999M حظ، ستحصل فوراً على أقوى هالة في اللعبة!
-      return AURAS[AURAS.length - 1];
-    }
-
-    function showAura(a) {
-      document.getElementById('titleBox').innerText = a.name;
-      document.getElementById('titleBox').style.color = a.color;
-      document.getElementById('rarityLbl').innerText = a.name;
-      document.getElementById('chanceLbl').innerText = "1 in " + a.chance.toLocaleString();
-      document.getElementById('orbBox').style.background = a.orb;
-      document.getElementById('orbBox').style.boxShadow = "0 0 25px " + a.color;
-      document.getElementById('cardBox').style.borderColor = a.color;
-    }
-
-    function showCut(a) {
-      let cs = document.getElementById('cutScene');
-      let t = document.getElementById('csTitle');
-      let c = document.getElementById('csChance');
-      t.innerText = a.name;
-      t.style.color = a.color;
-      c.innerText = "1 in " + a.chance.toLocaleString();
-      cs.classList.remove('hidden');
-      setTimeout(() => {
-        cs.classList.add('hidden');
-        showAura(a);
-      }, 2500);
-    }
-
-    function openModal(id) {
-      if (id === 'invModal') buildInv();
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-    function buildShop() {
-      let g = document.getElementById('shopGrid');
-      g.innerHTML = "";
-      SHOPS.forEach(s => {
-        g.innerHTML += `<div class="s-card"><div style="font-weight:900;color:#00f0ff;">${s.m}x LUCK</div><div style="font-size:11px;color:#ffd700;font-weight:700;">FREE (ADMIN)</div><button class="btn-sec" style="padding:4px 10px;font-size:10px;" onclick="alert('أنت تمتلك أعلى حظ في الكون مسبقاً يامحمد!')">MAX</button></div>`;
-      });
-    }
-
-    function buildInv() {
-      let g = document.getElementById('invGrid');
-      g.innerHTML = "";
-      AURAS.forEach(a => {
-        let cnt = game.inv[a.name] || 0;
-        if (cnt > 0) {
-          g.innerHTML += `<div class="s-card" style="border-color:${a.color}"><div style="font-weight:800;font-size:11px;color:${a.color}">${a.name}</div><div style="font-size:10px;color:#8a9cc4;">Count: ${cnt}</div><button class="btn-sec" style="padding:3px 8px;font-size:9px;" onclick="eq('${a.name}')">EQUIP</button></div>`;
-        }
-      });
-    }
-
-    function eq(name) {
-      game.eq = name;
-      save();
-      closeModal('invModal');
-    }
-  </script>
-</body>
-</html>
+        <button class="btn-sec" onclick="

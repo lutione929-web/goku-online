@@ -18,7 +18,6 @@
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
 
-    /* واجهة تطبيق Beat Maker Go */
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: #0f1016; display: flex; flex-direction: column; z-index: 50; color: #fff; padding: 12px;
@@ -26,28 +25,28 @@
 
     .app-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px;
+      margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 8px;
     }
     .app-title { font-size: 14px; font-weight: bold; background: linear-gradient(45deg, #ff007f, #7928ca); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    /* شبكة أزرار الإيقاعات (Pad Grid) */
+    /* شبكة أزرار الإيقاعات */
     .pad-grid {
       flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr);
-      gap: 10px; margin-bottom: 10px;
+      gap: 8px; margin-bottom: 10px;
     }
 
     .pad-btn {
-      border-radius: 14px; border: none; cursor: pointer;
+      border-radius: 12px; border: none; cursor: pointer;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.05s, filter 0.05s;
-      display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: rgba(255,255,255,0.8);
+      display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: rgba(255,255,255,0.9);
     }
-    .pad-btn:active, .pad-btn.active {
-      transform: scale(0.92);
-      filter: brightness(1.4);
+    .pad-btn:active {
+      transform: scale(0.9);
+      filter: brightness(1.5);
       box-shadow: 0 0 20px currentColor;
     }
 
-    /* ألوان الأزرار المتوهجة مطابقة للصورة */
+    /* ألوان الأزرار المتوهجة مطابقة لطلبك */
     .p1 { background: linear-gradient(135deg, #ffaa00, #ff4400); color: #ffe600; }
     .p2 { background: linear-gradient(135deg, #ff007f, #9900ff); color: #ff99ff; }
     .p3 { background: linear-gradient(135deg, #00f0ff, #0044ff); color: #ccffff; }
@@ -62,7 +61,14 @@
     .p12 { background: linear-gradient(135deg, #9900ff, #00f0ff); color: #e6ccff; }
 
     .status-bar-dj {
-      background: #161821; padding: 8px; border-radius: 8px; text-align: center; font-size: 11px; color: #a0a0c0; border: 1px solid #222;
+      background: #161821; padding: 8px; border-radius: 8px; text-align: center; font-size: 11px; color: #00ffcc; border: 1px solid #222;
+    }
+
+    /* زر تفعيل الصوت الأول */
+    #soundGate {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(11, 12, 16, 0.95); z-index: 100; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 20px;
     }
 
     .home-bar-area { height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); }
@@ -71,35 +77,43 @@
 </head>
 <body>
 
+  <!-- شاشة تفعيل الصوت الإجبارية لفتح الحظر عن المتصفح -->
+  <div id="soundGate">
+    <div style="font-size: 50px; margin-bottom: 10px;">🎵⚡</div>
+    <h3 style="color: #ff007f; font-size: 16px; margin-bottom: 8px;">مرحباً بك في Beat Maker Go</h3>
+    <p style="color: #aaa; font-size: 11px; margin-bottom: 20px;">اضغط الزر أدناه لتفعيل النظام الصوتي وعزف الإيقاعات!</p>
+    <button onclick="unlockAudio()" style="background: linear-gradient(45deg, #ff007f, #7928ca); color: #fff; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 20px rgba(255,0,127,0.5);">اضغط هنا لبدء العزف 🎧</button>
+  </div>
+
   <div class="phone-body">
     <div class="phone-screen">
       
       <div class="app-window">
         <div class="app-header">
           <span class="app-title">🎵 Beat Maker Go</span>
-          <span style="font-size: 10px; color: #ff007f;">● REC ACTIVE</span>
+          <span style="font-size: 10px; color: #00ff88;">● LIVE AUDIO</span>
         </div>
 
-        <!-- لوحة الأزرار المضيئة (12 Pad) -->
+        <!-- لوحة الأزرار المضيئة -->
         <div class="pad-grid">
-          <button class="pad-btn p1" onclick="playBeat(1, 120, 'KICK')">KICK</button>
+          <button class="pad-btn p1" onclick="playBeat(1, 100, 'KICK')">KICK</button>
           <button class="pad-btn p2" onclick="playBeat(2, 220, 'SNARE')">SNARE</button>
-          <button class="pad-btn p3" onclick="playBeat(3, 330, 'HI-HAT')">HI-HAT</button>
+          <button class="pad-btn p3" onclick="playBeat(3, 440, 'HI-HAT')">HI-HAT</button>
           
           <button class="pad-btn p4" onclick="playBeat(4, 150, 'BASS')">BASS</button>
-          <button class="pad-btn p5" onclick="playBeat(5, 440, 'SYNTH')">SYNTH</button>
-          <button class="pad-btn p6" onclick="playBeat(6, 550, 'CLAP')">CLAP</button>
+          <button class="pad-btn p5" onclick="playBeat(5, 520, 'SYNTH')">SYNTH</button>
+          <button class="pad-btn p6" onclick="playBeat(6, 330, 'CLAP')">CLAP</button>
           
-          <button class="pad-btn p7" onclick="playBeat(7, 180, '808')">808</button>
-          <button class="pad-btn p8" onclick="playBeat(8, 660, 'VOCAL')">HEY!</button>
-          <button class="pad-btn p9" onclick="playBeat(9, 280, 'PERC')">PERC</button>
+          <button class="pad-btn p7" onclick="playBeat(7, 80, '808 SUB')">808</button>
+          <button class="pad-btn p8" onclick="playBeat(8, 660, 'VOCAL HEY')">HEY!</button>
+          <button class="pad-btn p9" onclick="playBeat(9, 290, 'PERC')">PERC</button>
           
-          <button class="pad-btn p10" onclick="playBeat(10, 350, 'CHORD')">CHORD</button>
-          <button class="pad-btn p11" onclick="playBeat(11, 110, 'SUB')">SUB</button>
-          <button class="pad-btn p12" onclick="playBeat(12, 770, 'FX')">LASER</button>
+          <button class="pad-btn p10" onclick="playBeat(10, 390, 'CHORD')">CHORD</button>
+          <button class="pad-btn p11" onclick="playBeat(11, 110, 'DEEP BASS')">SUB</button>
+          <button class="pad-btn p12" onclick="playBeat(12, 880, 'LASER FX')">LASER</button>
         </div>
 
-        <div class="status-bar-dj" id="djStatus">اضغط على أي زر لصنع الإيقاع والموسيقى! 🎶</div>
+        <div class="status-bar-dj" id="djStatus">النظام جاهز! اضغط الأزرار لصنع الإيقاع 🎶</div>
       </div>
 
     </div>
@@ -112,22 +126,65 @@
   <script>
     let audioCtx = null;
 
+    function unlockAudio() {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      // تشغيل نقطة صوتية خفيفة لتأكيد التفعيل
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+
+      // إخفاء شاشة القفل وبدء التطبيق
+      document.getElementById('soundGate').style.display = 'none';
+    }
+
     function playBeat(padId, freq, name) {
-      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume();
+      if(!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if(audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
 
       let now = audioCtx.currentTime;
       let osc = audioCtx.createOscillator();
       let gain = audioCtx.createGain();
 
-      if(padId === 1) {
-        // Kick ضربة عميقة
+      if(padId === 1 || padId === 7 || padId === 11) {
+        // نغمات الباس العميقة (Kick & Sub)
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(150, now);
-        osc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
-        gain.gain.setValueAtTime(0.8, now);
+        osc.frequency.setValueAtTime(freq * 1.5, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.2);
+        gain.gain.setValueAtTime(0.9, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      } else if(padId === 12) {
+        // الليزر الصوتي
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(900, now);
+        osc.frequency.exponentialRampToValueAtTime(100, now + 0.3);
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      } else {
+        // نغمات الإيقاع والسينث
+        osc.type = padId % 2 === 0 ? 'square' : 'triangle';
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.4, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-      } else if(padId === 2) {
-        // Snare
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(
+      }
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.3);
+
+      document.getElementById('djStatus').innerText = `⚡ تم عزف: [ ${name} ] بنجاح!`;
+    }
+  </script>
+</body>
+</html>

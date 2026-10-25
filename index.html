@@ -2,399 +2,378 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Goku Fighter 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+<title>Goku Fighter 2 — Saga</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#05050c;color:#fff;font-family:Tahoma,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
-h1{font-size:1.45rem;margin:8px 0 4px;background:linear-gradient(90deg,#f39c12,#e74c3c,#f1c40f);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sub{font-size:.85rem;opacity:.7;margin-bottom:8px}
-#wrap{position:relative;border:3px solid #f39c12;border-radius:10px;box-shadow:0 0 28px rgba(243,156,18,.3);max-width:100%}
-canvas{display:block;max-width:100%;height:auto;border-radius:7px;background:#111}
-#hud{display:none;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:8px;font-size:.88rem;padding:0 6px}
-.box{background:rgba(255,255,255,.08);padding:5px 11px;border-radius:14px}
-.bar{height:7px;background:#333;border-radius:4px;margin-top:3px;overflow:hidden;width:90px}
-.bar>div{height:100%;border-radius:4px}
-#hpF{background:#e74c3c}#kiF{background:#3498db}
-.btns{display:none;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px;padding:0 6px}
-button{padding:9px 14px;font-size:.88rem;border:none;border-radius:20px;cursor:pointer;font-family:inherit;color:#fff}
-button:disabled{opacity:.4}
-#punchB{background:#c0392b}#kameB{background:#2980b9}#ssjB{background:#f1c40f;color:#111}
-#muiB{background:linear-gradient(90deg,#a29bfe,#74b9ff);color:#111}#menuB{background:#636e72}
-#menu{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;
-background:radial-gradient(ellipse at center,#1a1030 0%,#0a0a12 70%);border-radius:7px;padding:16px;text-align:center}
-#menu h2{font-size:1.6rem;margin-bottom:6px;color:#f1c40f}
-.mbtn{width:220px;padding:12px;margin:6px;border-radius:28px;font-size:1rem;border:2px solid transparent}
-.mbtn:active{transform:scale(.96)}
-.start{background:linear-gradient(90deg,#e67e22,#f39c12)}
-.shop{background:linear-gradient(90deg,#6c5ce7,#a29bfe)}
-.about{background:#2d3436}
-#msg{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);font-size:1.35rem;font-weight:bold;
-text-align:center;text-shadow:0 0 14px #000;z-index:30;display:none;white-space:pre-line;pointer-events:none}
-#shopO{display:none;position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:12px;border-radius:7px}
-#shopO.open{display:flex}
-.panel{background:#1e272e;border:2px solid #f39c12;border-radius:14px;padding:16px;width:min(380px,96%);max-height:90%;overflow-y:auto;text-align:center}
-.item{background:rgba(255,255,255,.07);border-radius:10px;padding:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:right}
-.help{display:none;margin:10px;font-size:.78rem;opacity:.65;text-align:center;max-width:520px;line-height:1.45}
+body{background:#02040a;color:#e8f0ff;font-family:Tahoma,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+.logo{margin:10px 0 4px;font-size:1.35rem;letter-spacing:1px;
+background:linear-gradient(90deg,#5dade2,#aed6f1,#f4d03f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:bold}
+.tag{font-size:.8rem;opacity:.65;margin-bottom:8px}
+#stage{position:relative;width:min(920px,100%);border:2px solid #1abc9c;border-radius:12px;overflow:hidden;
+box-shadow:0 0 40px rgba(26,188,156,.25),inset 0 0 60px rgba(0,0,0,.4)}
+canvas{display:block;width:100%;height:auto;background:#0b1020}
+#ui{display:none;width:min(920px,100%);padding:8px;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{background:rgba(15,30,50,.9);border:1px solid #1abc9c55;border-radius:12px;padding:6px 12px;font-size:.85rem}
+.barw{width:100px;height:8px;background:#1a2338;border-radius:4px;margin-top:3px;overflow:hidden}
+.barw>i{display:block;height:100%;border-radius:4px}
+#hp{background:linear-gradient(90deg,#e74c3c,#c0392b)}
+#ki{background:linear-gradient(90deg,#3498db,#2980b9)}
+#combo{background:linear-gradient(90deg,#f39c12,#e67e22)}
+.controls{display:none;width:min(920px,100%);padding:6px;gap:6px;flex-wrap:wrap;justify-content:center}
+.controls button{border:none;border-radius:18px;padding:10px 14px;font-size:.85rem;color:#fff;font-family:inherit;cursor:pointer}
+.controls button:disabled{opacity:.35}
+#bPunch{background:#c0392b}#bDash{background:#16a085}#bKame{background:#2980b9}
+#bForm{background:#8e44ad}#bMenu{background:#2c3e50}
+/* MENU */
+#menu{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;
+background:radial-gradient(circle at 50% 30%,#0e2a3a 0%,#050810 70%);text-align:center;padding:20px}
+#menu h1{font-size:1.7rem;margin-bottom:4px;color:#1abc9c;text-shadow:0 0 20px #1abc9c66}
+#menu .s{opacity:.7;margin-bottom:18px;font-size:.9rem;line-height:1.5}
+.mbtn{width:min(240px,90%);padding:13px;margin:5px;border:none;border-radius:28px;font-size:1rem;color:#fff;font-family:inherit;cursor:pointer}
+.mbtn.go{background:linear-gradient(90deg,#1abc9c,#16a085)}
+.mbtn.alt{background:linear-gradient(90deg,#2980b9,#6c5ce7)}
+.mbtn.dim{background:#2c3e50}
+#toast{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:25;font-size:1.25rem;font-weight:bold;
+text-align:center;text-shadow:0 0 16px #000;display:none;white-space:pre-line;pointer-events:none}
+.help{display:none;font-size:.75rem;opacity:.6;text-align:center;max-width:560px;margin:8px;line-height:1.4}
 </style>
 </head>
 <body>
-<h1>⚡ Goku Fighter 2</h1>
-<p class="sub">موجات · تحولات · Kamehameha · متجر</p>
+<div class="logo">GOKU FIGHTER 2 — SAGA</div>
+<div class="tag">جزء جديد: داش · كومبو · زعماء · تحول SSB</div>
 
-<div id="wrap">
-<canvas id="c" width="860" height="480"></canvas>
-<div id="msg"></div>
-
-<div id="menu">
-  <h2>Goku Fighter 2</h2>
-  <p style="opacity:.75;margin-bottom:14px;font-size:.9rem">قاتل أمواج الأعداء وتطور قوتك</p>
-  <button class="mbtn start" onclick="startGame()">▶ ابدأ القتال</button>
-  <button class="mbtn shop" onclick="openShop()">🛒 المتجر</button>
-  <button class="mbtn about" onclick="showAbout()">ℹ عن اللعبة</button>
-  <p style="margin-top:14px;font-size:.85rem;opacity:.7">أفضل نتيجة: <span id="bestTxt">0</span></p>
-</div>
-
-<div id="shopO">
-  <div class="panel">
-    <h2 style="color:#f1c40f;margin-bottom:8px">🛒 المتجر</h2>
-    <div style="color:#2ecc71;margin-bottom:12px">عملاتك: <span id="shopCoins">0</span></div>
-    <div id="shopList"></div>
-    <button onclick="closeShop()" style="background:#e74c3c;width:100%;margin-top:10px;border-radius:18px;padding:10px">إغلاق</button>
+<div id="stage">
+  <canvas id="cv" width="900" height="500"></canvas>
+  <div id="toast"></div>
+  <div id="menu">
+    <h1>Goku Fighter 2</h1>
+    <div class="s">نظام كومبو · اندفاع سريع · معارك زعماء<br>مختلف تماماً عن الجزء الأول</div>
+    <button class="mbtn go" onclick="start()">▶ ابدأ الساجا</button>
+    <button class="mbtn alt" onclick="toast('الجزء 2:\n• داش (اندفاع)\n• عداد كومبو\n• زعيم كل 5 موجات\n• تحول SSB',2800)">ما الجديد؟</button>
+    <button class="mbtn dim" onclick="toast('صُنعت للرفع على GitHub\nافتح index.html أو GitHub Pages',2200)">عن اللعبة</button>
+    <p style="margin-top:16px;opacity:.65;font-size:.85rem">أفضل نتيجة: <b id="bestV">0</b></p>
   </div>
 </div>
-</div>
 
-<div id="hud">
-  <div class="box">❤️ HP<div class="bar"><div id="hpF" style="width:100%"></div></div></div>
-  <div class="box">🔵 Ki<div class="bar"><div id="kiF" style="width:100%"></div></div></div>
-  <div class="box">💰 <span id="coinT">0</span></div>
-  <div class="box">النموذج: <span id="formT">Base</span></div>
-  <div class="box">الموجة: <span id="waveT">1</span></div>
-  <div class="box">النقاط: <span id="scoreT">0</span></div>
+<div id="ui">
+  <div class="chip">❤️ HP<div class="barw"><i id="hp" style="width:100%"></i></div></div>
+  <div class="chip">🔵 Ki<div class="barw"><i id="ki" style="width:100%"></i></div></div>
+  <div class="chip">🔥 كومبو<div class="barw"><i id="combo" style="width:0%"></i></div></div>
+  <div class="chip">الموجة <b id="wv">1</b></div>
+  <div class="chip">النقاط <b id="sc">0</b></div>
+  <div class="chip" id="formL">Base</div>
 </div>
-<div class="btns" id="gbtns">
-  <button id="punchB" onclick="doPunch()">👊 ضربة</button>
-  <button id="kameB" onclick="doKame()">💥 Kamehameha</button>
-  <button id="ssjB" onclick="goForm('ssj2')">🔥 SSJ2</button>
-  <button id="muiB" onclick="goForm('mui')">✨ MUI</button>
-  <button id="menuB" onclick="toMenu()">القائمة</button>
+<div class="controls" id="ctrls">
+  <button id="bPunch" onclick="punch()">👊 ضربة</button>
+  <button id="bDash" onclick="dash()">⚡ داش</button>
+  <button id="bKame" onclick="kame()">💥 Kamehameha</button>
+  <button id="bForm" onclick="transform()">🔥 تحول</button>
+  <button id="bMenu" onclick="menu()">قائمة</button>
 </div>
-<p class="help" id="help">الأسهم/WASD حركة · مسافة ضربة · Q كامهـامهـا · E SSJ2 · R MUI</p>
+<p class="help" id="help">WASD/أسهم حركة · مسافة ضربة · Shift داش · Q كامهـامهـا · E تحول<br>كل 5 موجات يظهر زعيم أقوى</p>
 
 <script>
-const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-const msgEl=document.getElementById('msg');
-
-// Audio
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 let actx=null;
-function audio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext);if(actx.state==='suspended')actx.resume()}
-function beep(f,d,t='square',v=.14,s=0){
-  audio();const o=actx.createOscillator(),g=actx.createGain();
+function A(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext);if(actx.state==='suspended')actx.resume()}
+function beep(f,d,t='square',v=.12,s=0){
+  A();const o=actx.createOscillator(),g=actx.createGain();
   o.type=t;o.frequency.setValueAtTime(f,actx.currentTime);
   if(s)o.frequency.linearRampToValueAtTime(f+s,actx.currentTime+d);
   g.gain.setValueAtTime(v,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d);
   o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d);
 }
 
-const FORMS={
-  base:{name:'Base',power:1,speed:4.5,maxHp:100,maxKi:100,kame:1,color:'#f5c542',hair:'#1c2833'},
-  ssj2:{name:'SSJ2',power:2.6,speed:5.5,maxHp:155,maxKi:145,kame:1.9,color:'#ffd700',hair:'#f1c40f'},
-  mui:{name:'MUI',power:4.5,speed:6.5,maxHp:210,maxKi:185,kame:3,color:'#dfe6e9',hair:'#b2bec3'},
-  blue:{name:'SSB',power:5.5,speed:7,maxHp:240,maxKi:210,kame:3.6,color:'#74b9ff',hair:'#0984e3'},
-  ui:{name:'Ultra Instinct',power:7,speed:7.8,maxHp:280,maxKi:250,kame:4.5,color:'#fff',hair:'#dfe6e9'}
-};
-
-const SHOP=[
-  {id:'blue',name:'Super Saiyan Blue',price:8000,desc:'قوة زرقاء عالية'},
-  {id:'ui',name:'Ultra Instinct',price:20000,desc:'أقوى نموذج في الجزء 2'}
+const FORMS=[
+  {id:'base',name:'Base',pow:1,spd:4.2,hp:100,ki:100,col:'#e67e22',hair:'#1a1a2e'},
+  {id:'ssj',name:'SSJ',pow:2.2,spd:5.0,hp:140,ki:130,col:'#f1c40f',hair:'#f4d03f'},
+  {id:'ssb',name:'SSB',pow:3.8,spd:6.2,hp:190,ki:180,col:'#3498db',hair:'#5dade2'},
+  {id:'ui',name:'Ultra Instinct',pow:5.5,spd:7.2,hp:240,ki:220,col:'#ecf0f1',hair:'#bdc3c7'}
 ];
 
-let coins=+localStorage.getItem('gf2c')||0;
-let owned=JSON.parse(localStorage.getItem('gf2o')||'["base","ssj2","mui"]');
-let best=+localStorage.getItem('gf2b')||0;
-document.getElementById('bestTxt').textContent=best;
+let best=+localStorage.getItem('gf2saga')||0;
+document.getElementById('bestV').textContent=best;
 
-let running=false,score=0,wave=1,form='base';
-let goku,enemies=[],beams=[],parts=[];
-let keys={},pCD=0,kCD=0,inv=0,tf=false,tfT=0,tfTo=null;
-let kameCh=false,kameT=0;
+let on=false,score=0,wave=1,fi=0; // form index
+let P,ens=[],beams=[],fx=[];
+let keys={},pCD=0,dCD=0,kCD=0,inv=0,combo=0,comboT=0;
+let charging=false,chargeT=0,boss=false;
 
-function save(){localStorage.setItem('gf2c',coins);localStorage.setItem('gf2o',JSON.stringify(owned));localStorage.setItem('gf2b',best)}
-function msg(t,ms=1300){msgEl.textContent=t;msgEl.style.display='block';clearTimeout(msgEl._t);msgEl._t=setTimeout(()=>msgEl.style.display='none',ms)}
+function toast(t,ms=1400){
+  const el=document.getElementById('toast');
+  el.textContent=t;el.style.display='block';
+  clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',ms);
+}
 function hud(){
-  if(!goku)return;
-  const f=FORMS[form];
-  document.getElementById('hpF').style.width=Math.max(0,goku.hp/f.maxHp*100)+'%';
-  document.getElementById('kiF').style.width=Math.max(0,goku.ki/f.maxKi*100)+'%';
-  document.getElementById('formT').textContent=f.name;
-  document.getElementById('waveT').textContent=wave;
-  document.getElementById('scoreT').textContent=score;
-  document.getElementById('coinT').textContent=coins;
-  document.getElementById('ssjB').disabled=!running||tf||form!=='base'||goku.ki<30;
-  document.getElementById('muiB').disabled=!running||tf||!['base','ssj2'].includes(form)||goku.ki<50;
-  document.getElementById('kameB').disabled=!running||kCD>0||kameCh||goku.ki<30;
-  document.getElementById('punchB').disabled=!running||pCD>0;
+  if(!P)return;
+  const f=FORMS[fi];
+  document.getElementById('hp').style.width=Math.max(0,P.hp/f.hp*100)+'%';
+  document.getElementById('ki').style.width=Math.max(0,P.ki/f.ki*100)+'%';
+  document.getElementById('combo').style.width=Math.min(100,combo*10)+'%';
+  document.getElementById('wv').textContent=wave+(boss?' 👑':'');
+  document.getElementById('sc').textContent=score;
+  document.getElementById('formL').textContent=f.name;
+  document.getElementById('bPunch').disabled=!on||pCD>0;
+  document.getElementById('bDash').disabled=!on||dCD>0||P.ki<12;
+  document.getElementById('bKame').disabled=!on||kCD>0||charging||P.ki<28;
+  document.getElementById('bForm').disabled=!on||fi>=FORMS.length-1||P.ki<40;
 }
 
-function toMenu(){
-  running=false;
+function menu(){
+  on=false;
   document.getElementById('menu').style.display='flex';
-  document.getElementById('hud').style.display='none';
-  document.getElementById('gbtns').style.display='none';
+  document.getElementById('ui').style.display='none';
+  document.getElementById('ctrls').style.display='none';
   document.getElementById('help').style.display='none';
-  document.getElementById('bestTxt').textContent=best;
+  document.getElementById('bestV').textContent=best;
 }
-function showAbout(){msg('Goku Fighter 2\nقتال موجات + تحولات\nارفعها على GitHub Pages',2500)}
-function openShop(){
-  document.getElementById('shopCoins').textContent=coins;
-  const list=document.getElementById('shopList');list.innerHTML='';
-  SHOP.forEach(it=>{
-    const own=owned.includes(it.id);
-    const d=document.createElement('div');d.className='item';
-    d.innerHTML=`<div style="text-align:right"><b>${it.name}</b><br><span style="font-size:.8rem;opacity:.75">${it.desc}</span><br><span style="color:#f1c40f">${own?'✓ مملوك':it.price.toLocaleString()+' 💰'}</span></div>
-      <button style="background:${own?'#27ae60':'#6c5ce7'};padding:7px 12px;border-radius:14px" onclick="buy('${it.id}')">${own?'✓':'شراء'}</button>`;
-    list.appendChild(d);
-  });
-  document.getElementById('shopO').classList.add('open');
-}
-function closeShop(){document.getElementById('shopO').classList.remove('open')}
-function buy(id){
-  const it=SHOP.find(x=>x.id===id);if(!it||owned.includes(id))return;
-  if(coins<it.price){msg('ما يكفيك عملات!',900);return}
-  coins-=it.price;owned.push(id);save();
-  document.getElementById('shopCoins').textContent=coins;
-  openShop();msg('🎉 اشتريت '+it.name,1200);
+function start(){
+  A();
+  document.getElementById('menu').style.display='none';
+  document.getElementById('ui').style.display='flex';
+  document.getElementById('ctrls').style.display='flex';
+  document.getElementById('help').style.display='block';
+  on=true;score=0;wave=1;fi=0;boss=false;combo=0;
+  const f=FORMS[0];
+  P={x:160,y:320,r:28,hp:f.hp,ki:f.ki,face:1,anim:0,dash:0};
+  ens=[];beams=[];fx=[];pCD=dCD=kCD=inv=0;charging=false;
+  toast('الساجا تبدأ!',900);
+  spawnWave();
+  requestAnimationFrame(loop);
 }
 
-const ETYPES={
-  saibaman:{hp:38,sp:1.0,dmg:8,pts:20,col:'#27ae60',lab:'Saibaman',r:17},
-  vegeta:{hp:110,sp:1.25,dmg:14,pts:70,col:'#2980b9',lab:'Vegeta',r:24},
-  frieza:{hp:150,sp:1.15,dmg:17,pts:100,col:'#a29bfe',lab:'Frieza',r:25},
-  cell:{hp:190,sp:1.1,dmg:19,pts:130,col:'#1abc9c',lab:'Cell',r:27},
-  beerus:{hp:250,sp:1.3,dmg:24,pts:190,col:'#6c5ce7',lab:'Beerus',r:28},
-  jiren:{hp:310,sp:1.2,dmg:28,pts:260,col:'#e74c3c',lab:'Jiren',r:29}
-};
-
-function spawnE(type){
-  const t=ETYPES[type]||ETYPES.saibaman;
-  enemies.push({...t,type,x:canvas.width+40+Math.random()*50,y:130+Math.random()*250,maxHp:t.hp,flash:0,atk:0});
-}
 function spawnWave(){
-  enemies=[];
-  const n=2+Math.floor(wave*1.15);
+  ens=[];
+  boss=(wave%5===0);
+  if(boss){
+    ens.push({x:cv.width+60,y:260,r:36,hp:180+wave*40,max:180+wave*40,sp:1.15,dmg:18+wave,pts:300+wave*20,col:'#e74c3c',name:'BOSS W'+wave,flash:0,atk:0,isBoss:true});
+    toast('👑 زعيم الموجة '+wave+'!',1600);beep(120,.3,'sawtooth',.15,80);
+    return;
+  }
+  const n=2+Math.floor(wave*0.9);
   for(let i=0;i<n;i++){
-    let type='saibaman';
-    if(wave>=2)type=Math.random()<.4?'vegeta':'saibaman';
-    if(wave>=4)type=Math.random()<.3?'frieza':(Math.random()<.5?'vegeta':'saibaman');
-    if(wave>=6)type=Math.random()<.28?'cell':(Math.random()<.4?'frieza':'vegeta');
-    if(wave>=8)type=Math.random()<.25?'beerus':(Math.random()<.4?'cell':'frieza');
-    if(wave>=11)type=Math.random()<.22?'jiren':(Math.random()<.4?'beerus':'cell');
-    setTimeout(()=>{if(running)spawnE(type)},i*380);
+    const types=[
+      {r:16,hp:30,sp:1.05,dmg:7,pts:15,col:'#27ae60',name:'Saibaman'},
+      {r:22,hp:70,sp:1.2,dmg:11,pts:40,col:'#2980b9',name:'Soldier'},
+      {r:24,hp:100,sp:1.1,dmg:14,pts:65,col:'#8e44ad',name:'Elite'}
+    ];
+    let t=types[0];
+    if(wave>=3)t=types[Math.random()<.5?1:0];
+    if(wave>=6)t=types[Math.floor(Math.random()*3)];
+    setTimeout(()=>{
+      if(!on)return;
+      ens.push({x:cv.width+30+Math.random()*80,y:140+Math.random()*240,...t,max:t.hp,flash:0,atk:0,isBoss:false});
+    },i*320);
   }
 }
 
 window.addEventListener('keydown',e=>{
   keys[e.key.toLowerCase()]=true;
   if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()))e.preventDefault();
-  if(!running)return;
-  if(e.key===' ')doPunch();
-  if(e.key.toLowerCase()==='q')doKame();
-  if(e.key.toLowerCase()==='e')goForm('ssj2');
-  if(e.key.toLowerCase()==='r')goForm('mui');
+  if(!on)return;
+  if(e.key===' ')punch();
+  if(e.key==='Shift'||e.key.toLowerCase()==='shift')dash();
+  if(e.key.toLowerCase()==='q')kame();
+  if(e.key.toLowerCase()==='e')transform();
 });
 window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
 
 let touch=null;
-canvas.addEventListener('touchstart',e=>{
-  e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();
-  touch={x:(t.clientX-r.left)*(canvas.width/r.width),y:(t.clientY-r.top)*(canvas.height/r.height)};
-},{passive:false});
-canvas.addEventListener('touchmove',e=>{
-  e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();
-  touch={x:(t.clientX-r.left)*(canvas.width/r.width),y:(t.clientY-r.top)*(canvas.height/r.height)};
-},{passive:false});
-canvas.addEventListener('touchend',()=>touch=null);
+cv.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],r=cv.getBoundingClientRect();
+  touch={x:(t.clientX-r.left)*(cv.width/r.width),y:(t.clientY-r.top)*(cv.height/r.height)}},{passive:false});
+cv.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0],r=cv.getBoundingClientRect();
+  touch={x:(t.clientX-r.left)*(cv.width/r.width),y:(t.clientY-r.top)*(cv.height/r.height)}},{passive:false});
+cv.addEventListener('touchend',()=>touch=null);
 
-function doPunch(){
-  if(!running||pCD>0||tf)return;audio();
-  const f=FORMS[form];pCD=form==='ui'?11:form==='blue'?13:form==='mui'?15:18;
-  beep(170,.08,'square',.18,-70);goku.anim=7;
-  const range=56+f.power*5;let hit=false;
-  for(const e of enemies){
-    const dx=e.x-goku.x,dy=e.y-goku.y;
-    if(Math.hypot(dx,dy)<range+e.r&&Math.sign(dx||1)===goku.facing){
-      e.hp-=12*f.power+Math.random()*7;e.flash=6;e.x+=goku.facing*18;hit=true;
-      burst(e.x,e.y,'#fff',6);if(e.hp<=0)kill(e);
+function punch(){
+  if(!on||pCD>0)return;A();
+  const f=FORMS[fi];pCD=fi>=3?12:fi>=2?15:18;
+  beep(160,.07,'square',.16,-60);P.anim=6;
+  const range=52+fi*8;let hit=false;
+  for(const e of ens){
+    const dx=e.x-P.x,dy=e.y-P.y;
+    if(Math.hypot(dx,dy)<range+e.r && Math.sign(dx||1)===P.face){
+      const dmg=(10+combo*2)*f.pow;
+      e.hp-=dmg;e.flash=5;e.x+=P.face*16;hit=true;
+      combo=Math.min(10,combo+1);comboT=90;
+      spark(e.x,e.y,'#fff',5);
+      if(e.hp<=0)die(e);
     }
   }
-  if(hit)beep(100,.1,'sawtooth',.15,-50);
+  if(hit)beep(90,.09,'sawtooth',.12,-40);
 }
-function doKame(){
-  if(!running||kCD>0||kameCh||goku.ki<30||tf)return;audio();
-  kameCh=true;kameT=0;beep(160,.45,'sawtooth',.12,350);msg('Ka...me...',500);
+function dash(){
+  if(!on||dCD>0||P.ki<12)return;A();
+  P.ki-=12;dCD=40;P.dash=12;
+  P.x+=P.face*90;
+  P.x=Math.max(30,Math.min(cv.width-30,P.x));
+  inv=15;beep(300,.12,'sine',.12,200);
+  spark(P.x,P.y,'#1abc9c',10);
+  toast('⚡ داش!',400);
+}
+function kame(){
+  if(!on||kCD>0||charging||P.ki<28)return;A();
+  charging=true;chargeT=0;beep(150,.4,'sawtooth',.1,300);toast('Ka...me...',500);
 }
 function fireKame(){
-  const f=FORMS[form];goku.ki-=30;kCD=75;kameCh=false;
-  beep(60,.7,'sawtooth',.22,-25);msg('HAAA!!',600);
-  const col=form==='ui'?'#fff':form==='blue'?'#74b9ff':form==='mui'?'#a29bfe':form==='ssj2'?'#feca57':'#3498db';
-  beams.push({x:goku.x+goku.facing*35,y:goku.y-4,dir:goku.facing,life:50,max:50,w:26+f.kame*9,dmg:38*f.power*f.kame,col});
-  burst(goku.x+goku.facing*40,goku.y,col,12);
+  const f=FORMS[fi];P.ki-=28;kCD=70;charging=false;
+  beep(55,.65,'sawtooth',.2,-20);toast('HAAA!!',600);
+  const col=fi>=3?'#ecf0f1':fi>=2?'#5dade2':fi>=1?'#f7dc6f':'#5dade2';
+  beams.push({x:P.x+P.face*30,y:P.y,dir:P.face,life:48,max:48,w:22+fi*6,dmg:28*f.pow*(1+combo*0.08),col});
+  spark(P.x+P.face*40,P.y,col,14);
 }
-function goForm(t){
-  if(!running||tf)return;
-  if(t==='ssj2'){if(form!=='base'||goku.ki<30)return;goku.ki-=30}
-  else if(t==='mui'){if(!['base','ssj2'].includes(form)||goku.ki<50)return;goku.ki-=50}
-  else if(t==='blue'){if(!owned.includes('blue')||goku.ki<55)return;goku.ki-=55}
-  else if(t==='ui'){if(!owned.includes('ui')||goku.ki<70)return;goku.ki-=70}
-  else return;
-  audio();tf=true;tfT=38;tfTo=t;
-  beep(200,.2,'sawtooth',.16,150);setTimeout(()=>beep(400,.25,'square',.14,100),150);
-  msg(t==='ssj2'?'🔥 SSJ2...':t==='mui'?'✨ MUI...':t==='blue'?'💙 SSB...':'⚪ Ultra Instinct...',700);
+function transform(){
+  if(!on||fi>=FORMS.length-1||P.ki<40)return;A();
+  P.ki-=40;fi++;
+  const f=FORMS[fi];P.hp=Math.min(f.hp,P.hp+40);
+  beep(250,.2,'sawtooth',.14,180);setTimeout(()=>beep(500,.25,'square',.12),180);
+  toast('🔥 '+f.name+'!',1400);
+  spark(P.x,P.y,f.hair,30);
   hud();
 }
-function kill(e){
-  score+=e.pts;coins+=Math.floor(e.pts/3)+4;save();
-  burst(e.x,e.y,e.col,14);enemies=enemies.filter(x=>x!==e);
-  if(!enemies.length){
-    beep(440,.1,'square',.1);setTimeout(()=>beep(554,.1,'square',.1),80);
-    msg('الموجة '+wave+' انتهت!',1100);wave++;
-    setTimeout(()=>{if(running)spawnWave()},1300);
+function die(e){
+  const mult=1+combo*0.15;
+  score+=Math.floor(e.pts*mult);
+  spark(e.x,e.y,e.col,12);
+  ens=ens.filter(x=>x!==e);
+  if(!ens.length){
+    beep(440,.08,'square',.1);setTimeout(()=>beep(660,.12,'square',.1),90);
+    toast(boss?'👑 الزعيم هُزم!\nالموجة '+(wave+1):'الموجة '+wave+' انتهت!',1200);
+    wave++;boss=false;
+    setTimeout(()=>{if(on)spawnWave()},1400);
   }
 }
-function burst(x,y,c,n){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,life:16+Math.random()*12,c,s:2+Math.random()*3})}
-
-function drawGoku(){
-  const x=goku.x,y=goku.y,f=FORMS[form],dir=goku.facing;
-  if(form!=='base'||tf){
-    const pulse=Math.sin(Date.now()/55)*7;
-    const t=tf?tfTo:form;
-    const col=t==='ui'||t==='mui'?'rgba(255,255,255,.28)':t==='blue'?'rgba(116,185,255,.3)':'rgba(255,215,0,.3)';
-    ctx.beginPath();ctx.arc(x,y,50+pulse,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
-  }
-  if(kameCh){ctx.beginPath();ctx.arc(x+dir*32,y-4,12+kameT*.9,0,Math.PI*2);ctx.fillStyle=`rgba(100,180,255,${.25+kameT/70})`;ctx.fill()}
-  // body
-  ctx.save();if(dir<0){ctx.translate(x,0);ctx.scale(-1,1);ctx.translate(-x,0)}
-  ctx.fillStyle='#e67e22';
-  ctx.fillRect(x-14,y-6,28,22);
-  ctx.fillStyle='#2980b9';ctx.fillRect(x-8,y-6,16,14);
-  ctx.fillStyle='#1a5276';ctx.fillRect(x-15,y+12,30,5);
-  // head
-  ctx.fillStyle='#f5cba7';ctx.beginPath();ctx.arc(x,y-18,13,0,Math.PI*2);ctx.fill();
-  // hair
-  ctx.fillStyle=f.hair;
-  ctx.beginPath();
-  ctx.moveTo(x-11,y-22);ctx.lineTo(x-8,y-40);ctx.lineTo(x-2,y-26);
-  ctx.lineTo(x+2,y-44);ctx.lineTo(x+6,y-26);ctx.lineTo(x+12,y-38);ctx.lineTo(x+10,y-22);
-  ctx.closePath();ctx.fill();
-  // eyes
-  ctx.fillStyle=form==='mui'||form==='ui'?'#74b9ff':'#111';
-  ctx.beginPath();ctx.arc(x-5,y-19,3,0,Math.PI*2);ctx.arc(x+5,y-19,3,0,Math.PI*2);ctx.fill();
-  // boots
-  ctx.fillStyle='#1a5276';ctx.fillRect(x-13,y+20,11,9);ctx.fillRect(x+2,y+20,11,9);
-  if(goku.anim>0){
-    ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=3;
-    ctx.beginPath();ctx.arc(x+36,y,11+(7-goku.anim),0,Math.PI*2);ctx.stroke();goku.anim--;
-  }
-  ctx.restore();
-  ctx.fillStyle='#fff';ctx.font='bold 11px Tahoma';ctx.textAlign='center';
-  ctx.fillText('Goku',x,y+42);
-  if(form!=='base'){ctx.fillStyle=f.hair;ctx.font='bold 10px Tahoma';ctx.fillText(f.name,x,y+54)}
-}
-function drawEnemy(e){
-  if(e.flash>0){ctx.globalAlpha=.5+Math.sin(e.flash)*.5;e.flash--}
-  ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fillStyle=e.col;ctx.fill();
-  ctx.strokeStyle='#222';ctx.lineWidth=2;ctx.stroke();
-  if(e.type==='vegeta'){ctx.fillStyle='#2c3e50';ctx.fillRect(e.x-e.r*.7,e.y-2,e.r*1.4,e.r*.85)}
-  if(e.type==='beerus'){
-    ctx.fillStyle='#6c5ce7';
-    ctx.beginPath();ctx.moveTo(e.x-e.r*.6,e.y-e.r*.5);ctx.lineTo(e.x-e.r*.3,e.y-e.r*1.2);ctx.lineTo(e.x,e.y-e.r*.4);ctx.fill();
-    ctx.beginPath();ctx.moveTo(e.x+e.r*.6,e.y-e.r*.5);ctx.lineTo(e.x+e.r*.3,e.y-e.r*1.2);ctx.lineTo(e.x,e.y-e.r*.4);ctx.fill();
-  }
-  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(e.x-5,e.y-3,3,0,Math.PI*2);ctx.arc(e.x+5,e.y-3,3,0,Math.PI*2);ctx.fill();
-  ctx.globalAlpha=1;
-  const bw=e.r*2;ctx.fillStyle='#333';ctx.fillRect(e.x-bw/2,e.y-e.r-12,bw,4);
-  ctx.fillStyle='#e74c3c';ctx.fillRect(e.x-bw/2,e.y-e.r-12,bw*(e.hp/e.maxHp),4);
-  ctx.fillStyle='#fff';ctx.font='9px Tahoma';ctx.textAlign='center';ctx.fillText(e.lab,e.x,e.y+e.r+11);
-}
-function drawBg(){
-  const g=ctx.createLinearGradient(0,0,0,canvas.height);
-  g.addColorStop(0,'#0f0c29');g.addColorStop(.55,'#302b63');g.addColorStop(1,'#24243e');
-  ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle='#1a1a2e';ctx.fillRect(0,canvas.height-50,canvas.width,50);
-}
+function spark(x,y,c,n){for(let i=0;i<n;i++)fx.push({x,y,vx:(Math.random()-.5)*9,vy:(Math.random()-.5)*9,life:14+Math.random()*12,c,s:2+Math.random()*3})}
 
 function update(){
-  if(pCD>0)pCD--;if(kCD>0)kCD--;if(inv>0)inv--;
-  if(kameCh){kameT++;if(kameT>=32)fireKame()}
-  if(tf){
-    tfT--;if(tfT%2===0)burst(goku.x+(Math.random()-.5)*40,goku.y+(Math.random()-.5)*45,tfTo==='mui'||tfTo==='ui'?'#fff':'#f1c40f',2);
-    if(tfT<=0){
-      form=tfTo;const f=FORMS[form];goku.hp=Math.min(f.maxHp,goku.hp+35);
-      tf=false;tfTo=null;
-      msg(form==='ssj2'?'🔥 Super Saiyan 2!':form==='mui'?'✨ MUI!':form==='blue'?'💙 Super Saiyan Blue!':'⚪ Ultra Instinct!',1300);
-      burst(goku.x,goku.y,FORMS[form].hair,35);hud();
-    }
-  }
-  const f=FORMS[form];let dx=0,dy=0;
-  if(keys['arrowleft']||keys['a'])dx-=1;if(keys['arrowright']||keys['d'])dx+=1;
-  if(keys['arrowup']||keys['w'])dy-=1;if(keys['arrowdown']||keys['s'])dy+=1;
-  if(touch){const tdx=touch.x-goku.x,tdy=touch.y-goku.y,d=Math.hypot(tdx,tdy);if(d>12){dx=tdx/d;dy=tdy/d}}
-  if(!tf&&!kameCh&&(dx||dy)){const l=Math.hypot(dx,dy)||1;goku.x+=(dx/l)*f.speed;goku.y+=(dy/l)*f.speed;if(dx)goku.facing=Math.sign(dx)}
-  goku.x=Math.max(28,Math.min(canvas.width-28,goku.x));
-  goku.y=Math.max(50,Math.min(canvas.height-65,goku.y));
-  goku.ki=Math.min(f.maxKi,goku.ki+.09*(form==='ui'?1.6:form==='blue'?1.4:1));
+  if(pCD>0)pCD--;if(dCD>0)dCD--;if(kCD>0)kCD--;if(inv>0)inv--;
+  if(comboT>0){comboT--;if(comboT<=0)combo=0}
+  if(charging){chargeT++;if(chargeT>=30)fireKame()}
+  if(P.dash>0)P.dash--;
 
-  for(const e of enemies){
-    const dx=goku.x-e.x,dy=goku.y-e.y,d=Math.hypot(dx,dy)||1;
+  const f=FORMS[fi];
+  let dx=0,dy=0;
+  if(keys['arrowleft']||keys['a'])dx-=1;
+  if(keys['arrowright']||keys['d'])dx+=1;
+  if(keys['arrowup']||keys['w'])dy-=1;
+  if(keys['arrowdown']||keys['s'])dy+=1;
+  if(touch){const tx=touch.x-P.x,ty=touch.y-P.y,d=Math.hypot(tx,ty);if(d>14){dx=tx/d;dy=ty/d}}
+  if(!charging&&(dx||dy)){
+    const l=Math.hypot(dx,dy)||1;
+    P.x+=(dx/l)*f.spd;P.y+=(dy/l)*f.spd;
+    if(dx)P.face=Math.sign(dx);
+  }
+  P.x=Math.max(28,Math.min(cv.width-28,P.x));
+  P.y=Math.max(55,Math.min(cv.height-60,P.y));
+  P.ki=Math.min(f.ki,P.ki+0.1*(1+fi*0.15));
+
+  for(const e of ens){
+    const dx=P.x-e.x,dy=P.y-e.y,d=Math.hypot(dx,dy)||1;
     e.x+=(dx/d)*e.sp;e.y+=(dy/d)*e.sp;
     if(e.atk>0)e.atk--;
-    if(d<e.r+goku.r-5&&e.atk<=0&&inv<=0&&!tf){
-      const red=form==='ui'?.4:form==='blue'?.5:form==='mui'?.6:form==='ssj2'?.75:1;
-      goku.hp-=e.dmg*red;inv=20;e.atk=36;beep(180,.12,'sawtooth',.12,-100);
-      burst(goku.x,goku.y,'#e74c3c',7);
-      if(goku.hp<=0){gameOver();return}
+    if(d<e.r+P.r-4&&e.atk<=0&&inv<=0){
+      const red=1-fi*0.12;
+      P.hp-=e.dmg*Math.max(0.4,red);inv=18;e.atk=34;
+      beep(170,.1,'sawtooth',.12,-90);spark(P.x,P.y,'#e74c3c',6);
+      combo=0;comboT=0;
+      if(P.hp<=0){over();return}
     }
   }
   for(const b of beams){
     b.life--;
-    const len=Math.min(canvas.width,60+(1-b.life/b.max)*850);
-    for(const e of[...enemies]){
-      const end=b.x+b.dir*len,minX=Math.min(b.x,end),maxX=Math.max(b.x,end);
-      if(e.x>minX-e.r&&e.x<maxX+e.r&&Math.abs(e.y-b.y)<b.w+e.r){
-        e.hp-=b.dmg*.035;e.flash=4;e.x+=b.dir*2;
-        if(Math.random()<.25)burst(e.x,e.y,b.col,2);
-        if(e.hp<=0)kill(e);
+    const len=Math.min(cv.width,70+(1-b.life/b.max)*900);
+    for(const e of[...ens]){
+      const end=b.x+b.dir*len,a=Math.min(b.x,end),z=Math.max(b.x,end);
+      if(e.x>a-e.r&&e.x<z+e.r&&Math.abs(e.y-b.y)<b.w+e.r){
+        e.hp-=b.dmg*0.04;e.flash=3;e.x+=b.dir*2;
+        if(Math.random()<.3)spark(e.x,e.y,b.col,2);
+        if(e.hp<=0)die(e);
       }
     }
   }
   beams=beams.filter(b=>b.life>0);
-  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.life--}
-  parts=parts.filter(p=>p.life>0);
+  for(const p of fx){p.x+=p.vx;p.y+=p.vy;p.vy+=.15;p.life--}
+  fx=fx.filter(p=>p.life>0);
   hud();
 }
-function gameOver(){
-  running=false;
-  if(score>best){best=score;save()}
-  msg('انتهت!\nالنقاط: '+score+'\nالموجة: '+wave,3000);
-  setTimeout(toMenu,2600);
+function over(){
+  on=false;
+  if(score>best){best=score;localStorage.setItem('gf2saga',best)}
+  toast('انتهت الساجا\nالنقاط: '+score+'\nالموجة: '+wave,3200);
+  setTimeout(menu,2800);
 }
-function startGame(){
-  audio();
-  document.getElementById('menu').style.display='none';
-  document.getElementById('hud').style.display='flex';
-  document.getElementById('gbtns').style.display='flex';
-  document.getElementById('help').style.display='block';
-  running=true;score=0;wave=1;form='base';
-  goku={x:140,y:300,r:30,hp:100,ki:100,facing:1,anim:0};
-  enemies=[];beams=[];parts=[];pCD=kCD=inv=0;tf=false;kameCh=false;
-  msg('ابدأ!',800);spawnWave();requestAnimationFrame(loop);
+
+function draw(){
+  // bg
+  const g=ctx.createLinearGradient(0,0,0,cv.height);
+  g.addColorStop(0,'#0a1628');g.addColorStop(.5,'#12243a');g.addColorStop(1,'#0d1520');
+  ctx.fillStyle=g;ctx.fillRect(0,0,cv.width,cv.height);
+  // stars
+  ctx.fillStyle='rgba(255,255,255,.15)';
+  for(let i=0;i<40;i++){const sx=(i*97+Date.now()/80)%cv.width,sy=(i*53)%(cv.height-50);ctx.fillRect(sx,sy,2,2)}
+  // ground
+  ctx.fillStyle='#0a1520';ctx.fillRect(0,cv.height-48,cv.width,48);
+  ctx.strokeStyle='#1abc9c33';ctx.beginPath();ctx.moveTo(0,cv.height-48);ctx.lineTo(cv.width,cv.height-48);ctx.stroke();
+
+  // beams
+  for(const b of beams){
+    const len=Math.min(cv.width,70+(1-b.life/b.max)*900);
+    const gr=ctx.createLinearGradient(b.x,b.y,b.x+b.dir*len,b.y);
+    gr.addColorStop(0,b.col);gr.addColorStop(.45,'#fff');gr.addColorStop(1,b.col);
+    ctx.globalAlpha=.9;ctx.fillStyle=gr;
+    ctx.beginPath();ctx.ellipse(b.x+b.dir*len/2,b.y,len/2,b.w/2,0,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=.25;ctx.beginPath();ctx.ellipse(b.x+b.dir*len/2,b.y,len/2,b.w,0,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+  }
+  // enemies
+  for(const e of ens){
+    if(e.flash>0){ctx.globalAlpha=.55;e.flash--}
+    ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fillStyle=e.col;ctx.fill();
+    ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.stroke();
+    if(e.isBoss){ctx.strokeStyle='#f1c40f';ctx.lineWidth=3;ctx.stroke()}
+    ctx.fillStyle='#111';ctx.beginPath();ctx.arc(e.x-5,e.y-3,3,0,Math.PI*2);ctx.arc(e.x+5,e.y-3,3,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    const bw=e.r*2;ctx.fillStyle='#222';ctx.fillRect(e.x-bw/2,e.y-e.r-14,bw,5);
+    ctx.fillStyle='#e74c3c';ctx.fillRect(e.x-bw/2,e.y-e.r-14,bw*(e.hp/e.max),5);
+    ctx.fillStyle='#fff';ctx.font='bold 10px Tahoma';ctx.textAlign='center';ctx.fillText(e.name,e.x,e.y+e.r+12);
+  }
+  // player
+  if(inv<=0||Math.floor(inv/3)%2===0){
+    const f=FORMS[fi],x=P.x,y=P.y;
+    // aura
+    if(fi>0){
+      const pulse=Math.sin(Date.now()/50)*6;
+      ctx.beginPath();ctx.arc(x,y,42+pulse,0,Math.PI*2);
+      ctx.fillStyle=fi>=3?'rgba(255,255,255,.2)':fi>=2?'rgba(52,152,219,.28)':'rgba(241,196,15,.28)';
+      ctx.fill();
+    }
+    if(charging){ctx.beginPath();ctx.arc(x+P.face*28,y,10+chargeT,.8,0,Math.PI*2);ctx.fillStyle='rgba(100,180,255,.35)';ctx.fill()}
+    if(P.dash>0){ctx.globalAlpha=.4;ctx.fillStyle='#1abc9c';ctx.fillRect(x-P.face*40,y-15,30,30);ctx.globalAlpha=1}
+    ctx.save();if(P.face<0){ctx.translate(x,0);ctx.scale(-1,1);ctx.translate(-x,0)}
+    // gi
+    ctx.fillStyle=f.col;ctx.fillRect(x-13,y-4,26,20);
+    ctx.fillStyle='#1a5276';ctx.fillRect(x-14,y+12,28,5);
+    ctx.fillStyle='#f5cba7';ctx.beginPath();ctx.arc(x,y-16,12,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=f.hair;
+    ctx.beginPath();ctx.moveTo(x-10,y-20);ctx.lineTo(x-6,y-38);ctx.lineTo(x,y-24);ctx.lineTo(x+4,y-40);ctx.lineTo(x+8,y-24);ctx.lineTo(x+11,y-34);ctx.lineTo(x+9,y-20);ctx.fill();
+    ctx.fillStyle=fi>=2?'#5dade2':'#111';
+    ctx.beginPath();ctx.arc(x-4,y-17,2.5,0,Math.PI*2);ctx.arc(x+4,y-17,2.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#1a5276';ctx.fillRect(x-12,y+20,10,8);ctx.fillRect(x+2,y+20,10,8);
+    if(P.anim>0){ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(x+34,y,10,0,Math.PI*2);ctx.stroke();P.anim--}
+    ctx.restore();
+    ctx.fillStyle='#fff';ctx.font='bold 11px Tahoma';ctx.textAlign='center';ctx.fillText('Goku',x,y+40);
+    if(fi>0){ctx.fillStyle=f.hair;ctx.font='bold 10px Tahoma';ctx.fillText(f.name,x,y+52)}
+  }
+  for(const p of fx){ctx.globalAlpha=p.life/20;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill()}
+  ctx.globalAlpha=1;
 }
 function loop(){
-  if(!running){drawBg();return}
-  update();drawBg();
-  for(const b of beams){
-    const len=Math.min(canvas.width,60+(1-b.life/b.max)*850);
-    const gr=ctx.createLinearGradient(b.x,b.y,b.x+b.dir*len,b.y);
-    gr.addColorStop(0,b.col);gr.addColorStop(.5,'#fff');gr.addColorStop(1,b.col);
-    ctx.fillStyle=gr;c
+  if(!on)return;
+  update();draw();
+  requestAnimationFrame(loop);
+}
+menu();
+</script>
+</body>
+</html>

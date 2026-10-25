@@ -3,64 +3,622 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AURA RNG - Mobile Ultra Simulator</title>
+  <title>AURA RNG - Ultra Simulator</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
-    html, body { width: 100%; height: 100%; background-color: #070913; color: #ffffff; overflow: hidden; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    /* حاوية اللعبة المرنة لملء شاشة الجوال بالكامل */
+    body {
+      background-color: #050714;
+      color: #ffffff;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .app-container {
-      width: 100vw; height: 100vh;
-      background: radial-gradient(circle at center, #0f1429 0%, #060810 100%);
-      display: flex; flex-direction: column; justify-content: space-between;
-      position: relative; overflow: hidden;
+      width: 100%;
+      height: 100%;
+      max-width: 900px;
+      max-height: 100vh;
+      background: radial-gradient(circle at center, #0f162e 0%, #050714 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* الشريط العلوي */
+    /* Top Stats Bar */
     .top-bar {
-      height: 56px; background: rgba(13, 17, 34, 0.95);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 12px; border-bottom: 1px solid #1a233d; z-index: 10; shrink: 0;
+      height: 55px;
+      background: rgba(10, 14, 29, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid #1a2542;
+      z-index: 10;
+      flex-shrink: 0;
     }
 
-    .brand { font-weight: 800; font-size: 13px; letter-spacing: 0.5px; color: #38ef7d; }
-    .brand span { color: #00c6ff; }
+    .brand {
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: #38ef7d;
+    }
 
-    .stats-group { display: flex; gap: 6px; }
+    .brand span {
+      color: #00c6ff;
+    }
+
+    .stats-group {
+      display: flex;
+      gap: 6px;
+    }
+
     .stat-badge {
-      background: #111728; border: 1px solid #1f2b48; padding: 4px 8px; border-radius: 8px;
-      display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #c0cdf0;
+      background: #11182a;
+      border: 1px solid #1f2d4e;
+      padding: 5px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #b0c4de;
     }
-    .stat-badge .val { color: #ffffff; font-weight: 700; }
 
-    /* منطقة العرض الرئيسية (تتأقلم تلقائياً مع حجم الشاشة) */
+    .stat-badge .val {
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    /* Main Aura Display */
     .display-area {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative; padding: 10px; width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      width: 100%;
     }
 
     .equipped-pill {
-      background: rgba(18, 25, 45, 0.8); border: 1px solid #28375c; padding: 4px 14px;
-      border-radius: 20px; font-size: 11px; color: #8fa0cc; margin-bottom: 12px; z-index: 2;
+      background: rgba(16, 24, 46, 0.85);
+      border: 1px solid #25365d;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: #8da3d0;
+      margin-bottom: 15px;
+      z-index: 2;
     }
-    .equipped-pill span { color: #38ef7d; font-weight: bold; }
 
-    /* بطاقة الهالة */
+    .equipped-pill span {
+      color: #38ef7d;
+      font-weight: bold;
+    }
+
     .aura-card {
-      width: 90%; max-width: 360px; height: 50vh; max-height: 240px;
-      background: rgba(15, 22, 41, 0.7); border: 2px solid #233257; border-radius: 20px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative; overflow: hidden; box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      width: 90%;
+      max-width: 350px;
+      height: 220px;
+      background: rgba(14, 21, 41, 0.75);
+      border: 2px solid #213259;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
       transition: border-color 0.3s, box-shadow 0.3s;
     }
 
     .aura-orb {
-      width: 75px; height: 75px; border-radius: 50%; background: #ffffff;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.8); margin-bottom: 15px;
-      transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.9);
+      margin-bottom: 12px;
+      transition: background 0.3s, box-shadow 0.3s;
     }
 
-    .aura-title { font-size: 20px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; text-align: center; }
+    .aura-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
     .rarity-pill {
-      background: #111827; border: 1px solid #2b3a5e; padding: 5px 14px; border-radius: 12px;
-      font-size: 11px; font-weight: 700; color: #a1b
+      background: #0d1324;
+      border: 1px solid #23345a;
+      padding: 4px 14px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #a0b6e0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Bottom Control Bar */
+    .bottom-controls {
+      height: 85px;
+      background: rgba(8, 12, 24, 0.98);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 15px;
+      border-top: 1px solid #1a2542;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .btn-secondary {
+      background: #121a30;
+      border: 1px solid #202e52;
+      color: #9cb3e0;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.92);
+      background: #182442;
+    }
+
+    .roll-btn-wrapper {
+      position: relative;
+    }
+
+    .roll-btn {
+      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+      border: none;
+      color: #ffffff;
+      padding: 12px 32px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 114, 255, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .roll-btn:active {
+      transform: scale(0.92);
+    }
+
+    .roll-btn.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(0.8);
+    }
+
+    .cooldown-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: #00f0ff;
+    }
+
+    /* Modal Screens */
+    .modal-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 7, 18, 0.96);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      align-items: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .modal-header {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #1a2646;
+      padding-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #38ef7d;
+    }
+
+    .grid-container {
+      width: 100%;
+      max-width: 500px;
+      flex: 1;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding-bottom: 10px;
+    }
+
+    .shop-card {
+      background: #0f162a;
+      border: 1px solid #1e2c4c;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      justify-content: space-between;
+    }
+
+    .shop-card .multiplier {
+      font-size: 16px;
+      font-weight: 900;
+      color: #00f0ff;
+      margin-bottom: 4px;
+    }
+
+    .shop-card .cost {
+      font-size: 11px;
+      color: #ffd700;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .cutscene-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      animation: flashBg 0.5s infinite alternate;
+    }
+
+    @keyframes flashBg {
+      0% { background: #000000; }
+      100% { background: #15002a; }
+    }
+
+    .cutscene-title {
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      animation: pulseText 0.4s infinite alternate;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    @keyframes pulseText {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.12); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Top Stats Bar -->
+    <div class="top-bar">
+      <div class="brand">💎 AURA <span>RNG</span></div>
+      <div class="stats-group">
+        <div class="stat-badge">🪙 <span class="val" id="coinsVal" style="color:#ffd700;">100</span></div>
+        <div class="stat-badge">🎲 <span class="val" id="rollsVal">0</span></div>
+        <div class="stat-badge">⚡ <span class="val" id="luckVal" style="color:#00f0ff;">1.0x</span></div>
+      </div>
+    </div>
+
+    <!-- Main Display -->
+    <div class="display-area">
+      <div class="equipped-pill">Equipped: <span id="equippedTxt">None</span></div>
+
+      <div class="aura-card" id="auraCard">
+        <div class="aura-orb" id="auraOrb"></div>
+        <div class="aura-title" id="auraTitle" style="color: #a0a0a0;">COMMON</div>
+        <div class="rarity-pill">
+          <span id="rarityLabel">COMMON</span>
+          <span id="rarityChance" style="color: #38ef7d;">1 in 2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Control Bar -->
+    <div class="bottom-controls">
+      <button class="btn-secondary" onclick="openModal('shopModal')">🛒 SHOP</button>
+      
+      <div class="roll-btn-wrapper">
+        <button class="roll-btn" id="rollBtn" onclick="triggerRoll()">
+          <span>ROLL</span>
+          <span style="font-size: 9px; opacity: 0.8;">AURA</span>
+        </button>
+        <div class="cooldown-overlay hidden" id="cdOverlay">2.0s</div>
+      </div>
+
+      <button class="btn-secondary" onclick="openModal('inventoryModal')">🎒 BAG</button>
+    </div>
+
+    <!-- Shop Modal -->
+    <div class="modal-screen hidden" id="shopModal">
+      <div class="modal-header">
+        <div class="modal-title">🛒 LUCK BOOST SHOP</div>
+        <button class="btn-secondary" onclick="closeModal('shopModal')">✕ CLOSE</button>
+      </div>
+      <div class="grid-container" id="shopGrid"></div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div class="modal-screen hidden" id="inventoryModal">
+      <div class="modal-header">
+        <div class="modal-title">🎒 INVENTORY</div>
+        <button class="btn-secondary" onclick="closeModal('inventoryModal')">✕ CLOSE</button>
+      </div>
+      <div class="grid-container" id="inventoryGrid"></div>
+    </div>
+
+    <!-- Ultra Rare Cutscene Overlay -->
+    <div class="cutscene-overlay hidden" id="cutsceneOverlay">
+      <div style="font-size: 13px; color: #ffaa00; font-weight: bold; margin-bottom: 8px;">🌟 UNBELIEVABLE DROP! 🌟</div>
+      <div class="cutscene-title" id="cutsceneTitle" style="color: #ff0055;">SUPREME</div>
+      <div style="font-size: 16px; color: #38ef7d; font-weight: 800;" id="cutsceneChance">1 in 100,000,000</div>
+    </div>
+
+  </div>
+
+  <script>
+    const AURAS = [
+      { name: "Common", chance: 2, color: "#b0b0b0", orbColor: "#ffffff" },
+      { name: "Uncommon", chance: 4, color: "#38ef7d", orbColor: "#38ef7d" },
+      { name: "Rare", chance: 10, color: "#00c6ff", orbColor: "#00c6ff" },
+      { name: "Epic", chance: 50, color: "#a855f7", orbColor: "#a855f7" },
+      { name: "Legendary", chance: 250, color: "#ffaa00", orbColor: "#ffaa00" },
+      { name: "Mythic", chance: 1250, color: "#ff0055", orbColor: "#ff0055" },
+      { name: "Solaris", chance: 12500, color: "#ffe600", orbColor: "#ffe600" },
+      { name: "Celestial", chance: 150000, color: "#00f0ff", orbColor: "#00f0ff" },
+      { name: "Gargantua", chance: 1500000, color: "#ff00ff", orbColor: "#ff00ff" },
+      { name: "ARCHANGEL", chance: 77779647, color: "#ffff00", orbColor: "#ffffff" },
+      { name: "OVERLORD", chance: 250000000, color: "#ff3300", orbColor: "#ff3300" },
+      { name: "SINGULARITY", chance: 1000000000, color: "#00ffff", orbColor: "#00ffff" },
+      { name: "ABSOLUTE INFINITY", chance: 10000000000, color: "#ff00aa", orbColor: "#ffffff" }
+    ];
+
+    const SHOP_ITEMS = [
+      { mult: 2, cost: 50 },
+      { mult: 4, cost: 120 },
+      { mult: 6, cost: 250 },
+      { mult: 8, cost: 450 },
+      { mult: 10, cost: 800 },
+      { mult: 50, cost: 3500 },
+      { mult: 100, cost: 8000 },
+      { mult: 188, cost: 15000 },
+      { mult: 250, cost: 25000 },
+      { mult: 1000, cost: 100000 }
+    ];
+
+    let state = {
+      coins: 100,
+      rolls: 0,
+      luckMult: 1.0,
+      equipped: "None",
+      inventory: {},
+      isRolling: false
+    };
+
+    window.onload = function() {
+      let saved = localStorage.getItem('auraRngSaveData');
+      if (saved) {
+        try {
+          state = Object.assign(state, JSON.parse(saved));
+        } catch(e) {}
+      }
+      updateUI();
+      renderShop();
+    };
+
+    function saveState() {
+      localStorage.setItem('auraRngSaveData', JSON.stringify(state));
+      updateUI();
+    }
+
+    function updateUI() {
+      document.getElementById('coinsVal').innerText = state.coins.toLocaleString();
+      document.getElementById('rollsVal').innerText = state.rolls.toLocaleString();
+      document.getElementById('luckVal').innerText = state.luckMult + 'x';
+      document.getElementById('equippedTxt').innerText = state.equipped;
+    }
+
+    function triggerRoll() {
+      if (state.isRolling) return;
+
+      state.isRolling = true;
+      state.rolls++;
+      state.coins += Math.floor(5 * state.luckMult);
+
+      let btn = document.getElementById('rollBtn');
+      let cdOverlay = document.getElementById('cdOverlay');
+      btn.classList.add('disabled');
+      cdOverlay.classList.remove('hidden');
+
+      let timeLeft = 2.0;
+      let cdInterval = setInterval(function() {
+        timeLeft -= 0.1;
+        cdOverlay.innerText = timeLeft.toFixed(1) + 's';
+        if (timeLeft <= 0) {
+          clearInterval(cdInterval);
+          cdOverlay.classList.add('hidden');
+          btn.classList.remove('disabled');
+          state.isRolling = false;
+        }
+      }, 100);
+
+      let result = calculateRoll();
+      
+      if (result.chance >= 100000) {
+        showCutscene(result);
+      } else {
+        displayAura(result);
+      }
+
+      state.inventory[result.name] = (state.inventory[result.name] || 0) + 1;
+      saveState();
+    }
+
+    function calculateRoll() {
+      for (let i = AURAS.length - 1; i >= 0; i--) {
+        let aura = AURAS[i];
+        let effectiveChance = aura.chance / state.luckMult;
+        let rand = Math.random() * effectiveChance;
+        if (rand <= 1 || i === 0) {
+          return aura;
+        }
+      }
+      return AURAS[0];
+    }
+
+    function displayAura(aura) {
+      let card = document.getElementById('auraCard');
+      let orb = document.getElementById('auraOrb');
+      let title = document.getElementById('auraTitle');
+      let label = document.getElementById('rarityLabel');
+      let chance = document.getElementById('rarityChance');
+
+      title.innerText = aura.name;
+      title.style.color = aura.color;
+      label.innerText = aura.name;
+      chance.innerText = "1 in " + aura.chance.toLocaleString();
+
+      orb.style.background = aura.orbColor;
+      orb.style.boxShadow = "0 0 30px " + aura.color;
+      card.style.borderColor = aura.color;
+    }
+
+    function showCutscene(aura) {
+      let overlay = document.getElementById('cutsceneOverlay');
+      let title = document.getElementById('cutsceneTitle');
+      let chance = document.getElementById('cutsceneChance');
+
+      title.innerText = aura.name;
+      title.style.color = aura.color;
+      chance.innerText = "1 in " + aura.chance.toLocaleString();
+
+      overlay.classList.remove('hidden');
+      setTimeout(function() {
+        overlay.classList.add('hidden');
+        displayAura(aura);
+      }, 2500);
+    }
+
+    function openModal(id) {
+      if (id === 'inventoryModal') renderInventory();
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function renderShop() {
+      let grid = document.getElementById('shopGrid');
+      grid.innerHTML = "";
+      SHOP_ITEMS.forEach(function(item) {
+        let card = document.createElement('div');
+        card.className = 'shop-card';
+        card.innerHTML = 
+          '<div class="multiplier">' + item.mult + 'x LUCK</div>' +
+          '<div class="cost">🪙 ' + item.cost.toLocaleString() + '</div>' +
+          '<button class="btn-secondary" style="padding: 6px 12px; font-size: 11px;" onclick="buyLuck(' + item.mult + ', ' + item.cost + ')">BUY</button>';
+        grid.appendChild(card);
+      });
+    }
+
+    function buyLuck(mult, cost) {
+      if (state.coins >= cost) {
+        state.coins -= cost;
+        state.luckMult = mult;
+        saveState();
+        alert("🎉 Purchased " + mult + "x Luck Multiplier!");
+      } else {
+        alert("❌ Not enough Coins!");
+      }
+    }
+
+    function renderInventory() {
+      let grid = document.getElementById('inventoryGrid');
+      grid.innerHTML = "";
+      AURAS.forEach(function(aura) {
+        let count = state.inventory[aura.name] || 0;
+        if (count > 0) {
+          let card = document.createElement('div');
+          card.className = 'shop-card';
+          card.style.borderColor = aura.color;
+          card.innerHTML = 
+            '<div style="font-weight: 800; font-size: 12px; color: ' + aura.color + ';">' + aura.name + '</div>' +
+            '<div style="font-size: 10px; color: #8a9cc4; margin: 4px 0;">Count: ' + count + '</div>' +
+            '<button class="btn-secondary" style="padding: 4px 10px; font-size: 10px;" onclick="equipAura(\'' + aura.name + '\')">EQUIP</button>';
+          grid.appendChild(card);
+        }
+      });
+    }
+
+    function equipAura(name) {
+      state.equipped = name;
+      saveState();
+      closeModal('inventoryModal');
+    }
+  </script>
+</body>
+</html>

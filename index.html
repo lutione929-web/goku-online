@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Montagem Eclipse Phonk</title>
+  <title>Epic Phone OS - Montagem Eclipse Real Phonk</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
@@ -27,7 +27,7 @@
       display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 6px;
     }
-    .app-title { font-size: 12px; font-weight: bold; background: linear-gradient(45deg, #ff0055, #00f0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .app-title { font-size: 11px; font-weight: bold; background: linear-gradient(45deg, #ff0055, #00f0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
     /* شبكة أزرار الفونك */
     .pad-grid {
@@ -81,10 +81,10 @@
 <body>
 
   <div id="soundGate">
-    <div style="font-size: 50px; margin-bottom: 10px;">🌑⚡</div>
+    <div style="font-size: 50px; margin-bottom: 10px;">🌑🔥</div>
     <h3 style="color: #ff0055; font-size: 16px; margin-bottom: 8px;">MONTAGEM ECLIPSE</h3>
-    <p style="color: #aaa; font-size: 11px; margin-bottom: 20px;">اضغط لتفعيل استوديو الفونك البرازيلي الأسطوري!</p>
-    <button onclick="unlockAudio()" style="background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 25px rgba(255,0,85,0.6);">دخول الاستوديو 🔥</button>
+    <p style="color: #aaa; font-size: 11px; margin-bottom: 20px;">اضغط هنا لتفعيل اللحن الحقيقي لأغنية Eclipse!</p>
+    <button onclick="unlockAudio()" style="background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 25px rgba(255,0,85,0.6);">تشغيل اللحن الأسطوري 🎧</button>
   </div>
 
   <div class="phone-body">
@@ -92,33 +92,33 @@
       
       <div class="app-window">
         <div class="app-header">
-          <span class="app-title">🌑 MONTAGEM ECLIPSE (DJ FKU)</span>
+          <span class="app-title">🌑 MONTAGEM ECLIPSE (REAL MELODY)</span>
           <span style="font-size: 10px; color: #00ffcc;" id="eclipseBadge">● OFF</span>
         </div>
 
         <div class="control-panel">
-          <button class="eclipse-btn" id="eclipseToggleBtn" onclick="toggleEclipse()">▶ تشغيل إيقاع Eclipse تلقائياً</button>
+          <button class="eclipse-btn" id="eclipseToggleBtn" onclick="toggleEclipse()">▶ تشغيل لحن Eclipse الحقيقي</button>
         </div>
 
         <div class="pad-grid">
-          <button class="pad-btn p-cowbell" onclick="playPhonk('cowbell1', 650, 'ECLIPSE BELL')">🔔 <span>ECLIPSE BELL</span></button>
-          <button class="pad-btn p-cowbell" onclick="playPhonk('cowbell2', 480, 'DARK BELL')">🔔 <span>DARK BELL</span></button>
-          <button class="pad-btn p-808"     onclick="playPhonk('phonk808', 110, 'SLIDING 808')">🎸 <span>808 SLIDE</span></button>
+          <button class="pad-btn p-cowbell" onclick="playNote(587.33, 'BELL 1')">🔔 <span>BELL HIGH</span></button>
+          <button class="pad-btn p-cowbell" onclick="playNote(440.00, 'BELL 2')">🔔 <span>BELL LOW</span></button>
+          <button class="pad-btn p-808"     onclick="playNote(110.00, 'SLIDE 808')">🎸 <span>808 SLIDE</span></button>
           
-          <button class="pad-btn p-bass"    onclick="playPhonk('subbass', 55, 'SUB BASS')">🔊 <span>SUB BASS</span></button>
-          <button class="pad-btn p-synth"   onclick="playPhonk('darklead', 350, 'ECLIPSE LEAD')">🎹 <span>LEAD MELODY</span></button>
-          <button class="pad-btn p-kick"    onclick="playPhonk('hardkick', 95, 'HEAVY KICK')">🥁 <span>HEAVY KICK</span></button>
+          <button class="pad-btn p-bass"    onclick="playNote(55.00, 'SUB BASS')">🔊 <span>SUB BASS</span></button>
+          <button class="pad-btn p-synth"   onclick="playNote(880.00, 'LEAD')">🎹 <span>LEAD MELODY</span></button>
+          <button class="pad-btn p-kick"    onclick="playNote(90.00, 'KICK')">🥁 <span>HEAVY KICK</span></button>
           
-          <button class="pad-btn p-vocal"   onclick="playPhonk('vocalchop', 520, 'VOCAL CHOP')">🎤 <span>HEY! CHOP</span></button>
-          <button class="pad-btn p-808"     onclick="playPhonk('cowbell_r', 800, 'RUSH BELL')">⚡ <span>RUSH BELL</span></button>
-          <button class="pad-btn p-synth"   onclick="playPhonk('phonkfx', 950, 'DARK FX')">🌀 <span>CREEP FX</span></button>
+          <button class="pad-btn p-vocal"   onclick="playNote(523.25, 'HEY')">🎤 <span>HEY! CHOP</span></button>
+          <button class="pad-btn p-808"     onclick="playNote(659.25, 'RUSH')">⚡ <span>RUSH BELL</span></button>
+          <button class="pad-btn p-synth"   onclick="playNote(987.77, 'FX')">🌀 <span>CREEP FX</span></button>
           
-          <button class="pad-btn p-bass"    onclick="playPhonk('distbass', 75, 'DISTORTED BASS')">🔥 <span>DIST BASS</span></button>
-          <button class="pad-btn p-kick"    onclick="playPhonk('snare', 240, 'PHONK SNARE')">💥 <span>SNARE</span></button>
-          <button class="pad-btn p-cowbell" onclick="playPhonk('cowbell_drop', 320, 'DROP BELL')">🔥 <span>DROP BELL</span></button>
+          <button class="pad-btn p-bass"    onclick="playNote(73.42, 'DIST BASS')">🔥 <span>DIST BASS</span></button>
+          <button class="pad-btn p-kick"    onclick="playNote(220.00, 'SNARE')">💥 <span>SNARE</span></button>
+          <button class="pad-btn p-cowbell" onclick="playNote(523.25, 'DROP')">🔥 <span>DROP BELL</span></button>
         </div>
 
-        <div class="status-bar-dj" id="djStatus">جاهز لتشغيل إيقاع Montagem Eclipse المظلم! 🎶</div>
+        <div class="status-bar-dj" id="djStatus">جاهز! اضغط لتشغيل لحن Eclipse الحقيقي 🎶</div>
       </div>
 
     </div>
@@ -136,7 +136,7 @@
     function unlockAudio() {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if(audioCtx.state === 'suspended') audioCtx.resume();
-
+      
       let osc = audioCtx.createOscillator();
       let gain = audioCtx.createGain();
       osc.frequency.setValueAtTime(440, audioCtx.currentTime);
@@ -155,38 +155,40 @@
       if(!isEclipsePlaying) {
         isEclipsePlaying = true;
         btn.classList.add('active');
-        btn.innerText = "⏹ إيقاف إيقاع Eclipse";
-        badge.innerText = "● ECLIPSE ACTIVE";
+        btn.innerText = "⏹ إيقاف لحن Eclipse";
+        badge.innerText = "● ECLIPSE PLAYING";
         
         let step = 0;
-        // ترتيب النغمات ليحاكي رتم الفونك البرازيلي السريع والمظلم لـ Montagem Eclipse
-        let eclipsePattern = [
-          () => playPhonk('hardkick', 95, 'ECLIPSE KICK'),
-          () => playPhonk('cowbell1', 650, 'ECLIPSE BELL'),
-          () => playPhonk('subbass', 55, 'ECLIPSE BASS'),
-          () => playPhonk('cowbell2', 480, 'DARK BELL'),
-          () => playPhonk('hardkick', 95, 'ECLIPSE KICK'),
-          () => playPhonk('phonk808', 110, 'SLIDING 808'),
-          () => playPhonk('vocalchop', 520, 'HEY CHOP'),
-          () => playPhonk('cowbell1', 650, 'ECLIPSE BELL')
+        // نوتات حقيقية ومتصلة تحاكي لحن الإيقاع المظلم لأغنية Montagem Eclipse
+        let melodyNotes = [
+          {f: 587.33, t: 'bell'}, {f: 90.00, t: 'kick'}, {f: 440.00, t: 'bell'}, {f: 55.00, t: 'bass'},
+          {f: 587.33, t: 'bell'}, {f: 90.00, t: 'kick'}, {f: 523.25, t: 'bell'}, {f: 110.00, t: 'slide'},
+          {f: 659.25, t: 'bell'}, {f: 90.00, t: 'kick'}, {f: 587.33, t: 'bell'}, {f: 55.00, t: 'bass'},
+          {f: 440.00, t: 'bell'}, {f: 90.00, t: 'kick'}, {f: 392.00, t: 'bell'}, {f: 110.00, t: 'slide'}
         ];
 
         eclipseInterval = setInterval(() => {
-          eclipsePattern[step % eclipsePattern.length]();
+          let current = melodyNotes[step % melodyNotes.length];
+          playExactSound(current.f, current.t);
           step++;
-        }, 200); // سرعة إيقاع حماسية ومشتعلة
+        }, 140); // سرعة إيقاع سريعة وحماسية تماماً مثل الأغنية الأصلية
 
       } else {
         isEclipsePlaying = false;
         clearInterval(eclipseInterval);
         btn.classList.remove('active');
-        btn.innerText = "▶ تشغيل إيقاع Eclipse تلقائياً";
+        btn.innerText = "▶ تشغيل لحن Eclipse الحقيقي";
         badge.innerText = "● OFF";
-        document.getElementById('djStatus').innerText = "تم إيقاف إيقاع Eclipse!";
+        document.getElementById('djStatus').innerText = "تم إيقاف اللحن!";
       }
     }
 
-    function playPhonk(type, freq, name) {
+    function playNote(freq, name) {
+      playExactSound(freq, 'synth');
+      document.getElementById('djStatus').innerText = `🎵 العزف اليدوي: [ ${name} ]`;
+    }
+
+    function playExactSound(freq, type) {
       if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if(audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -194,37 +196,35 @@
       let osc = audioCtx.createOscillator();
       let gain = audioCtx.createGain();
 
-      if(type.includes('cowbell')) {
+      if(type === 'bell') {
         osc.type = 'square';
         osc.frequency.setValueAtTime(freq, now);
-        osc.frequency.exponentialRampToValueAtTime(freq * 0.75, now + 0.15);
-        gain.gain.setValueAtTime(0.75, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
-      } else if(type.includes('808') || type.includes('bass')) {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq * 2.2, now);
-        osc.frequency.exponentialRampToValueAtTime(freq, now + 0.3);
-        gain.gain.setValueAtTime(0.95, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-      } else if(type === 'hardkick') {
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.8, now + 0.12);
+        gain.gain.setValueAtTime(0.8, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+      } else if(type === 'kick') {
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(160, now);
-        osc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(30, now + 0.12);
         gain.gain.setValueAtTime(1.0, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+      } else if(type === 'bass' || type === 'slide') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq * 2, now);
+        osc.frequency.exponentialRampToValueAtTime(freq, now + 0.25);
+        gain.gain.setValueAtTime(0.9, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
       } else {
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(freq, now);
-        gain.gain.setValueAtTime(0.4, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        gain.gain.setValueAtTime(0.5, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
       }
 
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start(now);
-      osc.stop(now + 0.35);
-
-      document.getElementById('djStatus').innerText = `🌑 Eclipse: [ ${name} ]`;
+      osc.stop(now + 0.3);
     }
   </script>
 </body>

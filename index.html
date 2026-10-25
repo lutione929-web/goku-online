@@ -3,252 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Spotify Web - Real Player</title>
+  <title>Level Devil - Ultimate Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
-    .phone-body {
-      width: 320px; height: 620px; background: #000; border-radius: 35px; border: 4px solid #222;
-      box-shadow: 0 0 35px rgba(29, 185, 84, 0.4); position: relative; display: flex; flex-direction: column; overflow: hidden;
+    /* حاوية العرض الأفقية للجوال */
+    .game-container {
+      width: 100vw; height: 100vh; max-width: 900px; max-height: 450px; background: #111;
+      position: relative; overflow: hidden; display: flex; flex-direction: column; border: 3px solid #333;
     }
 
-    .phone-screen {
-      flex: 1; background: #121212;
-      position: relative; overflow: hidden; display: flex; flex-direction: column; color: #fff;
-    }
-
-    .spotify-header {
-      padding: 14px 16px 8px; background: #121212; display: flex; align-items: center; justify-content: space-between;
-    }
-    .spotify-logo { font-size: 15px; font-weight: bold; color: #1db954; display: flex; align-items: center; gap: 5px; }
-
-    .search-container {
-      padding: 0 16px 10px; background: #121212;
-    }
-    .search-box {
-      display: flex; align-items: center; background: #282828; border-radius: 20px; padding: 8px 12px; gap: 8px;
-    }
-    .search-box input {
-      background: transparent; border: none; outline: none; color: #fff; font-size: 12px; width: 100%;
-    }
-    .search-box input::placeholder { color: #b3b3b3; }
-
-    .content-area {
-      flex: 1; overflow-y: auto; padding: 0 16px;
-    }
-    .section-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #fff; margin-top: 10px; }
-
-    /* قائمة الأغاني */
-    .song-list { display: flex; flex-direction: column; gap: 8px; padding-bottom: 90px; }
-    .song-item {
-      display: flex; align-items: center; justify-content: space-between;
-      background: #181818; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s;
-    }
-    .song-item:active { background: #282828; }
-    .song-info { display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1; }
-    .song-thumb { width: 38px; height: 38px; border-radius: 4px; background: #333; object-fit: cover; }
-    .song-details { display: flex; flex-direction: column; overflow: hidden; }
-    .song-name { font-size: 12px; font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .song-artist { font-size: 10px; color: #b3b3b3; }
-    
-    /* زر التشغيل الصريح المباشر */
-    .play-permission-btn {
-      background: #1db954; color: #000; border: none; padding: 6px 12px; border-radius: 15px;
-      font-size: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px;
-    }
-
-    /* أزرار سريعة مقترحة من عندي */
-    .quick-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 5px; }
-    .quick-chips::-webkit-scrollbar { display: none; }
-    .chip {
-      background: #282828; color: #fff; border: none; padding: 5px 10px; border-radius: 12px;
-      font-size: 10px; cursor: pointer; white-space: nowrap;
-    }
-    .chip:active { background: #1db954; color: #000; }
-
-    /* مشغل الموسيقى السفلي العائم */
-    .player-bar {
-      position: absolute; bottom: 0; left: 0; width: 100%; background: #282828; padding: 10px 16px;
-      display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #333; z-index: 10;
-    }
-    .player-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
-    .player-thumb { width: 32px; height: 32px; border-radius: 4px; background: #444; }
-    .player-text { display: flex; flex-direction: column; }
-    .player-title { font-size: 11px; font-weight: bold; color: #fff; width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .player-artist { font-size: 9px; color: #b3b3b3; }
-
-    .player-controls { display: flex; align-items: center; gap: 12px; }
-    .ctrl-btn { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; }
-
-    .home-bar-area { height: 18px; display: flex; justify-content: center; align-items: center; background: #000; }
-    .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
-
-    #permissionGate {
+    /* الشاشات والقوائم */
+    .screen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(18, 18, 18, 0.98); z-index: 100; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; text-align: center; padding: 20px;
+      background: #0f0f1a; z-index: 50; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 20px; text-align: center;
     }
+    .hidden { display: none !important; }
+
+    h1 { font-size: 24px; color: #ff0055; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255,0,85,0.5); }
+    p { font-size: 12px; color: #aaa; margin-bottom: 15px; }
+
+    .btn {
+      background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; border: none;
+      padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 13px; cursor: pointer;
+      box-shadow: 0 0 15px rgba(255,0,85,0.4); margin: 5px;
+    }
+    .btn:active { transform: scale(0.95); }
+
+    input {
+      padding: 8px 15px; border-radius: 15px; border: 1px solid #444; background: #222; color: #fff;
+      font-size: 12px; text-align: center; margin-bottom: 10px; outline: none;
+    }
+
+    /* شريط العلوي للعبة */
+    .top-bar {
+      height: 40px; background: #1a1a2e; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 15px; border-bottom: 2px solid #333; font-size: 12px; font-weight: bold; z-index: 10;
+    }
+
+    /* منطقة اللعب */
+    .game-canvas-area {
+      flex: 1; position: relative; background: #141422; overflow: hidden;
+    }
+
+    /* عناصر اللعبة */
+    .player {
+      position: absolute; width: 24px; height: 24px; background: #00ffcc; border-radius: 6px;
+      box-shadow: 0 0 10px #00ffcc; z-index: 5;
+    }
+    .platform {
+      position: absolute; background: #ff5500; border-radius: 4px; z-index: 2;
+    }
+    .spike {
+      position: absolute; width: 20px; height: 16px; background: #ff0000; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 2;
+    }
+    .coin {
+      position: absolute; width: 16px; height: 16px; background: #ffea00; border-radius: 50%;
+      box-shadow: 0 0 8px #ffea00; z-index: 2; animation: bounce 0.5s infinite alternate;
+    }
+    .door {
+      position: absolute; width: 28px; height: 36px; background: #9900ff; border-radius: 4px;
+      box-shadow: 0 0 12px #9900ff; z-index: 2;
+    }
+
+    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+
+    /* أزرار التحكم السفلیة للجوال (أفقي) */
+    .controls-bar {
+      height: 55px; background: #161625; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; z-index: 10; border-top: 1px solid #333;
+    }
+    .control-group { display: flex; gap: 10px; }
+    .ctrl-btn {
+      width: 45px; height: 38px; background: #2a2a40; color: #fff; border: 1px solid #444;
+      border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+    }
+    .ctrl-btn:active { background: #ff0055; }
+
+    /* متجر وسكنات */
+    .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 15px; }
+    .shop-item { background: #1c1c2d; border: 1px solid #333; padding: 8px; border-radius: 10px; text-align: center; }
   </style>
 </head>
 <body>
 
-  <!-- بوابة إعطاء إذن تشغيل الصوت الأولية -->
-  <div id="permissionGate">
-    <div style="font-size: 45px; margin-bottom: 10px;">🟢🎧</div>
-    <h3 style="color: #1db954; font-size: 16px; margin-bottom: 8px;">Spotify Music Player</h3>
-    <p style="color: #b3b3b3; font-size: 11px; margin-bottom: 20px;">اضغط هنا للسماح للمتصفح بتشغيل الأغاني والبحث بحرية!</p>
-    <button onclick="unlockAudio()" style="background: #1db954; color: #000; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; font-size: 13px; cursor: pointer; box-shadow: 0 0 20px rgba(29,185,84,0.5);">منح الإذن والدخول 🔥</button>
-  </div>
-
-  <div class="phone-body">
-    <div class="phone-screen">
-      
-      <div class="spotify-header">
-        <span class="spotify-logo">🟢 Spotify</span>
-        <span style="font-size: 10px; color: #b3b3b3;" id="statusText">جاهز</span>
-      </div>
-
-      <div class="search-container">
-        <div class="search-box">
-          <span>🔍</span>
-          <input type="text" id="searchInput" placeholder="ابحث عن أغنية أو فنان..." oninput="searchSongs()">
-        </div>
-        
-        <!-- إضافات جديدة: أسرع تصنيفات الفونك والموسيقى -->
-        <div class="section-title" style="font-size: 11px; margin-top: 8px;">بحث سريع مقترح ⚡</div>
-        <div class="quick-chips">
-          <button class="chip" onclick="quickSearch('Montagem Eclipse')">Montagem Eclipse</button>
-          <button class="chip" onclick="quickSearch('Drift Phonk')">Drift Phonk</button>
-          <button class="chip" onclick="quickSearch('Kordhell')">Kordhell</button>
-          <button class="chip" onclick="quickSearch('Aggressive Phonk')">Aggressive</button>
-          <button class="chip" onclick="quickSearch('Brazilian Phonk')">Brazilian</button>
-        </div>
-      </div>
-
-      <div class="content-area">
-        <div class="section-title">نتائج البحث والأغاني</div>
-        <div class="song-list" id="songList"></div>
-      </div>
-
-      <!-- مشغل الموسيقى السفلي -->
-      <div class="player-bar" id="playerBar" style="display: none;">
-        <div class="player-info">
-          <img id="playerThumb" class="player-thumb" src="" alt="">
-          <div class="player-text">
-            <span class="player-title" id="playerTitle">اختر أغنية</span>
-            <span class="player-artist" id="playerArtist">Spotify</span>
-          </div>
-        </div>
-        <div class="player-controls">
-          <button class="ctrl-btn" onclick="togglePlayPause()" id="playPauseIcon">⏸</button>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="home-bar-area">
-      <div class="home-bar"></div>
-    </div>
-  </div>
-
-  <audio id="audioPlayer"></audio>
-
-  <script>
-    let audio = document.getElementById('audioPlayer');
-    let currentTracks = [];
-    let isPlaying = false;
-
-    function unlockAudio() {
-      audio.play().then(() => {
-        audio.pause();
-      }).catch(e => {});
-      document.getElementById('permissionGate').style.display = 'none';
-      // بحث افتراضي مباشر
-      document.getElementById('searchInput').value = "Montagem Eclipse";
-      searchSongs();
-    }
-
-    function quickSearch(keyword) {
-      document.getElementById('searchInput').value = keyword;
-      searchSongs();
-    }
-
-    async function searchSongs() {
-      let query = document.getElementById('searchInput').value.trim();
-      if(!query) query = "phonk";
-      
-      document.getElementById('statusText').innerText = "جاري البحث...";
-
-      try {
-        let response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=15`);
-        let data = await response.json();
-        currentTracks = data.results;
-        renderSongs(currentTracks);
-        document.getElementById('statusText').innerText = "جاهز";
-      } catch(err) {
-        document.getElementById('statusText').innerText = "خطأ";
-      }
-    }
-
-    function renderSongs(tracks) {
-      let list = document.getElementById('songList');
-      list.innerHTML = "";
-
-      if(tracks.length === 0) {
-        list.innerHTML = `<div style="color: #b3b3b3; font-size: 11px; text-align: center; margin-top: 20px;">لا توجد نتائج</div>`;
-        return;
-      }
-
-      tracks.forEach((track, index) => {
-        let item = document.createElement('div');
-        item.className = 'song-item';
-
-        item.innerHTML = `
-          <div class="song-info" onclick="playSong(${index})">
-            <img class="song-thumb" src="${track.artworkUrl100 || 'https://via.placeholder.com/50'}" alt="">
-            <div class="song-details">
-              <span class="song-name">${track.trackName}</span>
-              <span class="song-artist">${track.artistName}</span>
-            </div>
-          </div>
-          <button class="play-permission-btn" onclick="playSong(${index})">▶ تشغيل</button>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    function playSong(index) {
-      let track = currentTracks[index];
-      if(!track || !track.previewUrl) return;
-
-      audio.src = track.previewUrl;
-      audio.play().then(() => {
-        isPlaying = true;
-        document.getElementById('playerBar').style.display = 'flex';
-        document.getElementById('playerTitle').innerText = track.trackName;
-        document.getElementById('playerArtist').innerText = track.artistName;
-        document.getElementById('playerThumb').src = track.artworkUrl100;
-        document.getElementById('playPauseIcon').innerText = "⏸";
-        document.getElementById('statusText').innerText = "يعمل 🟢";
-      }).catch(err => {
-        alert("يرجى الضغط على زر منح الإذن في البداية لتشغيل الأغاني!");
-      });
-    }
-
-    function togglePlayPause() {
-      if(isPlaying) {
-        audio.pause();
-        isPlaying = false;
-        document.getElementById('playPauseIcon').innerText = "▶";
-        document.getElementById('statusText').innerText = "مؤقت";
-      } else {
-        audio.play();
-        isPlaying = true;
-        document.getElementById('playPauseIcon').innerText = "⏸";
-        document.getElementById('statusText').innerText = "يعمل 🟢";
-      }
-    }
-  </script>
-</body>
-</html>
+  <div class="game-container">
+    
+    <!-- 1. شاشة تسجيل الدخول -->
+    <div id="loginScreen" class="screen">
+      <h1>😈 LEVEL DEVIL</h1>
+      <p>أدخل اسمك لح

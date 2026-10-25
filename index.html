@@ -3,72 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Shadow Ninja Parkour</title>
+  <title>Shadow Ninja Runner - Ultimate</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     html, body { width: 100%; height: 100%; background: #050508; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 
     .game-container {
-      width: 100vw; height: 100vh; background: #0a0a12; display: flex; flex-direction: column; position: relative; overflow: hidden;
+      width: 100vw; height: 100vh; background: #0a0a14; display: flex; flex-direction: column; position: relative; overflow: hidden;
     }
 
-    /* الواجهات والشاشات */
     .overlay-screen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0a0a12; z-index: 100; display: flex; flex-direction: column;
+      background: #0a0a14; z-index: 100; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 20px; text-align: center;
     }
     .hidden { display: none !important; }
 
-    h1 { font-size: 28px; color: #00ffcc; text-shadow: 0 0 15px rgba(0,255,204,0.6); margin-bottom: 8px; }
+    h1 { font-size: 26px; color: #00ffcc; text-shadow: 0 0 15px rgba(0,255,204,0.6); margin-bottom: 8px; }
     p { font-size: 13px; color: #88a; margin-bottom: 15px; }
 
     .btn {
       background: linear-gradient(45deg, #00ffcc, #0077ff); color: #000; border: none;
       padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 14px; cursor: pointer;
-      box-shadow: 0 0 18px rgba(0,255,204,0.4); margin: 6px; transition: transform 0.1s;
+      box-shadow: 0 0 18px rgba(0,255,204,0.4); margin: 6px;
     }
     .btn:active { transform: scale(0.92); }
 
-    /* الشريط العلوي */
     .top-bar {
       height: 40px; background: #10101c; display: flex; align-items: center; justify-content: space-between;
       padding: 0 15px; border-bottom: 1px solid #223; font-size: 12px; font-weight: bold; z-index: 20;
     }
 
-    /* مسرح اللعبة */
     .game-canvas {
       flex: 1; position: relative; background: #070710; overflow: hidden;
     }
 
-    /* عناصر اللعبة */
+    /* النينجا والعقبات */
     .ninja {
-      position: absolute; width: 24px; height: 28px; background: #00ffcc; border-radius: 4px;
-      box-shadow: 0 0 12px #00ffcc; z-index: 10; transition: transform 0.05s;
+      position: absolute; left: 60px; bottom: 30px; width: 28px; height: 32px;
+      background: #00ffcc; border-radius: 6px; box-shadow: 0 0 15px #00ffcc; z-index: 10;
     }
-    .ninja::after {
-      content: ''; position: absolute; top: 4px; right: 2px; width: 12px; height: 4px; background: #000; border-radius: 2px;
+    .ground {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 30px;
+      background: linear-gradient(90deg, #16162c, #222244); border-top: 2px solid #00ffcc; z-index: 5;
+    }
+    .obstacle {
+      position: absolute; bottom: 30px; width: 22px; height: 26px;
+      background: #ff0055; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 6;
+    }
+    .coin {
+      position: absolute; bottom: 70px; width: 18px; height: 18px;
+      background: #ffaa00; border-radius: 50%; box-shadow: 0 0 10px #ffaa00; z-index: 6;
     }
 
-    .wall { position: absolute; background: #1c1c30; border: 1px solid #00f0ff; z-index: 5; }
-    .spike { position: absolute; width: 20px; height: 20px; background: #ff0055; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 5; }
-    .gem { position: absolute; width: 16px; height: 16px; background: #ffaa00; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); box-shadow: 0 0 10px #ffaa00; z-index: 5; }
-
-    /* لوحة التحكم للموبايل */
-    .controls {
-      height: 70px; background: #0a0a14; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 20px; border-top: 1px solid #223; z-index: 20;
+    /* زر القفز الكبير يملأ الشاشة لتسهيل اللعب */
+    .jump-zone {
+      height: 100px; background: #0c0c18; display: flex; align-items: center; justify-content: center;
+      border-top: 1px solid #223; z-index: 20;
     }
-    .ctrl-group { display: flex; gap: 10px; }
-    .touch-btn {
-      width: 55px; height: 50px; background: #1a1a2e; color: #fff; border: 1px solid #00ffcc;
-      border-radius: 12px; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+    .big-jump-btn {
+      width: 90%; max-width: 350px; height: 60px; background: linear-gradient(45deg, #00ffcc, #0088ff);
+      color: #000; font-size: 18px; font-weight: bold; border: none; border-radius: 30px;
+      box-shadow: 0 0 20px rgba(0,255,204,0.5); cursor: pointer;
     }
-    .touch-btn:active { background: #00ffcc; color: #000; }
-
-    /* المتجر */
-    .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; width: 90%; max-width: 350px; }
-    .shop-item { background: #121224; border: 1px solid #224; padding: 10px; border-radius: 12px; }
+    .big-jump-btn:active { transform: scale(0.95); }
   </style>
 </head>
 <body>
@@ -77,186 +75,141 @@
     
     <!-- القائمة الرئيسية -->
     <div id="mainMenu" class="overlay-screen">
-      <h1>🥷 SHADOW NINJA</h1>
-      <p>تخطى العقبات، واجمع الجواهر النادرة!</p>
-      <p style="color: #ffaa00; font-weight: bold;">أعلى نتيجة: <span id="highScoreTxt">0</span> م</p>
-      <p style="color: #00ffcc;">الجواهر: <span id="menuGemsTxt">💎 0</span></p>
-
-      <button class="btn" onclick="startNinjaGame()">بدء المغامرة ⚡</button>
-      <button class="btn" style="background: linear-gradient(45deg, #ffaa00, #ff5500); color: #fff;" onclick="openShop()">المتجر والتطوير 🛒</button>
+      <h1>🥷 SHADOW NINJA RUN</h1>
+      <p>اضغط للقفز وتفادي الشوك واجمع الجواهر!</p>
+      <p style="color: #ffaa00; font-weight: bold;">أعلى نتيجة: <span id="highScoreTxt">0</span></p>
+      <button class="btn" onclick="startGame()">ابدأ الجري الحماسي ⚡</button>
     </div>
 
-    <!-- المتجر -->
-    <div id="shopScreen" class="overlay-screen hidden">
-      <h1>🛒 متجر النينجا</h1>
-      <p>الجواهر: <span id="shopGemsTxt" style="color: #ffaa00;">💎 0</span></p>
-      <div class="shop-grid">
-        <div class="shop-item">
-          <p style="font-size: 11px;">درع النيون 🛡️</p>
-          <p style="font-size: 9px; color: #aaa;">يحميك من صدمة واحدة</p>
-          <button class="btn" style="padding: 6px 10px; font-size: 10px;" onclick="buyItem('shield', 30)">شراء (30 💎)</button>
-        </div>
-        <div class="shop-item">
-          <p style="font-size: 11px;">سكن النينجا الذهبي 👑</p>
-          <p style="font-size: 9px; color: #aaa;">مظهر أسطوري مضيء</p>
-          <button class="btn" style="padding: 6px 10px; font-size: 10px;" onclick="buyItem('goldSkin', 50)">شراء (50 💎)</button>
-        </div>
-      </div>
-      <button class="btn" onclick="closeShop()">رجوع للقائمة ↩</button>
-    </div>
-
-    <!-- الشريط العلوي أثناء اللعب -->
+    <!-- الشريط العلوي -->
     <div class="top-bar">
-      <span>المسافة: <span id="distTxt" style="color: #00ffcc;">0</span> م</span>
-      <span>💎 <span id="gameGemsTxt">0</span></span>
-      <button class="btn" style="padding: 3px 10px; font-size: 10px;" onclick="showMainMenu()">قائمة</button>
+      <span>النقاط: <span id="scoreTxt" style="color: #00ffcc;">0</span></span>
+      <span>💎 <span id="gemsTxt">0</span></span>
+      <button class="btn" style="padding: 3px 10px; font-size: 10px;" onclick="returnMenu()">قائمة</button>
     </div>
 
     <!-- مسرح اللعبة -->
     <div class="game-canvas" id="canvas">
       <div class="ninja" id="ninja"></div>
+      <div class="ground"></div>
     </div>
 
-    <!-- أزرار التحكم اللمسية -->
-    <div class="controls">
-      <div class="ctrl-group">
-        <button class="touch-btn" ontouchstart="setDir(-1)" onmousedown="setDir(-1)" ontouchend="setDir(0)" onmouseup="setDir(0)">◀</button>
-        <button class="touch-btn" ontouchstart="setDir(1)" onmousedown="setDir(1)" ontouchend="setDir(0)" onmouseup="setDir(0)">▶</button>
-      </div>
-      <div class="ctrl-group">
-        <button class="touch-btn" style="background: #00ffcc; color: #000; width: 75px;" ontouchstart="ninjaJump()" onclick="ninjaJump()">⬆ قفز</button>
-      </div>
+    <!-- زر التحكم بالقفز -->
+    <div class="jump-zone">
+      <button class="big-jump-btn" ontouchstart="jumpNinja()" onclick="jumpNinja()">⬆ اضغط للقفز (Jump)</button>
     </div>
 
   </div>
 
   <script>
-    let saveData = {
-      gems: 0,
-      highScore: 0,
-      hasShield: false,
-      skin: 'default'
-    };
-
-    let nx = 50, ny = 40, nvx = 0, nvy = 0;
-    let jumpsLeft = 2;
-    let distance = 0;
-    let moveDir = 0;
-    let gameLoop = null;
+    let score = 0;
+    let gems = 0;
+    let highScore = 0;
+    let ny = 30;
+    let nvy = 0;
+    let isJumping = false;
+    let gameActive = false;
+    let gameInterval = null;
+    let obstacles = [];
+    let gameSpeed = 6;
 
     window.onload = () => {
-      let saved = localStorage.getItem('shadowNinjaSave');
-      if(saved) saveData = JSON.parse(saved);
-      updateUI();
+      let saved = localStorage.getItem('ninjaRunnerSave');
+      if(saved) {
+        let data = JSON.parse(saved);
+        highScore = data.highScore || 0;
+        gems = data.gems || 0;
+      }
+      document.getElementById('highScoreTxt').innerText = highScore;
+      document.getElementById('gemsTxt').innerText = gems;
     };
 
-    function saveProgress() {
-      localStorage.setItem('shadowNinjaSave', JSON.stringify(saveData));
-      updateUI();
+    function saveGame() {
+      if(score > highScore) highScore = score;
+      localStorage.setItem('ninjaRunnerSave', JSON.stringify({ highScore, gems }));
+      document.getElementById('highScoreTxt').innerText = highScore;
+      document.getElementById('gemsTxt').innerText = gems;
     }
 
-    function updateUI() {
-      document.getElementById('highScoreTxt').innerText = saveData.highScore;
-      document.getElementById('menuGemsTxt').innerText = `💎 ${saveData.gems}`;
-      document.getElementById('shopGemsTxt').innerText = `💎 ${saveData.gems}`;
-      document.getElementById('gameGemsTxt').innerText = saveData.gems;
-    }
-
-    function showMainMenu() {
-      if(gameLoop) clearInterval(gameLoop);
-      document.getElementById('mainMenu').classList.remove('hidden');
-      document.getElementById('shopScreen').classList.add('hidden');
-      updateUI();
-    }
-
-    function openShop() {
+    function startGame() {
       document.getElementById('mainMenu').classList.add('hidden');
-      document.getElementById('shopScreen').classList.remove('hidden');
-    }
-
-    function closeShop() {
-      document.getElementById('shopScreen').classList.add('hidden');
-      document.getElementById('mainMenu').classList.remove('hidden');
-    }
-
-    function buyItem(type, cost) {
-      if(saveData.gems >= cost) {
-        saveData.gems -= cost;
-        if(type === 'shield') saveData.hasShield = true;
-        if(type === 'goldSkin') saveData.skin = 'gold';
-        saveProgress();
-        alert("تم الشراء بنجاح! 🎉");
-      } else {
-        alert("الجواهر غير كافية!");
-      }
-    }
-
-    function startNinjaGame() {
-      document.getElementById('mainMenu').classList.add('hidden');
-      distance = 0;
-      nx = 50; ny = 40; nvx = 0; nvy = 0;
+      score = 0;
+      gameSpeed = 6;
+      ny = 30;
+      nvy = 0;
+      isJumping = false;
+      gameActive = true;
       
-      let canvas = document.getElementById('canvas');
-      let ninjaColor = saveData.skin === 'gold' ? '#ffaa00' : '#00ffcc';
+      // مسح العوائق القديمة
+      document.querySelectorAll('.obstacle, .coin').forEach(e => e.remove());
+      obstacles = [];
 
-      canvas.innerHTML = `
-        <div class="ninja" id="ninja" style="background: ${ninjaColor};"></div>
-        <div class="wall" style="left: 0; bottom: 0; width: 100%; height: 30px;"></div>
-        <div class="wall" style="left: 200px; bottom: 30px; width: 80px; height: 70px;"></div>
-        <div class="spike" style="left: 350px; bottom: 30px;"></div>
-        <div class="gem" style="left: 230px; bottom: 120px;" onclick="collectGem(this)"></div>
-      `;
-
-      if(gameLoop) clearInterval(gameLoop);
-      gameLoop = setInterval(updatePhysics, 20);
+      if(gameInterval) clearInterval(gameInterval);
+      gameInterval = setInterval(updateGame, 20);
     }
 
-    function setDir(d) { moveDir = d; }
+    function returnMenu() {
+      gameActive = false;
+      if(gameInterval) clearInterval(gameInterval);
+      document.getElementById('mainMenu').classList.remove('hidden');
+      saveGame();
+    }
 
-    function ninjaJump() {
-      if(jumpsLeft > 0) {
-        nvy = 11;
-        jumpsLeft--;
+    function jumpNinja() {
+      if(!gameActive) return;
+      if(!isJumping) {
+        nvy = 13;
+        isJumping = true;
       }
     }
 
-    function collectGem(el) {
-      el.remove();
-      saveData.gems += 5;
-      saveProgress();
-    }
+    function updateGame() {
+      if(!gameActive) return;
 
-    function updatePhysics() {
-      let canvasWidth = document.getElementById('canvas').clientWidth;
-
-      nx += moveDir * 5;
-      if(nx < 0) nx = 0;
-      if(nx > canvasWidth - 25) nx = canvasWidth - 25;
-
-      nvy -= 0.65; // جاذبية
+      // جاذبية
+      nvy -= 0.7;
       ny += nvy;
-
-      // أسرع اصطدام بالأرض
       if(ny <= 30) {
         ny = 30;
         nvy = 0;
-        jumpsLeft = 2; // إعادة تعبئة القفز المزدوج
+        isJumping = false;
       }
 
-      distance += 1;
-      document.getElementById('distTxt').innerText = Math.floor(distance / 5);
+      let ninjaEl = document.getElementById('ninja');
+      ninjaEl.style.bottom = ny + 'px';
 
-      if(Math.floor(distance / 5) > saveData.highScore) {
-        saveData.highScore = Math.floor(distance / 5);
-        saveProgress();
+      score += 1;
+      document.getElementById('scoreTxt').innerText = score;
+
+      // زيادة السرعة تدريجياً
+      if(score % 200 === 0) gameSpeed += 1;
+
+      // توليد عوائق وجواهر عشوائية
+      if(Math.random() < 0.02) {
+        createObstacle();
       }
 
-      let nObj = document.getElementById('ninja');
-      if(nObj) {
-        nObj.style.left = nx + 'px';
-        nObj.style.bottom = ny + 'px';
-      }
-    }
-  </script>
-</body>
-</html>
+      // تحريك العوائق
+      let canvas = document.getElementById('canvas');
+      let canvasWidth = canvas.clientWidth;
+
+      // تحديث مكان النينجا أفقياً للأمان
+      let obsList = document.querySelectorAll('.obstacle, .coin');
+      obsList.forEach(obs => {
+        let right = parseFloat(obs.style.right || '0');
+        right += gameSpeed;
+        obs.style.right = right + 'px';
+
+        // فحص الاصطدام بالشوك
+        if(obs.classList.contains('obstacle') && right > canvasWidth - 100 && right < canvasWidth - 50) {
+          if(ny < 55) {
+            // صدمة خسران
+            gameActive = false;
+            alert("💥 اصطدمت بالشوك! انتهت اللعبة. نقاطك: " + score);
+            saveGame();
+            returnMenu();
+          }
+        }
+
+        // إزالة العناصر التي خرجت من الشاشة
+        

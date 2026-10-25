@@ -3,274 +3,258 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Level Devil - Instant Play & Auto Save</title>
+  <title>Shadow Ninja Parkour</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
-    html, body { width: 100%; height: 100%; background: #07070d; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+    html, body { width: 100%; height: 100%; background: #050508; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 
-    .game-screen-container {
-      width: 100vw; height: 100vh; background: #0f0f1b; display: flex; flex-direction: column; position: relative; overflow: hidden;
+    .game-container {
+      width: 100vw; height: 100vh; background: #0a0a12; display: flex; flex-direction: column; position: relative; overflow: hidden;
     }
 
+    /* الواجهات والشاشات */
     .overlay-screen {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0f0f1b; z-index: 100; display: flex; flex-direction: column;
+      background: #0a0a12; z-index: 100; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 20px; text-align: center;
     }
     .hidden { display: none !important; }
 
-    h1 { font-size: 26px; color: #ff0055; margin-bottom: 8px; text-shadow: 0 0 15px rgba(255,0,85,0.6); }
-    p { font-size: 13px; color: #aaa; margin-bottom: 15px; }
+    h1 { font-size: 28px; color: #00ffcc; text-shadow: 0 0 15px rgba(0,255,204,0.6); margin-bottom: 8px; }
+    p { font-size: 13px; color: #88a; margin-bottom: 15px; }
 
-    .main-btn {
-      background: linear-gradient(45deg, #ff0055, #7700ff); color: #fff; border: none;
+    .btn {
+      background: linear-gradient(45deg, #00ffcc, #0077ff); color: #000; border: none;
       padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 14px; cursor: pointer;
-      box-shadow: 0 0 18px rgba(255,0,85,0.5); margin: 6px; transition: 0.1s;
+      box-shadow: 0 0 18px rgba(0,255,204,0.4); margin: 6px; transition: transform 0.1s;
     }
-    .main-btn:active { transform: scale(0.92); }
+    .btn:active { transform: scale(0.92); }
 
+    /* الشريط العلوي */
     .top-bar {
-      height: 42px; background: #141422; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 15px; border-bottom: 2px solid #222; font-size: 12px; font-weight: bold; z-index: 20;
+      height: 40px; background: #10101c; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 15px; border-bottom: 1px solid #223; font-size: 12px; font-weight: bold; z-index: 20;
     }
 
-    .game-area {
-      flex: 1; position: relative; background: #161628; overflow: hidden;
+    /* مسرح اللعبة */
+    .game-canvas {
+      flex: 1; position: relative; background: #070710; overflow: hidden;
     }
 
-    .player {
-      position: absolute; width: 26px; height: 26px; background: #00ffcc; border-radius: 6px;
-      box-shadow: 0 0 12px #00ffcc; z-index: 10;
+    /* عناصر اللعبة */
+    .ninja {
+      position: absolute; width: 24px; height: 28px; background: #00ffcc; border-radius: 4px;
+      box-shadow: 0 0 12px #00ffcc; z-index: 10; transition: transform 0.05s;
     }
-    .platform { position: absolute; background: #ff5500; border-radius: 4px; z-index: 5; }
-    .coin { position: absolute; width: 18px; height: 18px; background: #ffea00; border-radius: 50%; box-shadow: 0 0 10px #ffea00; z-index: 5; }
-    .door { position: absolute; width: 32px; height: 42px; background: #9900ff; border-radius: 6px; box-shadow: 0 0 15px #9900ff; z-index: 5; }
+    .ninja::after {
+      content: ''; position: absolute; top: 4px; right: 2px; width: 12px; height: 4px; background: #000; border-radius: 2px;
+    }
 
-    .controls-panel {
-      height: 65px; background: #0b0b14; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 25px; border-top: 2px solid #222; z-index: 20;
+    .wall { position: absolute; background: #1c1c30; border: 1px solid #00f0ff; z-index: 5; }
+    .spike { position: absolute; width: 20px; height: 20px; background: #ff0055; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 5; }
+    .gem { position: absolute; width: 16px; height: 16px; background: #ffaa00; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); box-shadow: 0 0 10px #ffaa00; z-index: 5; }
+
+    /* لوحة التحكم للموبايل */
+    .controls {
+      height: 70px; background: #0a0a14; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; border-top: 1px solid #223; z-index: 20;
     }
-    .btn-group { display: flex; gap: 12px; }
+    .ctrl-group { display: flex; gap: 10px; }
     .touch-btn {
-      width: 52px; height: 48px; background: #222238; color: #fff; border: 1px solid #444;
+      width: 55px; height: 50px; background: #1a1a2e; color: #fff; border: 1px solid #00ffcc;
       border-radius: 12px; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center;
     }
-    .touch-btn:active { background: #ff0055; }
+    .touch-btn:active { background: #00ffcc; color: #000; }
 
-    .shop-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; width: 90%; max-width: 350px; }
-    .shop-card { background: #1c1c30; border: 1px solid #333; padding: 10px; border-radius: 12px; }
+    /* المتجر */
+    .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; width: 90%; max-width: 350px; }
+    .shop-item { background: #121224; border: 1px solid #224; padding: 10px; border-radius: 12px; }
   </style>
 </head>
 <body>
 
-  <div class="game-screen-container">
+  <div class="game-container">
     
-    <!-- القائمة الرئيسية المباشرة (بدون شاشة تسجيل) -->
-    <div id="menuScreen" class="overlay-screen">
-      <h1>😈 LEVEL DEVIL</h1>
-      <p>التقدم محفوظ تلقائياً في جهازك!</p>
-      <p style="font-size: 14px;">رصيدك الحالي: <span id="menuCoins" style="color: #ffea00; font-weight: bold;">🪙 100</span></p>
-      
-      <button class="main-btn" onclick="startGame(1)">بدء اللعب الفوري 🎮</button>
-      <button class="main-btn" style="background: linear-gradient(45deg, #ffea00, #ff5500); color: #000;" onclick="showScreen('shopScreen')">المتجر والسكنات 🛒</button>
-      <button class="main-btn" style="background: linear-gradient(45deg, #00f0ff, #0044ff);" onclick="showScreen('wheelScreen')">عجلة الحظ 🎡</button>
+    <!-- القائمة الرئيسية -->
+    <div id="mainMenu" class="overlay-screen">
+      <h1>🥷 SHADOW NINJA</h1>
+      <p>تخطى العقبات، واجمع الجواهر النادرة!</p>
+      <p style="color: #ffaa00; font-weight: bold;">أعلى نتيجة: <span id="highScoreTxt">0</span> م</p>
+      <p style="color: #00ffcc;">الجواهر: <span id="menuGemsTxt">💎 0</span></p>
+
+      <button class="btn" onclick="startNinjaGame()">بدء المغامرة ⚡</button>
+      <button class="btn" style="background: linear-gradient(45deg, #ffaa00, #ff5500); color: #fff;" onclick="openShop()">المتجر والتطوير 🛒</button>
     </div>
 
     <!-- المتجر -->
     <div id="shopScreen" class="overlay-screen hidden">
-      <h1>🛒 المتجر الخرافي</h1>
-      <p>رصيدك: <span id="shopCoins" style="color: #ffea00;">🪙 100</span></p>
-      <div class="shop-items">
-        <div class="shop-card">
-          <p style="font-size: 11px;">سكن النيون الذهبي 👑</p>
-          <button class="main-btn" style="padding: 6px 10px; font-size: 10px;" onclick="buySkin('gold', 50)">شراء (50 🪙)</button>
+      <h1>🛒 متجر النينجا</h1>
+      <p>الجواهر: <span id="shopGemsTxt" style="color: #ffaa00;">💎 0</span></p>
+      <div class="shop-grid">
+        <div class="shop-item">
+          <p style="font-size: 11px;">درع النيون 🛡️</p>
+          <p style="font-size: 9px; color: #aaa;">يحميك من صدمة واحدة</p>
+          <button class="btn" style="padding: 6px 10px; font-size: 10px;" onclick="buyItem('shield', 30)">شراء (30 💎)</button>
         </div>
-        <div class="shop-card">
-          <p style="font-size: 11px;">سكن الشبح 👻</p>
-          <button class="main-btn" style="padding: 6px 10px; font-size: 10px;" onclick="buySkin('ghost', 80)">شراء (80 🪙)</button>
-        </div>
-        <div class="shop-card" style="grid-column: span 2;">
-          <p style="font-size: 11px; color: #00ffcc;">قدرة الطيران (Jetpack) 🚀</p>
-          <button class="main-btn" style="padding: 8px 15px; font-size: 11px; background: linear-gradient(45deg, #00ffcc, #0088ff); color: #000;" onclick="buyJetpack(150)">شراء طيران (150 🪙)</button>
+        <div class="shop-item">
+          <p style="font-size: 11px;">سكن النينجا الذهبي 👑</p>
+          <p style="font-size: 9px; color: #aaa;">مظهر أسطوري مضيء</p>
+          <button class="btn" style="padding: 6px 10px; font-size: 10px;" onclick="buyItem('goldSkin', 50)">شراء (50 💎)</button>
         </div>
       </div>
-      <button class="main-btn" onclick="showScreen('menuScreen')">رجوع للقائمة ↩</button>
+      <button class="btn" onclick="closeShop()">رجوع للقائمة ↩</button>
     </div>
 
-    <!-- عجلة الحظ -->
-    <div id="wheelScreen" class="overlay-screen hidden">
-      <h1>🎡 عجلة الحظ الساعية</h1>
-      <div id="wheelReward" style="font-size: 22px; margin: 20px 0; color: #ffea00; font-weight: bold;">🎁 اضغط للحصول على الجائزة!</div>
-      <button class="main-btn" onclick="spinWheel()">تدحرج واستلم الكوينز 🎰</button>
-      <button class="main-btn" onclick="showScreen('menuScreen')">رجوع ↩</button>
-    </div>
-
-    <!-- شريط اللعبة العلوي -->
+    <!-- الشريط العلوي أثناء اللعب -->
     <div class="top-bar">
-      <span id="levelLabel">المستوى: 1</span>
-      <span>🪙 <span id="gameCoinsDisplay">100</span></span>
-      <button class="main-btn" style="padding: 4px 10px; font-size: 10px;" onclick="showScreen('menuScreen')">قائمة</button>
+      <span>المسافة: <span id="distTxt" style="color: #00ffcc;">0</span> م</span>
+      <span>💎 <span id="gameGemsTxt">0</span></span>
+      <button class="btn" style="padding: 3px 10px; font-size: 10px;" onclick="showMainMenu()">قائمة</button>
     </div>
 
     <!-- مسرح اللعبة -->
-    <div class="game-area" id="gameCanvas">
-      <div class="player" id="playerObj"></div>
+    <div class="game-canvas" id="canvas">
+      <div class="ninja" id="ninja"></div>
     </div>
 
-    <!-- لوحة التحكم -->
-    <div class="controls-panel">
-      <div class="btn-group">
-        <button class="touch-btn" ontouchstart="setMove(-1)" onmousedown="setMove(-1)" ontouchend="setMove(0)" onmouseup="setMove(0)">◀</button>
-        <button class="touch-btn" ontouchstart="setMove(1)" onmousedown="setMove(1)" ontouchend="setMove(0)" onmouseup="setMove(0)">▶</button>
+    <!-- أزرار التحكم اللمسية -->
+    <div class="controls">
+      <div class="ctrl-group">
+        <button class="touch-btn" ontouchstart="setDir(-1)" onmousedown="setDir(-1)" ontouchend="setDir(0)" onmouseup="setDir(0)">◀</button>
+        <button class="touch-btn" ontouchstart="setDir(1)" onmousedown="setDir(1)" ontouchend="setDir(0)" onmouseup="setDir(0)">▶</button>
       </div>
-      <div class="btn-group">
-        <button class="touch-btn" style="background: #ff0055; width: 65px;" ontouchstart="doJump()" onclick="doJump()">⬆ قفز</button>
-        <button class="touch-btn" id="flyButton" style="background: #00f0ff; color: #000; width: 65px; display: none;" ontouchstart="doFly()" onclick="doFly()">🚀 طيران</button>
+      <div class="ctrl-group">
+        <button class="touch-btn" style="background: #00ffcc; color: #000; width: 75px;" ontouchstart="ninjaJump()" onclick="ninjaJump()">⬆ قفز</button>
       </div>
     </div>
 
   </div>
 
   <script>
-    let user = {
-      coins: 100,
-      skin: "default",
-      hasJetpack: false
+    let saveData = {
+      gems: 0,
+      highScore: 0,
+      hasShield: false,
+      skin: 'default'
     };
 
-    let level = 1;
-    let px = 30, py = 30, vx = 0, vy = 0;
-    let isGrounded = false;
+    let nx = 50, ny = 40, nvx = 0, nvy = 0;
+    let jumpsLeft = 2;
+    let distance = 0;
     let moveDir = 0;
     let gameLoop = null;
 
-    // استرجاع التقدم المحفوظ تلقائياً عند الدخول
     window.onload = () => {
-      let saved = localStorage.getItem('levelDevilAutoSave');
-      if(saved) {
-        user = JSON.parse(saved);
-      }
+      let saved = localStorage.getItem('shadowNinjaSave');
+      if(saved) saveData = JSON.parse(saved);
       updateUI();
     };
 
     function saveProgress() {
-      localStorage.setItem('levelDevilAutoSave', JSON.stringify(user));
-      updateUI();
-    }
-
-    function showScreen(id) {
-      if(gameLoop) clearInterval(gameLoop);
-      ['menuScreen', 'shopScreen', 'wheelScreen'].forEach(s => {
-        document.getElementById(s).classList.add('hidden');
-      });
-      if(id) document.getElementById(id).classList.remove('hidden');
+      localStorage.setItem('shadowNinjaSave', JSON.stringify(saveData));
       updateUI();
     }
 
     function updateUI() {
-      document.getElementById('menuCoins').innerText = `🪙 ${user.coins}`;
-      document.getElementById('shopCoins').innerText = `🪙 ${user.coins}`;
-      document.getElementById('gameCoinsDisplay').innerText = user.coins;
-      if(user.hasJetpack) {
-        document.getElementById('flyButton').style.display = 'flex';
-      }
+      document.getElementById('highScoreTxt').innerText = saveData.highScore;
+      document.getElementById('menuGemsTxt').innerText = `💎 ${saveData.gems}`;
+      document.getElementById('shopGemsTxt').innerText = `💎 ${saveData.gems}`;
+      document.getElementById('gameGemsTxt').innerText = saveData.gems;
     }
 
-    function buySkin(skinName, cost) {
-      if(user.coins >= cost) {
-        user.coins -= cost;
-        user.skin = skinName;
+    function showMainMenu() {
+      if(gameLoop) clearInterval(gameLoop);
+      document.getElementById('mainMenu').classList.remove('hidden');
+      document.getElementById('shopScreen').classList.add('hidden');
+      updateUI();
+    }
+
+    function openShop() {
+      document.getElementById('mainMenu').classList.add('hidden');
+      document.getElementById('shopScreen').classList.remove('hidden');
+    }
+
+    function closeShop() {
+      document.getElementById('shopScreen').classList.add('hidden');
+      document.getElementById('mainMenu').classList.remove('hidden');
+    }
+
+    function buyItem(type, cost) {
+      if(saveData.gems >= cost) {
+        saveData.gems -= cost;
+        if(type === 'shield') saveData.hasShield = true;
+        if(type === 'goldSkin') saveData.skin = 'gold';
         saveProgress();
-        alert("مبروك! تم تفعيل السكن بنجاح 🎉");
+        alert("تم الشراء بنجاح! 🎉");
       } else {
-        alert("لا تملك كوينز كافية!");
+        alert("الجواهر غير كافية!");
       }
     }
 
-    function buyJetpack(cost) {
-      if(user.coins >= cost) {
-        user.coins -= cost;
-        user.hasJetpack = true;
-        saveProgress();
-        alert("تم شراء الطيران بنجاح! 🚀");
-      } else {
-        alert("لا تملك كوينز كافية!");
-      }
-    }
+    function startNinjaGame() {
+      document.getElementById('mainMenu').classList.add('hidden');
+      distance = 0;
+      nx = 50; ny = 40; nvx = 0; nvy = 0;
+      
+      let canvas = document.getElementById('canvas');
+      let ninjaColor = saveData.skin === 'gold' ? '#ffaa00' : '#00ffcc';
 
-    function spinWheel() {
-      let wins = [30, 60, 100, 150];
-      let won = wins[Math.floor(Math.random() * wins.length)];
-      user.coins += won;
-      saveProgress();
-      document.getElementById('wheelReward').innerText = `🎉 ربحت ${won} كوينز!`;
-    }
+      canvas.innerHTML = `
+        <div class="ninja" id="ninja" style="background: ${ninjaColor};"></div>
+        <div class="wall" style="left: 0; bottom: 0; width: 100%; height: 30px;"></div>
+        <div class="wall" style="left: 200px; bottom: 30px; width: 80px; height: 70px;"></div>
+        <div class="spike" style="left: 350px; bottom: 30px;"></div>
+        <div class="gem" style="left: 230px; bottom: 120px;" onclick="collectGem(this)"></div>
+      `;
 
-    function startGame(lvlNum) {
-      level = lvlNum;
-      showScreen(null);
-      loadLevelLayout();
       if(gameLoop) clearInterval(gameLoop);
       gameLoop = setInterval(updatePhysics, 20);
     }
 
-    function loadLevelLayout() {
-      px = 30; py = 30; vx = 0; vy = 0;
-      let area = document.getElementById('gameCanvas');
-      
-      let color = "#00ffcc";
-      if(user.skin === 'gold') color = "#ffea00";
-      if(user.skin === 'ghost') color = "#aa00ff";
+    function setDir(d) { moveDir = d; }
 
-      area.innerHTML = `
-        <div class="player" id="playerObj" style="left: ${px}px; bottom: ${py}px; background: ${color};"></div>
-        <div class="platform" style="left: 0; bottom: 0; width: 100%; height: 25px;"></div>
-        <div class="platform" id="trickPlatform" style="left: 35%; bottom: 80px; width: 100px; height: 16px;"></div>
-        <div class="coin" style="left: 38%; bottom: 110px;" onclick="this.remove(); user.coins += 15; saveProgress();"></div>
-        <div class="door" id="goalDoor" style="right: 30px; bottom: 25px;"></div>
-      `;
-
-      document.getElementById('levelLabel').innerText = `المستوى: ${level} (انتبه للخدعة!)`;
+    function ninjaJump() {
+      if(jumpsLeft > 0) {
+        nvy = 11;
+        jumpsLeft--;
+      }
     }
 
-    function setMove(dir) { moveDir = dir; }
-    function doJump() {
-      if(isGrounded) { vy = 12; isGrounded = false; }
+    function collectGem(el) {
+      el.remove();
+      saveData.gems += 5;
+      saveProgress();
     }
-    function doFly() { vy = 9; }
 
     function updatePhysics() {
-      let areaWidth = document.getElementById('gameCanvas').clientWidth;
+      let canvasWidth = document.getElementById('canvas').clientWidth;
 
-      px += moveDir * 5;
-      if(px < 0) px = 0;
-      if(px > areaWidth - 30) px = areaWidth - 30;
+      nx += moveDir * 5;
+      if(nx < 0) nx = 0;
+      if(nx > canvasWidth - 25) nx = canvasWidth - 25;
 
-      vy -= 0.65;
-      py += vy;
+      nvy -= 0.65; // جاذبية
+      ny += nvy;
 
-      if(py <= 25) { py = 25; vy = 0; isGrounded = true; }
-
-      if(level === 1 && px > areaWidth * 0.25 && px < areaWidth * 0.45) {
-        let plat = document.getElementById('trickPlatform');
-        if(plat) plat.style.display = 'none';
+      // أسرع اصطدام بالأرض
+      if(ny <= 30) {
+        ny = 30;
+        nvy = 0;
+        jumpsLeft = 2; // إعادة تعبئة القفز المزدوج
       }
 
-      if(level === 2 && px > areaWidth * 0.6) {
-        let door = document.getElementById('goalDoor');
-        if(door) door.style.bottom = '120px';
+      distance += 1;
+      document.getElementById('distTxt').innerText = Math.floor(distance / 5);
+
+      if(Math.floor(distance / 5) > saveData.highScore) {
+        saveData.highScore = Math.floor(distance / 5);
+        saveProgress();
       }
 
-      let pObj = document.getElementById('playerObj');
-      if(pObj) {
-        pObj.style.left = px + 'px';
-        pObj.style.bottom = py + 'px';
-      }
-
-      if(px >= areaWidth - 60 && py <= 35) {
-        alert("🎉 كفو يا بطل! تخطيت المستوى بنجاح!");
-        level++;
-        loadLevelLayout();
+      let nObj = document.getElementById('ninja');
+      if(nObj) {
+        nObj.style.left = nx + 'px';
+        nObj.style.bottom = ny + 'px';
       }
     }
   </script>

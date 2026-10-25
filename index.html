@@ -1,207 +1,209 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Ultimate RNG - Aura Simulator</title>
+  <title>AURA RNG - Ultra Simulator</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
-    html, body { width: 100%; height: 100%; background: #030307; color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+    body { background-color: #070913; color: #ffffff; min-height: 100vh; overflow-x: hidden; display: flex; justify-content: center; align-items: center; }
 
-    .game-container {
-      width: 100vw; height: 100vh; background: #0a0a16; display: flex; flex-direction: column; position: relative; overflow: hidden;
+    /* Container for Landscape / Mobile View */
+    .app-container {
+      width: 100vw; height: 100vh; max-width: 950px; max-height: 480px;
+      background: radial-gradient(circle at center, #0f1429 0%, #060810 100%);
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden; border: 1px solid #1e2942; border-radius: 12px;
     }
 
-    /* تأثيرات الشاشة النادرة جداً (إنفجار نيون) */
-    @keyframes epicGlow {
-      0% { box-shadow: inset 0 0 20px rgba(255,215,0,0.2); background: #0a0a16; }
-      50% { box-shadow: inset 0 0 80px rgba(255,215,0,0.8); background: #1a1500; }
-      100% { box-shadow: inset 0 0 20px rgba(255,215,0,0.2); background: #0a0a16; }
-    }
-    .epic-flash { animation: epicGlow 1.2s ease-in-out; }
-
-    /* الشريط العلوي */
+    /* Top Stats Bar */
     .top-bar {
-      height: 45px; background: #121224; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 20px; border-bottom: 2px solid #222; font-size: 13px; font-weight: bold; z-index: 20;
+      height: 52px; background: rgba(13, 17, 34, 0.85); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; border-bottom: 1px solid #1a233d; z-index: 10;
     }
 
-    /* منطقة عرض الهالة المسحوبة */
-    .roll-display-area {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; position: relative;
+    .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; letter-spacing: 1px; color: #38ef7d; }
+    .brand span { color: #11998e; }
+
+    .stats-group { display: flex; gap: 8px; }
+    .stat-badge {
+      background: #111728; border: 1px solid #1f2b48; padding: 6px 12px; border-radius: 10px;
+      display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #c0cdf0;
+    }
+    .stat-badge .val { color: #ffffff; font-weight: 700; }
+
+    /* Center Stage / Aura Orb Display */
+    .display-area {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; padding: 10px;
     }
 
-    .aura-box {
-      background: #131326; border: 2px solid #2a2a48; border-radius: 20px; width: 90%; max-width: 400px;
-      padding: 25px 15px; box-shadow: 0 0 25px rgba(0,0,0,0.6); position: relative; overflow: hidden;
+    .equipped-pill {
+      background: rgba(18, 25, 45, 0.8); border: 1px solid #28375c; padding: 4px 16px;
+      border-radius: 20px; font-size: 11px; color: #8fa0cc; margin-bottom: 10px; z-index: 2;
+    }
+    .equipped-pill span { color: #38ef7d; font-weight: bold; }
+
+    /* Big Main Aura Card */
+    .aura-card {
+      width: 85%; max-width: 380px; height: 210px;
+      background: rgba(15, 22, 41, 0.6); border: 2px solid #233257; border-radius: 20px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    .aura-name { font-size: 22px; font-weight: bold; margin-bottom: 8px; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-    .aura-chance { font-size: 12px; color: #88a; margin-bottom: 15px; }
-
-    /* زر ROLL الضخم والحماسي */
-    .roll-action-area {
-      height: 110px; background: #0d0d1c; display: flex; align-items: center; justify-content: center;
-      border-top: 2px solid #222; z-index: 20;
+    /* Aura Orb Glow */
+    .aura-orb {
+      width: 70px; height: 70px; border-radius: 50%; background: #ffffff;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.8); margin-bottom: 12px;
+      transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
     }
+
+    .aura-title { font-size: 20px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
+    .rarity-pill {
+      background: #111827; border: 1px solid #2b3a5e; padding: 4px 14px; border-radius: 12px;
+      font-size: 11px; font-weight: 700; color: #a1b4e0; display: flex; gap: 8px; align-items: center;
+    }
+
+    /* Bottom Control Bar */
+    .bottom-controls {
+      height: 75px; background: rgba(11, 15, 30, 0.95); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; border-top: 1px solid #1a233d; z-index: 10;
+    }
+
+    .btn-secondary {
+      background: #131a2e; border: 1px solid #212d4d; color: #9bb0e0;
+      padding: 10px 16px; border-radius: 12px; font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: 0.1s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-secondary:active { transform: scale(0.95); background: #1a243f; }
+
+    /* Main Roll Button with Cooldown */
+    .roll-btn-wrapper { position: relative; }
     .roll-btn {
-      width: 85%; max-width: 360px; height: 65px; background: linear-gradient(45deg, #ff0055, #7700ff);
-      color: #fff; font-size: 20px; font-weight: bold; border: none; border-radius: 35px;
-      box-shadow: 0 0 25px rgba(255,0,85,0.6); cursor: pointer; transition: transform 0.08s;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); border: none;
+      color: #ffffff; padding: 12px 32px; border-radius: 16px; font-size: 15px; font-weight: 900;
+      letter-spacing: 1px; cursor: pointer; box-shadow: 0 0 20px rgba(0, 114, 255, 0.5);
+      transition: transform 0.1s, opacity 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
-    .roll-btn:active { transform: scale(0.93); }
+    .roll-btn:active { transform: scale(0.95); }
+    .roll-btn.disabled { opacity: 0.5; pointer-events: none; filter: grayscale(0.6); }
 
-    /* الشاشات الجانبية (المخزون والمتاجر) */
-    .screen-overlay {
+    .cooldown-overlay {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0a0a16; z-index: 100; display: flex; flex-direction: column; padding: 20px; align-items: center;
+      background: rgba(0, 0, 0, 0.6); border-radius: 16px; display: flex;
+      align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #00f0ff;
+    }
+
+    /* Modal Screens (Shop & Inventory) */
+    .modal-screen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(6, 8, 16, 0.95); backdrop-filter: blur(12px); z-index: 50;
+      display: flex; flex-direction: column; padding: 20px; align-items: center;
     }
     .hidden { display: none !important; }
-    
-    .btn {
-      background: #2a2a48; color: #fff; border: none; padding: 10px 20px; border-radius: 15px;
-      font-weight: bold; font-size: 13px; cursor: pointer; margin: 5px;
+
+    .modal-header {
+      width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 15px; border-bottom: 1px solid #202c4a; padding-bottom: 10px;
+    }
+    .modal-title { font-size: 18px; font-weight: 800; color: #38ef7d; }
+
+    .grid-container {
+      width: 100%; max-width: 600px; flex: 1; overflow-y: auto; display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; padding-right: 5px;
     }
 
-    .inventory-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 400px;
-      overflow-y: auto; flex: 1; padding: 10px 0;
+    .shop-card {
+      background: #111728; border: 1px solid #1f2c4a; border-radius: 12px; padding: 10px;
+      display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: space-between;
     }
-    .inv-card { background: #161630; border: 1px solid #333; padding: 10px; border-radius: 12px; text-align: center; }
+    .shop-card .multiplier { font-size: 16px; font-weight: 900; color: #00f0ff; margin-bottom: 4px; }
+    .shop-card .cost { font-size: 11px; color: #ffd700; margin-bottom: 8px; font-weight: 700; }
+
+    /* Cutscene Fullscreen Rare Drop Effect */
+    .cutscene-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #000000; animation: flashBg 0.5s infinite alternate;
+    }
+    @keyframes flashBg { 0% { background: #000; } 100% { background: #120024; } }
+
+    .cutscene-title { font-size: 32px; font-weight: 900; text-transform: uppercase; animation: pulseText 0.4s infinite alternate; margin-bottom: 10px; }
+    @keyframes pulseText { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
   </style>
 </head>
 <body>
 
-  <div class="game-container" id="gameContainer">
+  <div class="app-container" id="app">
     
-    <!-- الشريط العلوي -->
+    <!-- Top Stats Bar -->
     <div class="top-bar">
-      <span>🎲 إجمالي السحبات: <span id="totalRolls" style="color: #ff0055;">0</span></span>
-      <button class="btn" style="padding: 4px 12px; font-size: 11px;" onclick="openInventory()">حقيبة الهالات 🎒</button>
-    </div>
-
-    <!-- منطقة عرض السحب والهالات -->
-    <div class="roll-display-area">
-      <div class="aura-box" id="auraCardBox">
-        <div style="font-size: 11px; color: #ffaa00; margin-bottom: 5px;">HOLO ROULETTE</div>
-        <div class="aura-name" id="auraNameDisplay" style="color: #00ffcc;">اضغط ROLL لبدء الحظ!</div>
-        <div class="aura-chance" id="auraChanceDisplay">النسبة: ---</div>
+      <div class="brand">💎 AURA <span>RNG</span></div>
+      <div class="stats-group">
+        <div class="stat-badge">🪙 Coins: <span class="val" id="coinsVal" style="color:#ffd700;">100</span></div>
+        <div class="stat-badge">🎲 Rolls: <span class="val" id="rollsVal">0</span></div>
+        <div class="stat-badge">⚡ Luck: <span class="val" id="luckVal" style="color:#00f0ff;">1.0x</span></div>
       </div>
     </div>
 
-    <!-- زر السحب ROLL -->
-    <div class="roll-action-area">
-      <button class="roll-btn" id="rollBtn" onclick="rollAura()">🎲 ROLL (اسحب)</button>
+    <!-- Center Display -->
+    <div class="display-area">
+      <div class="equipped-pill">Equipped: <span id="equippedTxt">None</span></div>
+
+      <div class="aura-card" id="auraCard">
+        <div class="aura-orb" id="auraOrb"></div>
+        <div class="aura-title" id="auraTitle" style="color: #a0a0a0;">COMMON</div>
+        <div class="rarity-pill">
+          <span id="rarityLabel">COMMON</span>
+          <span id="rarityChance" style="color: #38ef7d;">1 in 2</span>
+        </div>
+      </div>
     </div>
 
-    <!-- شاشة حقيبة الهالات (Inventory) -->
-    <div id="inventoryScreen" class="screen-overlay hidden">
-      <h2 style="color: #ff0055; margin-bottom: 10px;">🎒 حقيبة الهالات النادرة</h2>
-      <p style="font-size: 12px; color: #aaa; margin-bottom: 10px;">الهالات التي قمت بسحبها:</p>
-      <div class="inventory-grid" id="inventoryGrid">
-        <!-- عناصر المخزون تظهر هنا -->
+    <!-- Bottom Controls -->
+    <div class="bottom-controls">
+      <button class="btn-secondary" onclick="openModal('shopModal')">🛒 SHOP (LUCK)</button>
+      
+      <div class="roll-btn-wrapper">
+        <button class="roll-btn" id="rollBtn" onclick="triggerRoll()">
+          <span>ROLL</span>
+          <span style="font-size: 10px; opacity: 0.8;">AURA</span>
+        </button>
+        <div class="cooldown-overlay hidden" id="cdOverlay">2.0s</div>
       </div>
-      <button class="btn" style="background: #ff0055; margin-top: 10px;" onclick="closeInventory()">رجوع للعبة ↩</button>
+
+      <button class="btn-secondary" onclick="openModal('inventoryModal')">🎒 BAG</button>
+    </div>
+
+    <!-- Shop Modal (Multipliers: 2x, 4x, 6x, 8x, 10x, 50x, 100x, 188x, 250x, 1000x) -->
+    <div class="modal-screen hidden" id="shopModal">
+      <div class="modal-header">
+        <div class="modal-title">🛒 LUCK BOOST SHOP</div>
+        <button class="btn-secondary" onclick="closeModal('shopModal')">✕ CLOSE</button>
+      </div>
+      <div class="grid-container" id="shopGrid"></div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div class="modal-screen hidden" id="inventoryModal">
+      <div class="modal-header">
+        <div class="modal-title">🎒 AURA INVENTORY</div>
+        <button class="btn-secondary" onclick="closeModal('inventoryModal')">✕ CLOSE</button>
+      </div>
+      <div class="grid-container" id="inventoryGrid"></div>
+    </div>
+
+    <!-- Ultra Rare Drop Cutscene -->
+    <div class="cutscene-overlay hidden" id="cutsceneOverlay">
+      <div style="font-size: 14px; color: #ffaa00; font-weight: bold; margin-bottom: 10px;">🌟 UNBELIEVABLE DROP! 🌟</div>
+      <div class="cutscene-title" id="cutsceneTitle" style="color: #ff0055;">SUPREME</div>
+      <div style="font-size: 18px; color: #38ef7d; font-weight: 800;" id="cutsceneChance">1 in 100,000,000</div>
     </div>
 
   </div>
 
-  <script>
-    // قائمة الهالات مع نسب الحظ (من الشائع إلى 1 في المليار!)
-    const auras = [
-      { name: "Common (عادي)", chance: 2, color: "#aaa", rarity: "شائع" },
-      { name: "Good (جيد)", chance: 10, color: "#00ffcc", rarity: "عادي" },
-      { name: "Rare (نادر)", chance: 50, color: "#0088ff", rarity: "نادر" },
-      { name: "Epic (ملحمي)", chance: 500, color: "#9900ff", rarity: "ملحمي" },
-      { name: "Legendary (أساطير)", chance: 5000, color: "#ffaa00", rarity: "أسطوري" },
-      { name: "Mythic (خرافي)", chance: 50000, color: "#ff0055", rarity: "خرافي" },
-      { name: "DIVINE (إلهي)", chance: 1000000, color: "#ffff00", rarity: "إلهي ⚡" },
-      { name: "⭐ UNIVERSE (الكون المطلق)", chance: 1000000000, color: "#00ffff", rarity: "1 in 1B 🌌" }
-    ];
-
-    let totalRolls = 0;
-    let inventory = {}; // لتخزين الهالات المكتسبة
-
-    window.onload = () => {
-      let saved = localStorage.getItem('ultimateRngSave');
-      if(saved) {
-        let data = JSON.parse(saved);
-        totalRolls = data.totalRolls || 0;
-        inventory = data.inventory || {};
-      }
-      document.getElementById('totalRolls').innerText = totalRolls;
-    };
-
-    function saveGame() {
-      localStorage.setItem('ultimateRngSave', JSON.stringify({ totalRolls, inventory }));
-      document.getElementById('totalRolls').innerText = totalRolls;
-    }
-
-    function rollAura() {
-      totalRolls++;
-      
-      // محاكاة حظ تصاعدي مثير
-      let rand = Math.floor(Math.random() * 1000000000) + 1;
-      let selectedAura = auras[0];
-
-      // فحص النسب من الأندر للأسهل
-      for(let i = auras.length - 1; i >= 0; i--) {
-        if(rand <= auras[i].chance || i === 0) {
-          selectedAura = auras[i];
-          break;
-        }
-      }
-
-      // تأثيرات بصرية فخمة لو طلعت هالة نادرة جداً (أقل من 1 في 5000)
-      let container = document.getElementById('gameContainer');
-      if(selectedAura.chance >= 5000) {
-        container.classList.remove('epic-flash');
-        void container.offsetWidth; // إعادة تشغيل الـ Animation
-        container.classList.add('epic-flash');
-      }
-
-      // عرض النتيجة
-      let nameEl = document.getElementById('auraNameDisplay');
-      let chanceEl = document.getElementById('auraChanceDisplay');
-      
-      nameEl.innerText = selectedAura.name;
-      nameEl.style.color = selectedAura.color;
-      chanceEl.innerText = `الندرة: 1 in ${selectedAura.chance.toLocaleString()} (${selectedAura.rarity})`;
-
-      // إضافة الهالة للمخزون
-      if(!inventory[selectedAura.name]) {
-        inventory[selectedAura.name] = { count: 0, color: selectedAura.color };
-      }
-      inventory[selectedAura.name].count++;
-      saveGame();
-    }
-
-    function openInventory() {
-      let grid = document.getElementById('inventoryGrid');
-      grid.innerHTML = "";
-
-      let keys = Object.keys(inventory);
-      if(keys.length === 0) {
-        grid.innerHTML = `<div style="grid-column: span 2; color: #888; font-size: 12px; margin-top: 20px;">لم تحصل على أي هالات بعد، اضغط ROLL!</div>`;
-      } else {
-        keys.forEach(key => {
-          let item = document.createElement('div');
-          item.className = 'inv-card';
-          item.innerHTML = `
-            <div style="font-weight: bold; font-size: 12px; color: ${inventory[key].color};">${key}</div>
-            <div style="font-size: 11px; color: #aaa; margin-top: 4px;">العدد: ${inventory[key].count}</div>
-          `;
-          grid.appendChild(item);
-        });
-      }
-
-      document.getElementById('inventoryScreen').classList.remove('hidden');
-    }
-
-    function closeInventory() {
-      document.getElementById('inventoryScreen').classList.add('hidden');
-    }
-  </script>
-</body>
-</html>
+  

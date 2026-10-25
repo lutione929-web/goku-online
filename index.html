@@ -3,50 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Epic Phone OS - Pure P2P RPS Arena</title>
+  <title>Epic Phone OS - Beat Maker Go Edition</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; user-select: none; }
     body { background: #05050a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
     .phone-body {
       width: 320px; height: 620px; background: #111; border-radius: 35px; border: 4px solid #333;
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.3); position: relative; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 0 35px rgba(255, 0, 150, 0.3); position: relative; display: flex; flex-direction: column; overflow: hidden;
     }
 
     .phone-screen {
-      flex: 1; background: linear-gradient(135deg, #0b1a2b, #090a15);
+      flex: 1; background: #0b0c10;
       position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
 
+    /* واجهة تطبيق Beat Maker Go */
     .app-window {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0f172a; display: flex; flex-direction: column; z-index: 50; color: #fff; padding: 15px;
+      background: #0f1016; display: flex; flex-direction: column; z-index: 50; color: #fff; padding: 12px;
     }
 
-    .header { font-size: 13px; font-weight: bold; color: #38bdf8; margin-bottom: 10px; text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 8px; }
+    .app-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px;
+    }
+    .app-title { font-size: 14px; font-weight: bold; background: linear-gradient(45deg, #ff007f, #7928ca); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    /* شاشة البوابة وزر التوليد */
-    .gate-screen { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; text-align: center; }
-    .gate-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #38bdf8; background: #1e293b; color: #fff; font-size: 12px; text-align: center; outline: none; }
-    
-    .generate-btn { width: 100%; padding: 10px; background: #10b981; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(16,185,129,0.4); }
-    .join-btn { width: 100%; padding: 10px; background: #0284c7; color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(2,132,199,0.4); }
+    /* شبكة أزرار الإيقاعات (Pad Grid) */
+    .pad-grid {
+      flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr);
+      gap: 10px; margin-bottom: 10px;
+    }
 
-    .code-display-box { background: #1e293b; border: 1px dashed #38bdf8; padding: 8px; border-radius: 8px; width: 100%; font-size: 12px; color: #38bdf8; font-weight: bold; display: none; margin-top: 5px; }
+    .pad-btn {
+      border-radius: 14px; border: none; cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.05s, filter 0.05s;
+      display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: rgba(255,255,255,0.8);
+    }
+    .pad-btn:active, .pad-btn.active {
+      transform: scale(0.92);
+      filter: brightness(1.4);
+      box-shadow: 0 0 20px currentColor;
+    }
 
-    /* غرفة اللعب والشات البشري الخالص بدون بوت */
-    .game-room-screen { flex: 1; display: none; flex-direction: column; justify-content: space-between; }
-    
-    .arena-box { background: #1e293b; border-radius: 10px; padding: 10px; text-align: center; border: 1px solid #334155; }
-    .choices-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
-    .choice-btn { background: #334155; border: none; padding: 8px; border-radius: 6px; font-size: 20px; cursor: pointer; }
-    .choice-btn:active { background: #0284c7; }
+    /* ألوان الأزرار المتوهجة مطابقة للصورة */
+    .p1 { background: linear-gradient(135deg, #ffaa00, #ff4400); color: #ffe600; }
+    .p2 { background: linear-gradient(135deg, #ff007f, #9900ff); color: #ff99ff; }
+    .p3 { background: linear-gradient(135deg, #00f0ff, #0044ff); color: #ccffff; }
+    .p4 { background: linear-gradient(135deg, #00ff88, #008844); color: #99ffbb; }
+    .p5 { background: linear-gradient(135deg, #ff0055, #ff0000); color: #ff99bb; }
+    .p6 { background: linear-gradient(135deg, #7700ff, #ff00ff); color: #eeccff; }
+    .p7 { background: linear-gradient(135deg, #ffea00, #ff8800); color: #ffff99; }
+    .p8 { background: linear-gradient(135deg, #00ffcc, #00aaff); color: #ccffff; }
+    .p9 { background: linear-gradient(135deg, #ff00aa, #5500ff); color: #ffccff; }
+    .p10 { background: linear-gradient(135deg, #00ff44, #00ffcc); color: #99ffcc; }
+    .p11 { background: linear-gradient(135deg, #ff4400, #ff0055); color: #ffcc99; }
+    .p12 { background: linear-gradient(135deg, #9900ff, #00f0ff); color: #e6ccff; }
 
-    .chat-container { flex: 1; background: #020617; border-radius: 8px; border: 1px solid #1e293b; margin: 8px 0; display: flex; flex-direction: column; overflow: hidden; }
-    .chat-messages { flex: 1; padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 11px; }
-    .msg-bubble { max-width: 85%; padding: 6px 10px; border-radius: 8px; word-break: break-word; }
-    .msg-out { background: #0284c7; color: #f8fafc; align-self: flex-end; }
-    .chat-input-area { display: flex; background: #1e293b; padding: 6px; gap: 6px; }
+    .status-bar-dj {
+      background: #161821; padding: 8px; border-radius: 8px; text-align: center; font-size: 11px; color: #a0a0c0; border: 1px solid #222;
+    }
 
     .home-bar-area { height: 20px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); }
     .home-bar { width: 100px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.7; }
@@ -58,52 +75,31 @@
     <div class="phone-screen">
       
       <div class="app-window">
-        <div class="header" id="appHeaderTitle">✂️ حجرة ورقة مقص (أونلاين)</div>
-
-        <!-- 1. شاشة البوابة وأزرار توليد / إدخال الكود -->
-        <div class="gate-screen" id="gateScreen">
-          <div style="font-size: 35px; margin-bottom: 2px;">🔑</div>
-          <h3 style="color: #38bdf8; font-size: 14px;">غرفة التحدي المشتركة</h3>
-          <p style="font-size: 10px; color: #94a3b8; line-height: 1.3;">أنشئ كود خاص وأعطه لصاحب، أو اكتب كود صديقك للإنضمام:</p>
-          
-          <!-- زر توليد الكود -->
-          <button class="generate-btn" onclick="generateCode()">🎲 Generate a Code (أنشئ كود)</button>
-          <div class="code-display-box" id="generatedCodeBox">كود غرفتك: <span id="theGeneratedCode" style="color:#fff;">---</span> (انسخه لصديقك)</div>
-
-          <div style="width:100%; border-top:1px solid #1e293b; margin: 5px 0;"></div>
-
-          <!-- خانة إدخال كود الصديق -->
-          <input type="text" id="roomCodeInput" placeholder="ادخل كود صاحبك هنا..." class="gate-input">
-          <button class="join-btn" onclick="joinRoomWithCode()">دخول غرفة صاحبك 🚀</button>
+        <div class="app-header">
+          <span class="app-title">🎵 Beat Maker Go</span>
+          <span style="font-size: 10px; color: #ff007f;">● REC ACTIVE</span>
         </div>
 
-        <!-- 2. غرفة اللعب والشات البشري الخالص (بدون بوت نهائياً) -->
-        <div class="game-room-screen" id="gameRoomScreen">
+        <!-- لوحة الأزرار المضيئة (12 Pad) -->
+        <div class="pad-grid">
+          <button class="pad-btn p1" onclick="playBeat(1, 120, 'KICK')">KICK</button>
+          <button class="pad-btn p2" onclick="playBeat(2, 220, 'SNARE')">SNARE</button>
+          <button class="pad-btn p3" onclick="playBeat(3, 330, 'HI-HAT')">HI-HAT</button>
           
-          <div class="arena-box">
-            <div id="roomBadge" style="font-size: 10px; color: #38bdf8; margin-bottom: 3px;">الغرفة النشطة</div>
-            <div id="rpsResult" style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">اختر سلاحك للتحدي:</div>
-            <div class="choices-grid">
-              <button class="choice-btn" onclick="playRPS('🪨')">🪨</button>
-              <button class="choice-btn" onclick="playRPS('📄')">📄</button>
-              <button class="choice-btn" onclick="playRPS('✂️')">✂️</button>
-            </div>
-          </div>
-
-          <!-- شات الدردشة (بدون بوت، رسائل فقط بينكم) -->
-          <div class="chat-container">
-            <div style="background: #1e293b; padding: 4px 8px; font-size: 10px; color: #94a3b8; font-weight: bold;">💬 دردشة الغرفة (بشري 100% بدون بوت)</div>
-            <div class="chat-messages" id="chatMsgBox">
-              <div class="msg-bubble msg-out" style="background:#1e293b;">النظام: تم الاتصال بالغرفة بنجاح. اكتب رسائلك لصديقك هنا بكل حرية.</div>
-            </div>
-            <div class="chat-input-area">
-              <input type="text" id="chatInputText" placeholder="اكتب رسالة لصديقك..." style="flex: 1; background: #0f172a; border: none; padding: 6px 10px; border-radius: 6px; color: #fff; font-size: 11px; outline: none;" onkeypress="handleChatEnter(event)">
-              <button onclick="sendUserMsg()" style="background: #0284c7; border: none; color: #fff; padding: 0 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">➤</button>
-            </div>
-          </div>
-
+          <button class="pad-btn p4" onclick="playBeat(4, 150, 'BASS')">BASS</button>
+          <button class="pad-btn p5" onclick="playBeat(5, 440, 'SYNTH')">SYNTH</button>
+          <button class="pad-btn p6" onclick="playBeat(6, 550, 'CLAP')">CLAP</button>
+          
+          <button class="pad-btn p7" onclick="playBeat(7, 180, '808')">808</button>
+          <button class="pad-btn p8" onclick="playBeat(8, 660, 'VOCAL')">HEY!</button>
+          <button class="pad-btn p9" onclick="playBeat(9, 280, 'PERC')">PERC</button>
+          
+          <button class="pad-btn p10" onclick="playBeat(10, 350, 'CHORD')">CHORD</button>
+          <button class="pad-btn p11" onclick="playBeat(11, 110, 'SUB')">SUB</button>
+          <button class="pad-btn p12" onclick="playBeat(12, 770, 'FX')">LASER</button>
         </div>
 
+        <div class="status-bar-dj" id="djStatus">اضغط على أي زر لصنع الإيقاع والموسيقى! 🎶</div>
       </div>
 
     </div>
@@ -114,65 +110,24 @@
   </div>
 
   <script>
-    let activeRoomCode = "";
+    let audioCtx = null;
 
-    // 1. زر توليد الكود (Generate a Code)
-    function generateCode() {
-      let randomNum = Math.floor(1000 + Math.random() * 9000);
-      let newCode = "ROOM-" + randomNum;
-      document.getElementById('theGeneratedCode').innerText = newCode;
-      document.getElementById('generatedCodeBox').style.display = 'block';
-      document.getElementById('roomCodeInput').value = newCode;
-    }
+    function playBeat(padId, freq, name) {
+      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
 
-    // 2. دخول الغرفة باستخدام الكود
-    function joinRoomWithCode() {
-      let code = document.getElementById('roomCodeInput').value.trim();
-      if(!code) {
-        alert("الرجاء توليد كود أو إدخال كود صاحبك أولاً!");
-        return;
-      }
-      activeRoomCode = code;
-      document.getElementById('gateScreen').style.display = 'none';
-      document.getElementById('gameRoomScreen').style.display = 'flex';
-      document.getElementById('roomBadge').innerText = `الغرفة النشطة: #${code}`;
-      document.getElementById('appHeaderTitle').innerText = `✂️ حجرة ورقة مقص (# ${code})`;
-    }
+      let now = audioCtx.currentTime;
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
 
-    // منطق لعبة حجرة ورقة مقص المحلية المباشرة
-    function playRPS(myChoice) {
-      const choices = ['🪨', '📄', '✂️'];
-      let rivalChoice = choices[Math.floor(Math.random() * choices.length)];
-      
-      let resText = `أنت: ${myChoice} | الخصم: ${rivalChoice}<br>`;
-      if(myChoice === rivalChoice) {
-        resText += `<b style="color: #fbbf24;">تعادل! 🤝</b>`;
-      } else if(
-        (myChoice === '🪨' && rivalChoice === '✂️') ||
-        (myChoice === '📄' && rivalChoice === '🪨') ||
-        (myChoice === '✂️' && rivalChoice === '📄')
-      ) {
-        resText += `<b style="color: #4ade80;">فزت بالجولة! 🎉</b>`;
-      } else {
-        resText += `<b style="color: #f87171;">خسرت الجولة! 😢</b>`;
-      }
-      document.getElementById('rpsResult').innerHTML = resText;
-    }
-
-    // منطق الشات (بدون أي بوت نهائياً، رسائل يدوية فقط)
-    function handleChatEnter(e) { if(e.key === 'Enter') sendUserMsg(); }
-
-    function sendUserMsg() {
-      let input = document.getElementById('chatInputText');
-      let msgBox = document.getElementById('chatMsgBox');
-      let text = input.value.trim();
-      if(!text) return;
-
-      msgBox.innerHTML += `<div class="msg-bubble msg-out">${text}</div>`;
-      input.value = "";
-      msgBox.scrollTop = msgBox.scrollHeight;
-      // ملاحظة: تم إزالة البوت بالكامل، الشات الآن مخصص لكتابة رسائلك بكل حرية وخلو تام من أي ردود آلية.
-    }
-  </script>
-</body>
-</html>
+      if(padId === 1) {
+        // Kick ضربة عميقة
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
+        gain.gain.setValueAtTime(0.8, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+      } else if(padId === 2) {
+        // Snare
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(
